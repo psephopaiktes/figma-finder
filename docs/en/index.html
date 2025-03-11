@@ -1,0 +1,66 @@
+<!DOCTYPE html><!--
+
+  Source Code:
+  https://github.com/psephopaiktes/astro-i18n-starter
+
+--><html lang="en-US"> <head><meta charset="UTF-8"><title>Astro i18n Starter</title><meta name="description" content="A starter template for Astro with i18n support."><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="sitemap" href="/sitemap-index.xml"><meta name="generator" content="Astro v5.1.9"><link rel="alternate" hreflang="en-US" href="https://astro-i18n-starter.pages.dev/en/"><link rel="alternate" hreflang="ja" href="https://astro-i18n-starter.pages.dev/ja/"><link rel="alternate" hreflang="zh-CN" href="https://astro-i18n-starter.pages.dev/zh-cn/"><link rel="alternate" hreflang="ar" href="https://astro-i18n-starter.pages.dev/ar/"><!-- icon --><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon alternate" sizes="64x64" type="image/png" href="/favicon.png"><link rel="icon" sizes="192x192" href="/android-chrome.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="color-scheme" content="light dark"><!-- OGP --><meta property="og:type" content="website"><meta property="og:title" content="Astro i18n Starter"><meta property="og:site_name" content="Astro i18n Starter"><meta property="og:description" content="A starter template for Astro with i18n support."><meta property="og:image" content="https://astro-i18n-starter.pages.dev/ogp.png"><meta property="og:url" content="https://astro-i18n-starter.pages.dev/en/"><meta property="og:locale" content="en-US"><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@psephopaiktes"><!-- External Resource --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" fetchpriority="high" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;800&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;800&display=swap" media="print" onload="this.media='all'"><link rel="preload" as="style" fetchpriority="high" href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp&display=swap" media="print" onload="this.media='all'"><style>body{ font-family: "Noto Sans", sans-serif; }</style><link rel="stylesheet" href="/_astro/_id_.Bcj8AqLX.css">
+<style>ul[data-astro-cid-ct3bgug4]{margin-block-start:var(--sp-s);list-style:disc;padding-inline-start:1em}h2[data-astro-cid-ct3bgug4]{color:var(--color-theme);margin-block-start:var(--sp-l)}em[data-astro-cid-ct3bgug4]{display:block;font-style:normal;font-size:1.3em;margin-block-end:var(--sp-m)}.start[data-astro-cid-ct3bgug4]{display:block;width:fit-content;padding:.5em;border-radius:.5em;background:var(--color-main);color:var(--color-base);text-decoration:none;letter-spacing:.05em}
+</style></head> <body> <div id="js-languageSuggest" data-astro-cid-onlux7ho> <a id="js-link" href="#" data-astro-cid-onlux7ho> <span class="material-icons-sharp" data-astro-cid-onlux7ho>autorenew</span> <span id="js-linkText" data-astro-cid-onlux7ho></span> </a> <button id="js-close" data-astro-cid-onlux7ho> <span class="material-icons-sharp" data-astro-cid-onlux7ho>close</span> </button> </div> <script>(function(){const currentLocale = "en";
+const LOCALES = {"en":{"label":"English","lang":"en-US"},"ja":{"label":"日本語"},"zh-cn":{"label":"简体中文","lang":"zh-CN"},"ar":{"label":"العربية","dir":"rtl"}};
+
+  const browserLang = navigator.language.toLowerCase();
+  const suggest = document.getElementById("js-languageSuggest");
+
+  const showSuggest = (lang) => {
+    const pathnames = location.pathname.split("/");
+    const link = document.getElementById("js-link");
+    const linkText = document.getElementById("js-linkText");
+
+    pathnames[1] = lang;
+    link.href = pathnames.join("/");
+    linkText.innerText = LOCALES[lang].label;
+    suggest.style.display = "block";
+  };
+
+  if (
+    currentLocale === browserLang ||
+    currentLocale === browserLang.split("-")[0] ||
+    localStorage.languageSuggestDenied ||
+    localStorage.selectedLang
+  ) {
+    return;
+  } else if (Object.keys(LOCALES).includes(browserLang)) {
+    showSuggest(browserLang);
+  } else if (Object.keys(LOCALES).includes(browserLang.split("-")[0])) {
+    showSuggest(browserLang.split("-")[0]);
+  }
+
+  document.getElementById("js-close").addEventListener("click", () => {
+    suggest.style.display = "none";
+    localStorage.languageSuggestDenied = true;
+  });
+})();</script>  <header class="l-header" data-astro-cid-3ef6ksr2> <h1 dir="ltr" data-astro-cid-3ef6ksr2> <a href="/en/" data-astro-cid-3ef6ksr2> <img src="/_astro/astro-logo.D76-p4eS_15VVKJ.svg" alt="Astro" data-astro-cid-3ef6ksr2="true" width="460" height="160" loading="lazy" decoding="async">
+i18n Starter
+</a> </h1> <label data-astro-cid-opxux4jt> <span class="material-icons-sharp" data-astro-cid-opxux4jt>translate</span> <select data-languageSelect data-astro-cid-opxux4jt> <option label="English" value="/en/" data-lang="en" selected data-astro-cid-opxux4jt></option><option label="日本語" value="/ja/" data-lang="ja" data-astro-cid-opxux4jt></option><option label="简体中文" value="/zh-cn/" data-lang="zh-cn" data-astro-cid-opxux4jt></option><option label="العربية" value="/ar/" data-lang="ar" dir="rtl" data-astro-cid-opxux4jt></option> </select> <span class="material-icons-sharp" data-astro-cid-opxux4jt>expand_more</span> </label> <script>
+  const selects = document.querySelectorAll("[data-languageSelect]");
+
+  selects.forEach((select) => {
+    select.addEventListener("change", (event) => {
+      // used for 404 page
+      localStorage.selectedLang = event.target?.selectedOptions[0].dataset.lang;
+      location.href = event.target?.value;
+    });
+  });
+</script>  <nav class="l-content" data-astro-cid-3ef6ksr2> <ul data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/en/setup/" data-astro-cid-3ef6ksr2> Setup </a> </li> <li data-astro-cid-3ef6ksr2> <a href="/en/page/" data-astro-cid-3ef6ksr2> Add Page </a> </li> <li data-astro-cid-3ef6ksr2> <a href="/en/feature/" data-astro-cid-3ef6ksr2> Features </a> </li> <li class="en-only" data-astro-cid-3ef6ksr2> <a href="/en/monolingual/" data-astro-cid-3ef6ksr2>
+Monolingual
+</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/en/blog/" data-astro-cid-3ef6ksr2> Blog </a> </li> <li data-astro-cid-3ef6ksr2> <a href="https://github.com/psephopaiktes/astro-i18n-starter" target="_blank" data-astro-cid-3ef6ksr2>
+GitHub
+<span class="material-icons-sharp dir" data-astro-cid-3ef6ksr2>open_in_new</span> </a> </li> </ul> </nav> </header>  <main class="l-main l-content">  <img src="/_astro/hero.DBk1P_Wj_Z20s1bY.svg" alt="Hello" loading="eager" data-astro-cid-ct3bgug4="true" width="960" height="400" decoding="async"> <p data-astro-cid-ct3bgug4> <em data-astro-cid-ct3bgug4> i18n Starter is a simple Astro theme for creating multilingual websites. It supports i18n feature from Astro v4.0. </em> </p> <p data-astro-cid-ct3bgug4> <a href="https://docs.astro.build/en/guides/internationalization/" target="_blank" data-astro-cid-ct3bgug4>
+Internationalization (i18n) Routing | Astro Docs
+<span class="material-icons-sharp dir" data-astro-cid-ct3bgug4>open_in_new</span> </a> </p> <p data-astro-cid-ct3bgug4> Basically, only the subdirectory URL scheme is supported. It is managed by the URL as follows for each language. The root URL is redirected to the specified default language. </p> <ul data-astro-cid-ct3bgug4> <li data-astro-cid-ct3bgug4>example.com/en/</li> <li data-astro-cid-ct3bgug4>example.com/ja/</li> </ul> <h2 data-astro-cid-ct3bgug4> Feature </h2> <ul data-astro-cid-ct3bgug4> <li data-astro-cid-ct3bgug4> support for Astro&#39;s official i18n feature </li> <li data-astro-cid-ct3bgug4> Various management methods for multilingual pages </li> <li data-astro-cid-ct3bgug4>Vanilla CSS</li> <li data-astro-cid-ct3bgug4> SEO friendly </li> <li data-astro-cid-ct3bgug4> 100/100 Lighthouse performance </li> </ul> <h2 data-astro-cid-ct3bgug4> Getting Started </h2> <p data-astro-cid-ct3bgug4> Assumes basic knowledge of Astro. </p> <p data-astro-cid-ct3bgug4> <a href="https://docs.astro.build/" target="_blank" data-astro-cid-ct3bgug4>
+https://docs.astro.build/
+<span class="material-icons-sharp dir" data-astro-cid-ct3bgug4>open_in_new</span> </a> </p> <p data-astro-cid-ct3bgug4> If you&#39;re okay, let&#39;s get started! </p> <p data-astro-cid-ct3bgug4> <a href="/en/setup/" class="start" data-astro-cid-ct3bgug4> <span class="material-icons-sharp dir" data-astro-cid-ct3bgug4>arrow_forward</span> Start Setup </a> </p>  </main> <footer class="l-footer l-content" data-astro-cid-sz7xmlte> <a href="https://github.com/psephopaiktes/astro-i18n-starter" target="_blank" class="github" data-astro-cid-sz7xmlte>
+GitHub
+<span class="material-icons-sharp dir" data-astro-cid-sz7xmlte>open_in_new</span> </a> <ul data-astro-cid-sz7xmlte> <li><a href="/en/" onclick="localStorage.selectedLang = &#34;en&#34;">English</a></li><li><a href="/ja/" onclick="localStorage.selectedLang = &#34;ja&#34;">日本語</a></li><li><a href="/zh-cn/" onclick="localStorage.selectedLang = &#34;zh-cn&#34;">简体中文</a></li><li><a href="/ar/" onclick="localStorage.selectedLang = &#34;ar&#34;" dir="rtl">العربية</a></li> </ul> <a class="copy" href="https://hira.page/" target="_blank" dir="ltr" data-astro-cid-sz7xmlte>
+© Akira HIRATA 2025.
+</a> </footer>   </body> </html> 
