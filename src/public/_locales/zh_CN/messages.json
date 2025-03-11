@@ -1,0 +1,14 @@
+{
+  "locale": {
+    "message": "zh_CN"
+  },
+  "extName": {
+    "message": "Share-it"
+  },
+  "extDescription": {
+    "message": "通过各种格式分享或复制网页到任何地方。"
+  },
+  "popupTitle": {
+    "message": "分享此页面"
+  }
+}

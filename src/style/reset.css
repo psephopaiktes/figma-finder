@@ -1,0 +1,164 @@
+/* Base Reset - Universal Selector */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Document & Root Element Styles */
+:root,
+body {
+  height: 100%;
+  min-height: 100vh;
+  block-size: 100dvb;
+  scroll-behavior: smooth;
+  line-height: 1.5;
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: none;
+  word-break: auto-phrase;
+  font-kerning: normal;
+  hanging-punctuation: allow-end;
+}
+
+/* Typography */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.4;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  text-decoration-skip-ink: auto;
+  color: inherit;
+  word-break: break-word;
+}
+
+p a {
+  text-decoration: underline;
+}
+
+/* Lists */
+ul,
+ol {
+  list-style-type: none;
+}
+
+/* Media Elements */
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: none;
+}
+
+img,
+picture,
+svg {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* Form Elements */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+a,
+area,
+button,
+[role="button"],
+input:not([type="range"]),
+label,
+select,
+summary,
+textarea {
+  touch-action: manipulation;
+}
+
+button,
+label,
+select,
+summary,
+[role="button"],
+[role="option"] {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  &:not([rows]) {
+    min-height: 3em;
+  }
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Scroll Margin for Anchor Links */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* View Transitions API */
+@view-transition {
+  /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+  navigation: auto;
+}
+
+/* Responsive & Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

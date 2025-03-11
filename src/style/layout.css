@@ -1,0 +1,27 @@
+/* define the layout and structure of the entire page */
+
+.l-navButton {
+  z-index: 2;
+  position: fixed;
+  top: 4px;
+  left: 4px;
+  width: 48px;
+  aspect-ratio: 1;
+}
+
+.l-main {
+  z-index: 1;
+  /* margin-block-start: var(--sp-l); */
+}
+/*
+.l-content {
+  max-inline-size: 800px;
+  padding-inline: var(--sp-m);
+  margin-inline: auto;
+}
+
+.l-footer {
+  position: sticky;
+  top: 100vh;
+  margin-block-start: calc(var(--sp-l) * 2);
+} */

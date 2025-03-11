@@ -1,0 +1,14 @@
+{
+  "locale": {
+    "message": "en"
+  },
+  "extName": {
+    "message": "Share-it"
+  },
+  "extDescription": {
+    "message": "Share or Copy web pages to anywhere by various format."
+  },
+  "popupTitle": {
+    "message": "Share this page"
+  }
+}

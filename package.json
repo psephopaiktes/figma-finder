@@ -1,0 +1,35 @@
+{
+  "name": "Figma Finder",
+  "author": "Akira HIRATA",
+  "version": "0.0.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "biome": "biome check --write",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "npm run biome && wxt build && wxt zip",
+    "build:firefox": "npm run biome && wxt build -b firefox && wxt zip -b firefox",
+    "build:safari": "npm run biome && wxt build -b safari && xcrun safari-web-extension-converter .output/safari-mv2 --project-location .output --force",
+    "compile": "vue-tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "svg-mask-icon": "^2.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/chrome": "^0.0.280",
+    "@wxt-dev/auto-icons": "^1.0.2",
+    "@wxt-dev/module-svelte": "^2.0.0",
+    "svelte": "^5.1.16",
+    "svelte-check": "^4.0.7",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3",
+    "wxt": "^0.19.13"
+  }
+}
