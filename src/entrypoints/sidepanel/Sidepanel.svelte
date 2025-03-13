@@ -5,3 +5,6 @@ import Layout from "@/lib/Layout.svelte";
 <Layout current="editor">
   <h1>SidePanel</h1>
 </Layout>
+
+<style>
+</style>

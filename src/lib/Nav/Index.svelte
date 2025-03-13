@@ -1,55 +1,37 @@
 <script lang="ts">
-import i18n from "@/lib/i18n";
-import { browserMenu } from "./browserMenu";
+  import i18n from "@/lib/i18n";
 
-let { current = "" } = $props();
+  let { current = "" } = $props();
 
-let drawer: HTMLDialogElement;
-const browserName =
-  import.meta.env.BROWSER.charAt(0).toUpperCase() +
-  import.meta.env.BROWSER.slice(1);
+  let drawer: HTMLDialogElement;
 
-function openBrowserPage(url: string) {
-  try {
-    browser.tabs.update({ url });
-  } catch (error) {
-    console.error("This feature can't be used in this environment.");
+  function openDrawer() {
+    drawer.showModal();
   }
-}
 
-function openDrawer() {
-  drawer.showModal();
-}
-
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  console.log(target);
-  if (target === drawer) {
-    closeDrawer();
+  function closeDrawer() {
+    drawer.close();
   }
-}
+
+  function backdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    console.log(target);
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav>
-  <button
-    class="l-navButton"
-    onclick={openDrawer}
-    tabindex="2"
-    title={i18n.t({ en: "Menu", jp: "メニュー" })}
-  >
-    <svg-icon
-      src="/img/icon/menu.svg"
-      alt={i18n.t({ en: "Menu", jp: "メニュー" })}
-    />
+  <button class="l-navButton" onclick={openDrawer} tabindex="2">
+    <svg-icon src="/img/icon/menu.svg">
+      {i18n.t({ en: "Menu", jp: "メニュー" })}
+    </svg-icon>
   </button>
 
   <dialog bind:this={drawer} onclick={backdropClick}>
     <h1>
-      <svg-icon src="/img/logo.svg" alt="Tabulasa" />
+      <svg-icon src="/img/logo.svg">Figma Finder</svg-icon>
     </h1>
 
     <hr />
@@ -57,54 +39,52 @@ function backdropClick(event: MouseEvent): void {
     <ul>
       <li>
         <a
-          href="/newtab.html"
-          class:current={current === "editor"}
-          inert={current === "editor"}
+          href="/sidepanel.html"
+          class:current={current === "home"}
+          inert={current === "home"}
           onclick={(e) => {
             e.preventDefault();
             closeDrawer();
-            location.href = browser.runtime.getURL("/newtab.html");
+            location.href = browser.runtime.getURL("/sidepanel.html");
           }}
         >
-          <svg-icon src="/img/icon/editor.svg" alt="editor" />
-          Editor
+          <svg-icon src="/img/icon/home.svg" alt="home" />
+          home
         </a>
       </li>
+
       <li>
         <a
-          href="/options.html"
+          href="/options.html?sidepanel"
           class:current={current === "options"}
           inert={current === "options"}
           onclick={(e) => {
             e.preventDefault();
             closeDrawer();
-            location.href = browser.runtime.getURL("/options.html");
+            location.href = browser.runtime.getURL("/options.html?sidepanel");
           }}
         >
-          <svg-icon src="/img/icon/customize.svg" alt="customize" />
+          <svg-icon src="/img/icon/options.svg" alt="options" />
           Options
         </a>
       </li>
+
+      <li>
+        <a
+          href="/help.html"
+          class:current={current === "help"}
+          inert={current === "help"}
+          onclick={(e) => {
+            e.preventDefault();
+            closeDrawer();
+            location.href = browser.runtime.getURL("/help.html");
+          }}
+        >
+          <svg-icon src="/img/icon/help.svg" alt="help" />
+          help
+        </a>
+      </li>
     </ul>
-
-    {#if import.meta.env.CHROME}
-      <hr />
-
-      <h3>{browserName}</h3>
-      <ul>
-        {#each browserMenu as item}
-          <li>
-            <a href={item.url} onclick={() => openBrowserPage(item.url)}>
-              <svg-icon
-                src={`/img/icon/${item.id}.svg`}
-                alt={i18n.t(item.label)}
-              />
-              {i18n.t(item.label)}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    {/if}
 
     <footer>
       <a href="https://hira.page" target="_blank"> © Akira HIRATA </a>

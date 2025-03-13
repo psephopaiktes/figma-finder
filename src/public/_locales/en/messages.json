@@ -3,12 +3,12 @@
     "message": "en"
   },
   "extName": {
-    "message": "Share-it"
+    "message": "Figma Finder"
   },
   "extDescription": {
-    "message": "Share or Copy web pages to anywhere by various format."
+    "message": "You can quickly find and open Figma files."
   },
   "popupTitle": {
-    "message": "Share this page"
+    "message": "Find Figma Files"
   }
 }

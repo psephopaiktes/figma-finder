@@ -141,12 +141,6 @@ table {
   scroll-margin-block: 5ex;
 }
 
-/* View Transitions API */
-@view-transition {
-  /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
-  navigation: auto;
-}
-
 /* Responsive & Accessibility */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {

@@ -3,12 +3,12 @@
     "message": "zh_CN"
   },
   "extName": {
-    "message": "Share-it"
+    "message": "Figma Finder"
   },
   "extDescription": {
-    "message": "通过各种格式分享或复制网页到任何地方。"
+    "message": "您可以最快速地查找和打开Figma文件。"
   },
   "popupTitle": {
-    "message": "分享此页面"
+    "message": "查找Figma文件"
   }
 }

@@ -3,12 +3,12 @@
     "message": "ja"
   },
   "extName": {
-    "message": "Share-it"
+    "message": "Figma Finder"
   },
   "extDescription": {
-    "message": "開いているWebページを、さまざまなサービスや形式で共有・コピーできます。"
+    "message": "Figmaファイルを最速で探し、開くことができます。"
   },
   "popupTitle": {
-    "message": "このページを共有"
+    "message": "Figmaファイルを検索"
   }
 }

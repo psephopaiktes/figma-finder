@@ -1,5 +1,7 @@
 # Figma Finder
 
+https://psephopaiktes.github.io/figma-finder/
+
 ![Hero Image](design/cover.png)
 
 TODO

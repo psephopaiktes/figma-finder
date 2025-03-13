@@ -1,24 +1,24 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n";
-import { store } from "@/lib/store.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n";
+  import { store } from "@/lib/store.svelte";
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  const title = i18n.t({
+    en: "Options",
+    jp: "設定",
+  });
+
+  const isSidepanel = location.search.includes("sidepanel");
+
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
-<Layout
-  current="options"
-  title={i18n.t({
-    en: "Tabulasa Options",
-    jp: "Tabulasaの設定",
-  })}
->
-  <h1>
-    {i18n.t({ en: "Options", jp: "設定" })}
-  </h1>
+<Layout current="options" {title}>
+  <h1>{title}</h1>
+  <p>isSidepanel: {isSidepanel ? "YESです" : "NOです"}</p>
 
   <h2>Editor</h2>
   <h3>Theme</h3>

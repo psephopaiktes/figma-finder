@@ -3,12 +3,48 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>redirect...</title>
+  <link rel="alternate" hreflang="en-US" href="https://psephopaiktes.github.io/figma-finder/en/">
+  <link rel="alternate" hreflang="ja" href="https://psephopaiktes.github.io/figma-finder/ja/">
+  <link rel="alternate" hreflang="zh-CN" href="https://psephopaiktes.github.io/figma-finder/zh-cn/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Astro i18n Starter">
+  <meta property="og:site_name" content="Astro i18n Starter">
+  <meta property="og:description" content="A starter template for Astro with i18n support.">
+  <meta property="og:image" content="https://psephopaiktes.github.io/figma-finder/ogp.png">
+  <meta property="og:url" content="https://psephopaiktes.github.io/figma-finder/">
+  <meta property="og:locale" content="en">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@psephopaiktes"><noscript>
+    <meta http-equiv="refresh" content="0;url=https://psephopaiktes.github.io/figma-finder/en/">
+  </noscript>
+  <script>(function () {
+      const langs = ["en", "ja", "zh-cn", "ar"];
+      const baseUrl = "https://psephopaiktes.github.io/figma-finder/";
+      const defaultLocale = "en";
+
+      if (
+        localStorage.selectedLang &&
+        langs.includes(localStorage.selectedLang)
+      ) {
+        location.href = `${baseUrl + localStorage.selectedLang}/`;
+      } else {
+        const browserLang = navigator.language.toLowerCase();
+
+        if (langs.includes(browserLang)) {
+          location.href = `${baseUrl + browserLang}/`;
+        } else if (langs.includes(browserLang.split("-")[0])) {
+          location.href = `${baseUrl + browserLang.split("-")[0]}/`;
+        } else {
+          location.href = `${baseUrl + defaultLocale}/`;
+        }
+      }
+    })();</script>
 </head>
 
 <body>
-  Figma Finder
+  <h1>redirect...</h1>
 </body>
 
 </html>

@@ -18,7 +18,15 @@ const manifest = {
       id: "figma-finder@hira.page",
     },
   },
-  action: {}, // Required
+  action: {
+    default_icon: {
+      16: "/img/action-icon.png",
+      32: "/img/action-icon.png",
+      48: "/img/action-icon.png",
+      128: "/img/action-icon.png",
+    },
+    default_title: "__MSG_popupTitle__",
+  },
 };
 
 export default defineConfig({
