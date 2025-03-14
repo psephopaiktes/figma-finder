@@ -1,6 +1,7 @@
 <script lang="ts">
   import "@/style/index.css";
   import "svg-mask-icon";
+  import i18n from "@/lib/i18n.svelte";
   import { loadOptions, store } from "@/lib/store.svelte";
 
   let { class: className = "", children } = $props();
@@ -8,6 +9,7 @@
   onMount(async () => {
     await loadOptions();
     document.documentElement.dataset.theme = store.options.theme;
+    document.documentElement.lang = store.options.locale || i18n.default_locale;
 
     console.log(
       "This site's code: \n%chttps://github.com/psephopaiktes/figma-finder",

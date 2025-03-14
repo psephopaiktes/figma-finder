@@ -1,8 +1,12 @@
 .c-document {
   h2 {
-    margin-block-start: var(--sp-l);
+    margin-block-start: var(--sp-xl);
   }
   h3 {
     margin-block-start: var(--sp-m);
+  }
+  hr {
+    margin-block-start: var(--sp-xl);
+    margin-block-end: var(--sp-xl);
   }
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import Nav from "@/lib/Nav/Index.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/Nav/Index.svelte";
+  import i18n from "@/lib/i18n.svelte";
 </script>
 
 <Layout>
@@ -9,6 +10,9 @@ import Nav from "@/lib/Nav/Index.svelte";
   </Nav>
 
   <h1>SidePanel</h1>
+  <h3>
+    {i18n.t({ en: "english", ja: "日本語", "zh-cn": "簡体中文" })}
+  </h3>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

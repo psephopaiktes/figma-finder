@@ -1,14 +1,7 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n";
-  import type { Snippet } from "svelte";
+  import i18n from "@/lib/i18n.svelte";
 
-  interface Props {
-    title?: string;
-    current?: string;
-    children?: Snippet;
-  }
-  let { title, current, children }: Props = $props();
-
+  let { title = null, current = null, children = null } = $props();
   let drawer: HTMLDialogElement;
 
   function openDrawer() {
@@ -28,15 +21,11 @@
   }
 </script>
 
-<svelte:head>
-  <title>{title || "Figma Finder"}</title>
-</svelte:head>
-
 <nav class="l-nav">
   <header class="l-navHeader">
     <button onclick={openDrawer} tabindex="2">
       <svg-icon src="/img/icon/menu.svg">
-        {i18n.t({ en: "Menu", jp: "メニュー", "zh-cn": "菜单" })}
+        {i18n.t({ en: "Menu", ja: "メニュー", "zh-cn": "菜单" })}
       </svg-icon>
     </button>
 
@@ -44,7 +33,7 @@
       {#if children}
         {@render children?.()}
       {:else if title}
-        <h1>{title}</h1>
+        <h1>{i18n.t(title)}</h1>
       {:else}
         <h1>Figma Finder</h1>
       {/if}
@@ -58,7 +47,7 @@
   <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">
     <button onclick={closeDrawer}>
       <svg-icon src="/img/icon/close.svg">
-        {i18n.t({ en: "Close", jp: "閉じる", "zh-cn": "关闭" })}
+        {i18n.t({ en: "Close", ja: "閉じる", "zh-cn": "关闭" })}
       </svg-icon>
     </button>
 
@@ -162,6 +151,7 @@
   }
 
   dialog {
+    color: var(--color-main);
     background: var(--color-base);
     transition:
       translate 0.2s ease-in,

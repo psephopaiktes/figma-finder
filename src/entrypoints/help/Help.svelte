@@ -1,13 +1,7 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
   import Nav from "@/lib/Nav/Index.svelte";
-  import i18n from "@/lib/i18n";
-
-  const title = i18n.t({
-    en: "Help",
-    jp: "ヘルプ",
-    "zh-cn": "帮助",
-  });
+  import i18n from "@/lib/i18n.svelte";
 
   let isWelcome = $state(false);
   let isPinned = $state(false);
@@ -32,9 +26,22 @@
 <Layout class="l-document c-document">
   {#if isWelcome}
     <h1>Welcome!</h1>
-    <button onclick={runFF}> FigmaFinderを実行する </button>
+    <button onclick={runFF}>
+      {i18n.t({
+        en: "Run Figma Finder",
+        ja: "Figma Finderを実行する",
+        "zh-cn": "运行Figma Finder",
+      })}
+    </button>
   {:else}
-    <Nav {title} current="help" />
+    <Nav
+      title={{
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+      }}
+      current="help"
+    />
   {/if}
 
   {#if !isPinned}

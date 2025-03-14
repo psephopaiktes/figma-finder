@@ -4,7 +4,7 @@ export const browserMenu = import.meta.env.CHROME
         id: "history",
         label: {
           en: "History",
-          jp: "履歴",
+          ja: "履歴",
         },
         url: "chrome://history",
       },
@@ -12,7 +12,7 @@ export const browserMenu = import.meta.env.CHROME
         id: "bookmarks",
         label: {
           en: "Bookmarks",
-          jp: "ブックマーク",
+          ja: "ブックマーク",
         },
         url: "chrome://bookmarks",
       },
@@ -20,7 +20,7 @@ export const browserMenu = import.meta.env.CHROME
         id: "downloads",
         label: {
           en: "Downloads",
-          jp: "ダウンロード",
+          ja: "ダウンロード",
         },
         url: "chrome://downloads",
       },
@@ -28,7 +28,7 @@ export const browserMenu = import.meta.env.CHROME
         id: "extensions",
         label: {
           en: "Extensions",
-          jp: "拡張機能",
+          ja: "拡張機能",
         },
         url: "chrome://extensions",
       },
@@ -36,7 +36,7 @@ export const browserMenu = import.meta.env.CHROME
         id: "settings",
         label: {
           en: "Settings",
-          jp: "設定",
+          ja: "設定",
         },
         url: "chrome://settings",
       },
@@ -54,7 +54,7 @@ export const browserMenu = import.meta.env.CHROME
           id: "downloads",
           label: {
             en: "Downloads",
-            jp: "ダウンロード",
+            ja: "ダウンロード",
           },
           url: "about:downloads",
         },
@@ -62,7 +62,7 @@ export const browserMenu = import.meta.env.CHROME
           id: "extensions",
           label: {
             en: "Add-ons",
-            jp: "アドオン",
+            ja: "アドオン",
           },
           url: "about:addons",
         },
@@ -70,7 +70,7 @@ export const browserMenu = import.meta.env.CHROME
           id: "settings",
           label: {
             en: "Settings",
-            jp: "設定",
+            ja: "設定",
           },
           url: "about:preferences",
         },
@@ -78,7 +78,7 @@ export const browserMenu = import.meta.env.CHROME
           id: "passwords",
           label: {
             en: "Passwords",
-            jp: "パスワード",
+            ja: "パスワード",
           },
           url: "about:logins",
         },
@@ -86,7 +86,7 @@ export const browserMenu = import.meta.env.CHROME
           id: "home",
           label: {
             en: "Home",
-            jp: "ホーム",
+            ja: "ホーム",
           },
           url: "about:home",
         },

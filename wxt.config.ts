@@ -35,7 +35,10 @@ export default defineConfig({
   extensionApi: "chrome",
   modules: ["@wxt-dev/module-svelte", "@wxt-dev/auto-icons"],
   runner: {
-    startUrls: ["https://figma.com/"],
+    startUrls: [
+      "https://figma.com/",
+      "chrome-extension://mnkaimakhomgdcoifcfjdafbbffmakoh/options.html?sidepanel",
+    ],
     chromiumArgs: ["--user-data-dir=./.wxt/chrome-data"],
   },
   manifest,

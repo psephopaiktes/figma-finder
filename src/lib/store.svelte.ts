@@ -2,6 +2,7 @@ export const store = $state({
   doc: "",
   options: {
     theme: "system",
+    locale: null,
   },
 });
 

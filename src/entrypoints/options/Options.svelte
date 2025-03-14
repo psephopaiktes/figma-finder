@@ -1,14 +1,8 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
   import Nav from "@/lib/Nav/Index.svelte";
-  import i18n from "@/lib/i18n";
+  import i18n from "@/lib/i18n.svelte";
   import { store } from "@/lib/store.svelte";
-
-  const title = i18n.t({
-    en: "Options",
-    jp: "設定",
-    "zh-cn": "选项",
-  });
 
   const isSidepanel = location.search.includes("sidepanel");
 
@@ -20,65 +14,59 @@
 
 <Layout class="l-document c-document">
   {#if isSidepanel}
-    <Nav {title} current="options" />
+    <Nav
+      title={{
+        en: "Options",
+        ja: "設定",
+        "zh-cn": "选项",
+      }}
+      current="options"
+    />
   {/if}
 
-  <h2>Editor</h2>
-  <h3>Theme</h3>
-  <ul>
-    <li>
-      <label>
-        <input
-          bind:group={store.options.theme}
-          type="radio"
-          name="theme"
-          value="system"
-        />
-        {i18n.t({ en: "System", jp: "システム", "zh-cn": "系统" })}
-      </label>
-    </li>
-    <li>
-      <label>
-        <input
-          bind:group={store.options.theme}
-          type="radio"
-          name="theme"
-          value="light"
-        />
-        {i18n.t({ en: "Light", jp: "ライト", "zh-cn": "亮" })}
-      </label>
-    </li>
-    <li>
-      <label>
-        <input
-          bind:group={store.options.theme}
-          type="radio"
-          name="theme"
-          value="dark"
-        />
-        {i18n.t({ en: "Dark", jp: "ダーク", "zh-cn": "暗" })}
-      </label>
-    </li>
-  </ul>
+  <label>
+    <h3>
+      {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题" })}
+    </h3>
 
-  <h3>Font</h3>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </p>
+    <select bind:value={store.options.theme}>
+      <option value="system">
+        {i18n.t({ en: "System", ja: "システム", "zh-cn": "系统" })}
+      </option>
+      <option value="light">
+        {i18n.t({ en: "Light", ja: "ライト", "zh-cn": "亮" })}
+      </option>
+      <option value="dark">
+        {i18n.t({ en: "Dark", ja: "ダーク", "zh-cn": "暗" })}
+      </option>
+    </select>
+  </label>
+
+  <label>
+    <h3>
+      {i18n.t({ en: "Language", ja: "言語", "zh-cn": "语言" })}
+    </h3>
+
+    <select bind:value={store.options.locale}>
+      <option value={null}>
+        {i18n.t({ en: "System", ja: "システム", "zh-cn": "系统" })}
+      </option>
+      {#each Object.keys(i18n.locales) as locale}
+        <option value={locale}>
+          {i18n.locales[locale as keyof typeof i18n.locales].label}
+        </option>
+      {/each}
+    </select>
+  </label>
 
   <hr />
 
-  <h2>{i18n.t({ en: "Information", jp: "情報", "zh-cn": "信息" })}</h2>
+  <h2>{i18n.t({ en: "Information", ja: "情報", "zh-cn": "信息" })}</h2>
   <h3>URL</h3>
   <ul>
     <li>
       <a href="https://TODO動的に" target="_blank">
-        {i18n.t({ en: "Store Page", jp: "ストアページ", "zh-cn": "商店页面" })}
+        {i18n.t({ en: "Store Page", ja: "ストアページ", "zh-cn": "商店页面" })}
       </a>
     </li>
     <li>
@@ -90,14 +78,14 @@
       <a href="https://hira.page" target="_blank">
         {i18n.t({
           en: "Author's Website",
-          jp: "制作者HP",
+          ja: "制作者HP",
           "zh-cn": "作者网站",
         })}
       </a>
     </li>
   </ul>
 
-  <h3>{i18n.t({ jp: "支援する", en: "Support", "zh-cn": "支持" })}</h3>
+  <h3>{i18n.t({ ja: "支援する", en: "Support", "zh-cn": "支持" })}</h3>
   <ul>
     <li>
       <a href="https://paypal.me/psephopaiktes" target="_blank"> PayPal </a>

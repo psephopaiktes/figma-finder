@@ -1,3 +1,5 @@
+import { store } from "@/lib/store.svelte";
+
 const default_locale: string =
   browser.runtime.getManifest().default_locale || "en";
 
@@ -8,6 +10,7 @@ interface LocaleSetting {
     dir?: "rtl" | "ltr";
   };
 }
+
 const locales: LocaleSetting = {
   en: {
     label: "English",
@@ -19,9 +22,6 @@ const locales: LocaleSetting = {
   "zh-cn": {
     label: "简体中文",
     lang: "zh-CN",
-  },
-  es: {
-    label: "Español",
   },
 };
 
@@ -37,7 +37,9 @@ export default {
     }
 
     const userLang =
-      browser.i18n.getUILanguage().toLowerCase() || default_locale;
+      store.options.locale ||
+      browser.i18n.getUILanguage().toLowerCase() ||
+      default_locale;
     return translations[userLang] ?? translations[default_locale] ?? "";
   },
 };
