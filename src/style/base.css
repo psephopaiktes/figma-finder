@@ -1,6 +1,5 @@
 /* basic site style */
 
-/* TODO: PRINT */
 :root {
   @media (prefers-color-scheme: light) {
     --color-theme: #0d99ff;
@@ -16,16 +15,16 @@
   }
 
   &[data-theme="light"] {
-    --color-theme: #3367d6;
+    --color-theme: #0d99ff;
     --color-base: #fff;
-    --color-main: #202124;
-    --color-caution: #a80a00;
+    --color-main: #1e1e1e;
+    --color-caution: #f24822;
   }
   &[data-theme="dark"] {
-    --color-theme: #8ab4f8;
-    --color-base: #323639;
-    --color-main: #f8f9fa;
-    --color-caution: #a80a00;
+    --color-theme: #0c8ce9;
+    --color-base: #2c2c2c;
+    --color-main: #fff;
+    --color-caution: #e03e1a;
   }
 
   --sp-l: 64px;

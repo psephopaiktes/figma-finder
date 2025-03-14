@@ -14,16 +14,24 @@ onMount(async () => {
   );
 });
 
-let { title = "Tabulasa", current = "", children } = $props();
+let {
+  title = "Tabulasa",
+  current = "",
+  showNav = true,
+  class: className = "",
+  children,
+} = $props();
 </script>
 
 <svelte:head>
   <title>{title}</title>
 </svelte:head>
 
-<Nav {current} />
+{#if showNav}
+  <Nav {current} />
+{/if}
 
-<main class="l-main">
+<main class={["l-main", className]}>
   {@render children()}
 </main>
 

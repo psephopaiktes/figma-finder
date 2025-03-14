@@ -25,13 +25,13 @@
 <nav>
   <button class="l-navButton" onclick={openDrawer} tabindex="2">
     <svg-icon src="/img/icon/menu.svg">
-      {i18n.t({ en: "Menu", jp: "メニュー" })}
+      {i18n.t({ en: "Menu", jp: "メニュー", "zh-cn": "菜单" })}
     </svg-icon>
   </button>
 
   <dialog bind:this={drawer} onclick={backdropClick}>
     <h1>
-      <svg-icon src="/img/logo.svg">Figma Finder</svg-icon>
+      <img src="/img/logo-symbol.svg" alt="Figma Finder" />
     </h1>
 
     <hr />
@@ -48,7 +48,7 @@
             location.href = browser.runtime.getURL("/sidepanel.html");
           }}
         >
-          <svg-icon src="/img/icon/home.svg" alt="home" />
+          <svg-icon src="/img/icon/home.svg"></svg-icon>
           home
         </a>
       </li>
@@ -64,7 +64,7 @@
             location.href = browser.runtime.getURL("/options.html?sidepanel");
           }}
         >
-          <svg-icon src="/img/icon/options.svg" alt="options" />
+          <svg-icon src="/img/icon/options.svg"></svg-icon>
           Options
         </a>
       </li>
@@ -80,8 +80,8 @@
             location.href = browser.runtime.getURL("/help.html");
           }}
         >
-          <svg-icon src="/img/icon/help.svg" alt="help" />
-          help
+          <svg-icon src="/img/icon/help.svg"></svg-icon>
+          Help
         </a>
       </li>
     </ul>

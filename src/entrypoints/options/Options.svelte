@@ -1,24 +1,24 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n";
-  import { store } from "@/lib/store.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n";
+import { store } from "@/lib/store.svelte";
 
-  const title = i18n.t({
-    en: "Options",
-    jp: "設定",
-  });
+const title = i18n.t({
+  en: "Options",
+  jp: "設定",
+  "zh-cn": "选项",
+});
 
-  const isSidepanel = location.search.includes("sidepanel");
+const isSidepanel = location.search.includes("sidepanel");
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-    document.documentElement.dataset.theme = store.options.theme;
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+  document.documentElement.dataset.theme = store.options.theme;
+});
 </script>
 
-<Layout current="options" {title}>
+<Layout current="options" {title} class="c-document" showNav={isSidepanel}>
   <h1>{title}</h1>
-  <p>isSidepanel: {isSidepanel ? "YESです" : "NOです"}</p>
 
   <h2>Editor</h2>
   <h3>Theme</h3>
@@ -31,7 +31,7 @@
           name="theme"
           value="system"
         />
-        {i18n.t({ en: "System", jp: "システム" })}
+        {i18n.t({ en: "System", jp: "システム", "zh-cn": "系统" })}
       </label>
     </li>
     <li>
@@ -42,7 +42,7 @@
           name="theme"
           value="light"
         />
-        {i18n.t({ en: "Light", jp: "ライト" })}
+        {i18n.t({ en: "Light", jp: "ライト", "zh-cn": "亮" })}
       </label>
     </li>
     <li>
@@ -53,7 +53,7 @@
           name="theme"
           value="dark"
         />
-        {i18n.t({ en: "Dark", jp: "ダーク" })}
+        {i18n.t({ en: "Dark", jp: "ダーク", "zh-cn": "暗" })}
       </label>
     </li>
   </ul>
@@ -70,12 +70,12 @@
 
   <hr />
 
-  <h2>{i18n.t({ en: "Information", jp: "情報" })}</h2>
+  <h2>{i18n.t({ en: "Information", jp: "情報", "zh-cn": "信息" })}</h2>
   <h3>URL</h3>
   <ul>
     <li>
       <a href="https://TODO動的に" target="_blank">
-        {i18n.t({ en: "Store Page", jp: "ストアページ" })}
+        {i18n.t({ en: "Store Page", jp: "ストアページ", "zh-cn": "商店页面" })}
       </a>
     </li>
     <li>
@@ -85,12 +85,16 @@
     </li>
     <li>
       <a href="https://hira.page" target="_blank">
-        {i18n.t({ en: "Author's Website", jp: "制作者HP" })}
+        {i18n.t({
+          en: "Author's Website",
+          jp: "制作者HP",
+          "zh-cn": "作者网站",
+        })}
       </a>
     </li>
   </ul>
 
-  <h3>{i18n.t({ jp: "支援する", en: "Support" })}</h3>
+  <h3>{i18n.t({ jp: "支援する", en: "Support", "zh-cn": "支持" })}</h3>
   <ul>
     <li>
       <a href="https://paypal.me/psephopaiktes" target="_blank"> PayPal </a>

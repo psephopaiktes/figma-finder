@@ -7,6 +7,7 @@ export default defineBackground(() => {
       });
     }
   });
+
   // Handle SidePanel open
   if (import.meta.env.CHROME) {
     chrome.sidePanel
