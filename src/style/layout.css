@@ -1,25 +1,26 @@
 /* define the layout and structure of the entire page */
 
 .l-navButton {
-  z-index: 2;
+  z-index: 3;
   position: fixed;
-  top: 4px;
-  left: 4px;
-  width: 48px;
+  top: 8px;
+  left: 8px;
+  width: 40px;
   aspect-ratio: 1;
 }
 
 .l-main {
   z-index: 1;
-  /* margin-block-start: var(--sp-l); */
 }
-/*
-.l-content {
+
+.l-document {
   max-inline-size: 800px;
+  margin-block-start: var(--sp-l);
   padding-inline: var(--sp-m);
   margin-inline: auto;
 }
 
+/*
 .l-footer {
   position: sticky;
   top: 100vh;

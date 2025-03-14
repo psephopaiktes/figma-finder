@@ -94,8 +94,7 @@
 
 <style>
   nav > button {
-    font-size: 32px;
-    background-color: var(--color-base);
+    font-size: 24px;
     border-radius: 8px;
     line-height: 100%;
     &:hover {

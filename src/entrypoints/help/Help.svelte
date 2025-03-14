@@ -1,34 +1,34 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n";
 
-const title = i18n.t({
-  en: "Help",
-  jp: "ヘルプ",
-  "zh-cn": "帮助",
-});
+  const title = i18n.t({
+    en: "Help",
+    jp: "ヘルプ",
+    "zh-cn": "帮助",
+  });
 
-let isWelcome = $state(false);
-let isPinned = $state(false);
-onMount(async () => {
-  isWelcome = location.search.includes("welcome");
-  const settings = await chrome.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
-});
+  let isWelcome = $state(false);
+  let isPinned = $state(false);
+  onMount(async () => {
+    isWelcome = location.search.includes("welcome");
+    const settings = await chrome.action.getUserSettings();
+    isPinned = settings.isOnToolbar;
+  });
 
-const runFF = async () => {
-  if (import.meta.env.CHROME) {
-    const queryOptions = { active: true, currentWindow: true };
-    const [tab] = await browser.tabs.query(queryOptions);
-    chrome.sidePanel.open({ windowId: tab.windowId });
-  } else {
-    // @ts-ignore
-    browser.sidebarAction.open();
-  }
-};
+  const runFF = async () => {
+    if (import.meta.env.CHROME) {
+      const queryOptions = { active: true, currentWindow: true };
+      const [tab] = await browser.tabs.query(queryOptions);
+      chrome.sidePanel.open({ windowId: tab.windowId });
+    } else {
+      // @ts-ignore
+      browser.sidebarAction.open();
+    }
+  };
 </script>
 
-<Layout current="help" {title} class="c-document" showNav={!isWelcome}>
+<Layout current="help" {title} class="l-document" showNav={!isWelcome}>
   {#if !isPinned}
     <p>ピンしてね！</p>
   {/if}

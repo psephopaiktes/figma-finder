@@ -1,23 +1,23 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n";
-import { store } from "@/lib/store.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n";
+  import { store } from "@/lib/store.svelte";
 
-const title = i18n.t({
-  en: "Options",
-  jp: "設定",
-  "zh-cn": "选项",
-});
+  const title = i18n.t({
+    en: "Options",
+    jp: "設定",
+    "zh-cn": "选项",
+  });
 
-const isSidepanel = location.search.includes("sidepanel");
+  const isSidepanel = location.search.includes("sidepanel");
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
-<Layout current="options" {title} class="c-document" showNav={isSidepanel}>
+<Layout current="options" {title} class="l-document" showNav={isSidepanel}>
   <h1>{title}</h1>
 
   <h2>Editor</h2>
@@ -121,69 +121,4 @@ $effect(() => {
 </Layout>
 
 <style>
-  :global(main) {
-    width: calc(100% - 64px);
-    max-width: 640px;
-    margin: 96px auto 0;
-    padding-bottom: 96px;
-  }
-  h1 {
-    font-size: 64px;
-    font-weight: bold;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    &::before {
-      content: "#";
-      opacity: 0.6;
-      margin-right: 0.2em;
-    }
-  }
-  h2 {
-    margin-top: 96px;
-    font-size: 32px;
-    line-height: 1.2;
-    &::before {
-      content: "##";
-      opacity: 0.4;
-      margin-right: 0.2em;
-    }
-  }
-  h3 {
-    margin-top: 24px;
-    font-size: 20px;
-    line-height: 1.2;
-    &::before {
-      content: "###";
-      opacity: 0.4;
-      margin-right: 0.2em;
-    }
-  }
-  hr {
-    margin-top: 96px;
-    border: 0;
-    border-top: 1px solid var(--color-main);
-    opacity: 0.1;
-  }
-  ul {
-    margin-top: 12px;
-    li {
-      margin-top: 8px;
-      &::before {
-        content: "-";
-        opacity: 0.4;
-        margin-right: 0.2em;
-      }
-    }
-    li > a {
-      color: var(--color-theme);
-      text-decoration: underline;
-    }
-  }
-  p {
-    margin-top: 12px;
-  }
-  footer {
-    margin-top: 96px;
-    opacity: 0.8;
-  }
 </style>
