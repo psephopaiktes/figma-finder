@@ -1,8 +1,13 @@
 <script lang="ts">
 import Layout from "@/lib/Layout.svelte";
+import Nav from "@/lib/Nav/Index.svelte";
 </script>
 
-<Layout current="editor">
+<Layout>
+  <Nav current="home">
+    <input type="text" name="aa" id="" />
+  </Nav>
+
   <h1>SidePanel</h1>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

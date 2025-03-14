@@ -1,5 +1,8 @@
-c-document {
+.c-document {
   h2 {
-    color: red;
+    margin-block-start: var(--sp-l);
+  }
+  h3 {
+    margin-block-start: var(--sp-m);
   }
 }

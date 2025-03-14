@@ -1,5 +1,6 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/Nav/Index.svelte";
   import i18n from "@/lib/i18n";
   import { store } from "@/lib/store.svelte";
 
@@ -17,8 +18,10 @@
   });
 </script>
 
-<Layout current="options" {title} class="l-document" showNav={isSidepanel}>
-  <h1>{title}</h1>
+<Layout class="l-document c-document">
+  {#if isSidepanel}
+    <Nav {title} current="options" />
+  {/if}
 
   <h2>Editor</h2>
   <h3>Theme</h3>

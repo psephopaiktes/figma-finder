@@ -27,24 +27,30 @@
     --color-caution: #e03e1a;
   }
 
-  --sp-l: 64px;
+  --sp-xl: 64px;
+  --sp-l: 48px;
   --sp-m: 32px;
   --sp-s: 16px;
+  --sp-xs: 8px;
   @media (width < 480px) {
-    --sp-l: 48px;
+    --sp-xl: 32px;
+    --sp-l: 24px;
     --sp-m: 16px;
     --sp-s: 8px;
+    --sp-xs: 4px;
   }
 
   color: var(--color-main);
   background-color: var(--color-base);
   accent-color: var(--color-theme);
+}
 
+body {
   line-height: 1.6;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   @media (width < 480px) {
-    font-size: 16px;
+    font-size: 12px;
   }
 }
 

@@ -1,5 +1,6 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/Nav/Index.svelte";
   import i18n from "@/lib/i18n";
 
   const title = i18n.t({
@@ -28,17 +29,18 @@
   };
 </script>
 
-<Layout current="help" {title} class="l-document" showNav={!isWelcome}>
+<Layout class="l-document c-document">
+  {#if isWelcome}
+    <h1>Welcome!</h1>
+    <button onclick={runFF}> FigmaFinderを実行する </button>
+  {:else}
+    <Nav {title} current="help" />
+  {/if}
+
   {#if !isPinned}
     <p>ピンしてね！</p>
   {/if}
 
-  {#if isWelcome}
-    <h1>Welcome!</h1>
-    <button onclick={runFF}> FigmaFinderを実行する </button>
-  {/if}
-
-  <h1>{title}</h1>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

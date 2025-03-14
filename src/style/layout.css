@@ -1,28 +1,41 @@
 /* define the layout and structure of the entire page */
 
-.l-navButton {
-  z-index: 3;
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  width: 40px;
-  aspect-ratio: 1;
-}
-
 .l-main {
   z-index: 1;
 }
 
+.l-nav {
+  height: 56px;
+}
+
+.l-navHeader {
+  z-index: 2;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 56px;
+}
+
+.l-navDrawer {
+  --w: 256px;
+  width: var(--w);
+  height: 100vh;
+  max-height: 100vh;
+  overscroll-behavior: contain;
+  margin: 0;
+  border: 0;
+  translate: calc(-1 * var(--w)) 0;
+
+  &[open] {
+    translate: 0 0;
+    @starting-style {
+      translate: calc(-1 * var(--w)) 0;
+    }
+  }
+}
+
 .l-document {
   max-inline-size: 800px;
-  margin-block-start: var(--sp-l);
   padding-inline: var(--sp-m);
   margin-inline: auto;
 }
-
-/*
-.l-footer {
-  position: sticky;
-  top: 100vh;
-  margin-block-start: calc(var(--sp-l) * 2);
-} */

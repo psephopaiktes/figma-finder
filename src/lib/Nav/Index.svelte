@@ -1,7 +1,13 @@
 <script lang="ts">
   import i18n from "@/lib/i18n";
+  import type { Snippet } from "svelte";
 
-  let { current = "" } = $props();
+  interface Props {
+    title?: string;
+    current?: string;
+    children?: Snippet;
+  }
+  let { title, current, children }: Props = $props();
 
   let drawer: HTMLDialogElement;
 
@@ -22,14 +28,40 @@
   }
 </script>
 
-<nav>
-  <button class="l-navButton" onclick={openDrawer} tabindex="2">
-    <svg-icon src="/img/icon/menu.svg">
-      {i18n.t({ en: "Menu", jp: "メニュー", "zh-cn": "菜单" })}
-    </svg-icon>
-  </button>
+<svelte:head>
+  <title>{title || "Figma Finder"}</title>
+</svelte:head>
 
-  <dialog bind:this={drawer} onclick={backdropClick}>
+<nav class="l-nav">
+  <header class="l-navHeader">
+    <button onclick={openDrawer} tabindex="2">
+      <svg-icon src="/img/icon/menu.svg">
+        {i18n.t({ en: "Menu", jp: "メニュー", "zh-cn": "菜单" })}
+      </svg-icon>
+    </button>
+
+    <div class="content">
+      {#if children}
+        {@render children?.()}
+      {:else if title}
+        <h1>{title}</h1>
+      {:else}
+        <h1>Figma Finder</h1>
+      {/if}
+    </div>
+
+    <a href="http://figma.com" target="_blank">
+      <img src="/img/figma.svg" alt="Figma" />
+    </a>
+  </header>
+
+  <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">
+    <button onclick={closeDrawer}>
+      <svg-icon src="/img/icon/close.svg">
+        {i18n.t({ en: "Close", jp: "閉じる", "zh-cn": "关闭" })}
+      </svg-icon>
+    </button>
+
     <h1>
       <img src="/img/logo-symbol.svg" alt="Figma Finder" />
     </h1>
@@ -38,6 +70,7 @@
 
     <ul>
       <li>
+        <!-- Loopさせるとか、そもそももっとシンプル?TODO -->
         <a
           href="/sidepanel.html"
           class:current={current === "home"}
@@ -93,41 +126,50 @@
 </nav>
 
 <style>
-  nav > button {
-    font-size: 24px;
-    border-radius: 8px;
-    line-height: 100%;
-    &:hover {
-      scale: 1.1;
+  header {
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 8px 16px;
+    background: color-mix(in srgb, var(--color-base) 60%, transparent);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-main) 10%, transparent);
+
+    button {
+      width: 40px;
+      aspect-ratio: 1;
+      font-size: 20px;
+      border-radius: 8px;
+      line-height: 100%;
+      &:hover {
+        background: color-mix(in srgb, var(--color-main) 5%, transparent);
+      }
+    }
+    .content {
+      flex: 1;
+      h1 {
+        font-size: 1.5em;
+        font-weight: 600;
+      }
+    }
+    > a img {
+      margin-inline-start: 8px;
+      width: 16px;
+      aspect-ratio: 2 / 3;
     }
   }
 
   dialog {
-    --w: 256px;
-    width: var(--w);
-    height: 100vh;
-    max-height: 100vh;
-    overscroll-behavior: contain;
-    margin: 0;
-
     background: var(--color-base);
-    border: 0;
-
-    translate: calc(-1 * var(--w)) 0;
     transition:
       translate 0.2s ease-in,
       overlay 0.2s ease-in allow-discrete,
       display 0.2s ease-in allow-discrete;
-
-    &[open] {
-      translate: 0 0;
-      box-shadow:
-        0 0 32px rgb(0 0 0 / 0.1),
-        0 0 64px rgb(0 0 0 / 0.1);
-      @starting-style {
-        translate: calc(-1 * var(--w)) 0;
-      }
-    }
+    box-shadow:
+      0 0 32px rgb(0 0 0 / 0.1),
+      0 0 64px rgb(0 0 0 / 0.1);
     &::backdrop {
       background-color: rgb(0 0 0 / 0.1);
       backdrop-filter: blur(2px);
