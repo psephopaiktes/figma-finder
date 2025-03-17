@@ -1,17 +1,11 @@
 <script lang="ts">
 import Layout from "@/lib/Layout.svelte";
-import Nav from "@/lib/Nav/Index.svelte";
 import i18n from "@/lib/i18n.svelte";
 
-let isWelcome = $state(false);
-let isPinned = $state(false);
-onMount(async () => {
-  isWelcome = location.search.includes("welcome");
-  const settings = await chrome.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
-});
+onMount(async () => {});
 
 const runFF = async () => {
+  // TODO: ボタンごとComponent化
   if (import.meta.env.CHROME) {
     const queryOptions = { active: true, currentWindow: true };
     const [tab] = await browser.tabs.query(queryOptions);
@@ -24,29 +18,14 @@ const runFF = async () => {
 </script>
 
 <Layout class="l-document c-document">
-  {#if isWelcome}
-    <h1>Welcome!</h1>
-    <button onclick={runFF}>
-      {i18n.t({
-        en: "Run Figma Finder",
-        ja: "Figma Finderを実行する",
-        "zh-cn": "运行Figma Finder",
-      })}
-    </button>
-  {:else}
-    <Nav
-      title={{
-        en: "Help",
-        ja: "ヘルプ",
-        "zh-cn": "帮助",
-      }}
-      current="help"
-    />
-  {/if}
-
-  {#if !isPinned}
-    <p>ピンしてね！</p>
-  {/if}
+  <h1>Autho Lized!</h1>
+  <button onclick={runFF}>
+    {i18n.t({
+      en: "Run Figma Finder",
+      ja: "Figma Finderを実行する",
+      "zh-cn": "运行Figma Finder",
+    })}
+  </button>
 
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

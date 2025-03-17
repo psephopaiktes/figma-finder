@@ -1,24 +1,24 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
+import i18n from "@/lib/i18n.svelte";
 
-  let { title = null, current = null, children = null } = $props();
-  let drawer: HTMLDialogElement;
+let { title = null, current = null, children = null } = $props();
+let drawer: HTMLDialogElement;
 
-  function openDrawer() {
-    drawer.showModal();
+function openDrawer() {
+  drawer.showModal();
+}
+
+function closeDrawer() {
+  drawer.close();
+}
+
+function backdropClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  console.log(target);
+  if (target === drawer) {
+    closeDrawer();
   }
-
-  function closeDrawer() {
-    drawer.close();
-  }
-
-  function backdropClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    console.log(target);
-    if (target === drawer) {
-      closeDrawer();
-    }
-  }
+}
 </script>
 
 <nav class="l-nav">

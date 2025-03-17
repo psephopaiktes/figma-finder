@@ -3,6 +3,14 @@ export const store = $state({
   options: {
     theme: "system",
     locale: null,
+    users: [
+      {
+        id: null,
+        handle: null,
+        img_url: null,
+        token: null,
+      },
+    ],
   },
 });
 
