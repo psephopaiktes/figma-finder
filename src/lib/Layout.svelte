@@ -1,21 +1,22 @@
 <script lang="ts">
-import "@/style/index.css";
-import "svg-mask-icon";
-import i18n from "@/lib/i18n.svelte";
-import { loadOptions, store } from "@/lib/store.svelte";
+  import "@/style/index.css";
+  import "svg-mask-icon";
+  import i18n from "@/lib/i18n.svelte";
+  import { loadOptions, store } from "@/lib/store.svelte";
 
-let { class: className = "", children } = $props();
+  let { class: className = "", children } = $props();
 
-onMount(async () => {
-  await loadOptions();
-  document.documentElement.dataset.theme = store.options.theme;
-  document.documentElement.lang = store.options.locale || i18n.default_locale;
+  onMount(async () => {
+    // TODO3 すべてのユーザーについてrefresh関数を実行 タイム判定はここで実行かな
+    await loadOptions();
+    document.documentElement.dataset.theme = store.options.theme;
+    document.documentElement.lang = store.options.locale || i18n.default_locale;
 
-  console.log(
-    "This site's code: \n%chttps://github.com/psephopaiktes/figma-finder",
-    "padding: 16px 24px; margin: 8px 0px; border: 2px solid #fb0; border-radius: 16px; letter-spacing: .1em; font-size: large; font-weight: bold;",
-  );
-});
+    console.log(
+      "This site's code: \n%chttps://github.com/psephopaiktes/figma-finder",
+      "padding: 16px 24px; margin: 8px 0px; border: 2px solid #fb0; border-radius: 16px; letter-spacing: .1em; font-size: large; font-weight: bold;",
+    );
+  });
 </script>
 
 <main class={["l-main", className]}>

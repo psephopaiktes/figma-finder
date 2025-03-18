@@ -1,29 +1,29 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
+  import i18n from "@/lib/i18n.svelte";
 
-let { title = null, current = null, children = null } = $props();
-let drawer: HTMLDialogElement;
+  let { title = null, current = null, children = null } = $props();
+  let drawer: HTMLDialogElement;
 
-function openDrawer() {
-  drawer.showModal();
-}
-
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  console.log(target);
-  if (target === drawer) {
-    closeDrawer();
+  function openDrawer() {
+    drawer.showModal();
   }
-}
+
+  function closeDrawer() {
+    drawer.close();
+  }
+
+  function backdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    console.log(target);
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav class="l-nav">
   <header class="l-navHeader">
-    <button onclick={openDrawer} tabindex="2">
+    <button onclick={openDrawer}>
       <svg-icon src="/img/icon/menu.svg">
         {i18n.t({ en: "Menu", ja: "メニュー", "zh-cn": "菜单" })}
       </svg-icon>
@@ -170,23 +170,12 @@ function backdropClick(event: MouseEvent): void {
       color: var(--color-theme);
       text-align: center;
       padding: 48px 0 40px;
-      svg-icon {
-        width: 140px;
-        height: auto;
-        aspect-ratio: 6;
-      }
     }
     hr {
       margin-top: 8px;
       border: 0;
       border-top: 1px solid var(--color-main);
       opacity: 0.1;
-    }
-    h3 {
-      margin: 20px 16px 0;
-      font-size: 13px;
-      opacity: 0.6;
-      font-weight: normal;
     }
     ul {
       margin-top: 8px;
@@ -216,13 +205,6 @@ function backdropClick(event: MouseEvent): void {
         position: absolute;
         top: 12px;
         left: 10px;
-      }
-    }
-    p {
-      margin: 64px 16px 32px;
-      a {
-        text-decoration: none;
-        opacity: 0.4;
       }
     }
 

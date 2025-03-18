@@ -10,7 +10,7 @@ const signIn = async () => {
     client_id,
     redirect_uri,
     scope: "files:read",
-    state: "test",
+    state: "null",
     response_type: "code",
   }).toString();
 
@@ -46,15 +46,25 @@ const signIn = async () => {
       console.error("Failed to fetch access token", await tokenResponse.text());
       return;
     }
+    const oauthData = await tokenResponse.json();
 
-    const data = await tokenResponse.json();
-    const token = data.access_token;
-
-    console.log("Access Token:", token);
+    // TODO:
+    store.options.users[oauthData.user_id] = {
+      access_token: oauthData.access_token,
+      expires_at: Date.now() + oauthData.expires_in * 1000,
+      refresh_token: oauthData.refresh_token,
+      // handle: userData.user.handle,
+      // img_url: userData.user.img_url,
+    };
+    console.dir(store.options.users); //TODO: Consoleでexpires_at確認
+    storage.setItem("sync:options", store.options);
+    store.currentUser = oauthData.user_id;
   } catch (error) {
     console.error("OAuth login failed", error);
   }
 };
+
+// TODO2 Refresh関数用意
 
 export default {
   signIn,

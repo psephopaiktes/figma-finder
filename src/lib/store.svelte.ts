@@ -1,16 +1,25 @@
-export const store = $state({
-  doc: "",
+interface Store {
+  currentUser: string | null;
+  options: {
+    theme: string;
+    locale: string | null;
+    users: Record<string, User>;
+  };
+}
+interface User {
+  access_token: string;
+  refresh_token: string;
+  expires_at: number; // Unixタイムスタンプ（ミリ秒）
+  handle: string;
+  img_url: string;
+}
+
+export const store: Store = $state({
+  currentUser: null,
   options: {
     theme: "system",
     locale: null,
-    users: [
-      {
-        id: null,
-        handle: null,
-        img_url: null,
-        token: null,
-      },
-    ],
+    users: {},
   },
 });
 

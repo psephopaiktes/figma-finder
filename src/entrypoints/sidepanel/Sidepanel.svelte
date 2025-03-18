@@ -1,8 +1,16 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import Nav from "@/lib/Nav/Index.svelte";
-import i18n from "@/lib/i18n.svelte";
-import oauth from "@/lib/oauth.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/Nav/Index.svelte";
+  import Loader from "@/lib/UI/Loader.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import oauth from "@/lib/oauth.svelte";
+
+  let loading = $state(false);
+  const signIn = async () => {
+    loading = true;
+    await oauth.signIn();
+    location.reload();
+  };
 </script>
 
 <Layout>
@@ -15,7 +23,13 @@ import oauth from "@/lib/oauth.svelte";
     {i18n.t({ en: "english", ja: "日本語", "zh-cn": "簡体中文" })}
   </h3>
 
-  <button onclick={oauth.signIn}> Sign In to Figma </button>
+  <button onclick={signIn}>
+    {#if loading}
+      <Loader />
+    {:else}
+      Sign In to Figma
+    {/if}
+  </button>
   <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -27,4 +41,11 @@ import oauth from "@/lib/oauth.svelte";
 </Layout>
 
 <style>
+  button {
+    width: 320px;
+    height: 48px;
+    border-radius: 8px;
+    background: var(--color-theme);
+    color: var(--color-base);
+  }
 </style>
