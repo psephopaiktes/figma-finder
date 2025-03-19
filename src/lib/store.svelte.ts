@@ -1,22 +1,23 @@
 interface Store {
-  currentUser: string | null;
   options: {
+    currentUser: string | null;
     theme: string;
     locale: string | null;
     users: Record<string, User>;
   };
 }
 interface User {
+  email: string;
+  handle: string;
+  img_url: string;
   access_token: string;
   refresh_token: string;
   expires_at: number; // Unixタイムスタンプ（ミリ秒）
-  handle: string;
-  img_url: string;
 }
 
 export const store: Store = $state({
-  currentUser: null,
   options: {
+    currentUser: null,
     theme: "system",
     locale: null,
     users: {},

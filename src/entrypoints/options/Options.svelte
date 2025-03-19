@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import Nav from "@/lib/Nav/Index.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
+import Layout from "@/lib/Layout.svelte";
+import Nav from "@/lib/Nav/Index.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
 
-  const isSidepanel = location.search.includes("sidepanel");
+const isSidepanel = location.search.includes("sidepanel");
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-    document.documentElement.dataset.theme = store.options.theme;
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+  document.documentElement.dataset.theme = store.options.theme;
+});
 </script>
 
 <Layout class="l-document c-document">

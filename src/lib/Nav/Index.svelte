@@ -1,24 +1,25 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
 
-  let { title = null, current = null, children = null } = $props();
-  let drawer: HTMLDialogElement;
+let { title = null, current = null, children = null } = $props();
+let drawer: HTMLDialogElement;
 
-  function openDrawer() {
-    drawer.showModal();
+function openDrawer() {
+  drawer.showModal();
+}
+
+function closeDrawer() {
+  drawer.close();
+}
+
+function backdropClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  console.log(target);
+  if (target === drawer) {
+    closeDrawer();
   }
-
-  function closeDrawer() {
-    drawer.close();
-  }
-
-  function backdropClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    console.log(target);
-    if (target === drawer) {
-      closeDrawer();
-    }
-  }
+}
 </script>
 
 <nav class="l-nav">
@@ -39,9 +40,13 @@
       {/if}
     </div>
 
-    <a href="http://figma.com" target="_blank">
-      <img src="/img/figma.svg" alt="Figma" />
-    </a>
+    {#if store.options.currentUser}
+      <img src={store.options.users[store.options.currentUser].img_url} />
+    {:else}
+      <a href="http://figma.com" target="_blank">
+        <img src="/img/figma.svg" alt="Figma" />
+      </a>
+    {/if}
   </header>
 
   <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">

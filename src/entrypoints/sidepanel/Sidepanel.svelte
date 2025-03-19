@@ -1,16 +1,16 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import Nav from "@/lib/Nav/Index.svelte";
-  import Loader from "@/lib/UI/Loader.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
+import Layout from "@/lib/Layout.svelte";
+import Nav from "@/lib/Nav/Index.svelte";
+import Loader from "@/lib/UI/Loader.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
 
-  let loading = $state(false);
-  const signIn = async () => {
-    loading = true;
-    await oauth.signIn();
-    location.reload();
-  };
+let loading = $state(false);
+const signIn = async () => {
+  loading = true;
+  await oauth.signIn();
+  location.reload();
+};
 </script>
 
 <Layout>

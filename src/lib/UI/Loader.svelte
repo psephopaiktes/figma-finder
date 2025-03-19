@@ -1,7 +1,7 @@
 <script lang="ts">
-  // by Astrit Malsia
-  // Released under the MIT license
-  // URL：https://codepen.io/astrit
+// by Astrit Malsia
+// Released under the MIT license
+// URL：https://codepen.io/astrit
 </script>
 
 <div class="figma">
