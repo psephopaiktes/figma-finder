@@ -25,6 +25,8 @@
   margin: 0;
   border: 0;
   translate: calc(-1 * var(--w)) 0;
+  transition: translate 0.2s ease-in, overlay 0.2s ease-in allow-discrete,
+    display 0.2s ease-in allow-discrete;
 
   &[open] {
     translate: 0 0;

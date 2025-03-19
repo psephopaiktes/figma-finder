@@ -1,25 +1,26 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
+  import UserSelector from "./UserSelector.svelte";
 
-let { title = null, current = null, children = null } = $props();
-let drawer: HTMLDialogElement;
+  let { title = null, current = null, children = null } = $props();
+  let drawer: HTMLDialogElement;
 
-function openDrawer() {
-  drawer.showModal();
-}
-
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  console.log(target);
-  if (target === drawer) {
-    closeDrawer();
+  function openDrawer() {
+    drawer.showModal();
   }
-}
+
+  function closeDrawer() {
+    drawer.close();
+  }
+
+  function backdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    console.log(target);
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav class="l-nav">
@@ -30,7 +31,7 @@ function backdropClick(event: MouseEvent): void {
       </svg-icon>
     </button>
 
-    <div class="content">
+    <div class="child">
       {#if children}
         {@render children?.()}
       {:else if title}
@@ -40,13 +41,7 @@ function backdropClick(event: MouseEvent): void {
       {/if}
     </div>
 
-    {#if store.options.currentUser}
-      <img src={store.options.users[store.options.currentUser].img_url} />
-    {:else}
-      <a href="http://figma.com" target="_blank">
-        <img src="/img/figma.svg" alt="Figma" />
-      </a>
-    {/if}
+    <UserSelector />
   </header>
 
   <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">
@@ -125,7 +120,7 @@ function backdropClick(event: MouseEvent): void {
     justify-content: stretch;
     align-items: center;
     gap: 8px;
-    padding-inline: 8px 16px;
+    padding-inline: 8px;
     background: color-mix(in srgb, var(--color-base) 60%, transparent);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid
@@ -141,27 +136,18 @@ function backdropClick(event: MouseEvent): void {
         background: color-mix(in srgb, var(--color-main) 5%, transparent);
       }
     }
-    .content {
+    .child {
       flex: 1;
       h1 {
         font-size: 1.5em;
         font-weight: 600;
       }
     }
-    > a img {
-      margin-inline-start: 8px;
-      width: 16px;
-      aspect-ratio: 2 / 3;
-    }
   }
 
   dialog {
     color: var(--color-main);
     background: var(--color-base);
-    transition:
-      translate 0.2s ease-in,
-      overlay 0.2s ease-in allow-discrete,
-      display 0.2s ease-in allow-discrete;
     box-shadow:
       0 0 32px rgb(0 0 0 / 0.1),
       0 0 64px rgb(0 0 0 / 0.1);

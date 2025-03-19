@@ -12,7 +12,7 @@ interface User {
   img_url: string;
   access_token: string;
   refresh_token: string;
-  expires_at: number; // Unixタイムスタンプ（ミリ秒）
+  expires_at: number;
 }
 
 export const store: Store = $state({

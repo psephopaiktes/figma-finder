@@ -3,19 +3,19 @@ const client_id = import.meta.env.WXT_FIGMA_ID;
 const client_secret = import.meta.env.WXT_FIGMA_SECRET;
 
 export default {
-  signIn,
-  signOut,
+  logIn,
+  logOut,
   refreshTokens,
 };
 
 /**
- * Initiates the OAuth 2.0 authorization flow for signing in a user via Figma's API.
+ * Initiates the OAuth 2.0 authorization flow for logging in a user via Figma's API.
  * @async
  * @throws {Error} If the OAuth login process fails or if any required data is missing.
  * @see https://www.figma.com/developers/api#oauth2
- * @returns Whether the user has successfully signed in.
+ * @returns Whether the user has successfully logged in.
  */
-async function signIn(): Promise<boolean> {
+async function logIn(): Promise<boolean> {
   const redirect_uri = browser.identity.getRedirectURL();
   const params = new URLSearchParams({
     client_id,
@@ -90,9 +90,9 @@ async function signIn(): Promise<boolean> {
 
 /**
  * Signs out the current user by clearing stored authentication data.
- * @returns Whether the sign-out was successful.
+ * @returns Whether the log-out was successful.
  */
-function signOut(): boolean {
+function logOut(): boolean {
   if (
     store.options.currentUser &&
     store.options.users[store.options.currentUser]
@@ -103,7 +103,7 @@ function signOut(): boolean {
     storage.setItem("sync:options", store.options);
     return true;
   }
-  console.warn("No user signed in.");
+  console.warn("No user logged in.");
   return false;
 }
 
