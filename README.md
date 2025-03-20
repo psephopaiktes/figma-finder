@@ -1,4 +1,8 @@
-# Figma Finder
+# WIP: Figma Finder
+
+> [!WARNING]
+> This project is a work in progress and not yet complete.
+
 
 https://psephopaiktes.github.io/figma-finder/
 
