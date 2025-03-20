@@ -13,9 +13,10 @@ export default {
  * @async
  * @throws {Error} If the OAuth login process fails or if any required data is missing.
  * @see https://www.figma.com/developers/api#oauth2
+ * @param options - Additional options for the login process.
  * @returns Whether the user has successfully logged in.
  */
-async function logIn(): Promise<boolean> {
+async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
   const redirect_uri = browser.identity.getRedirectURL();
   const params = new URLSearchParams({
     client_id,
@@ -25,10 +26,14 @@ async function logIn(): Promise<boolean> {
     response_type: "code",
   }).toString();
 
+  const endpoint = options.add
+    ? `https://www.figma.com/switch_user?cont=/oauth?${encodeURIComponent(params)}`
+    : `https://www.figma.com/oauth?${params}`;
+
   try {
     const responseUrl = await browser.identity.launchWebAuthFlow({
       interactive: true,
-      url: `https://www.figma.com/oauth?${params}`,
+      url: endpoint,
     });
     if (!responseUrl) {
       throw new Error("Failed to get response URL");

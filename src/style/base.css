@@ -54,14 +54,6 @@ body {
   }
 }
 
-p {
-  margin-block-start: 0.8em;
-}
-
-p a {
-  color: var(--color-theme);
-}
-
 a,
 button {
   transition: 0.2s ease-out;

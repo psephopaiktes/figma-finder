@@ -35,13 +35,59 @@
   </button>
 
   <dialog bind:this={selector} onclick={backdropClick}>
+    {#each Object.keys(store.options.users) as user}
+      <button
+        onclick={() => {
+          store.options.currentUser = user;
+          storage.setItem("sync:options", store.options);
+          location.reload();
+        }}
+        inert={store.options.currentUser == user}
+      >
+        <img src={store.options.users[user].img_url} alt="Profile Icon" />
+        <p>
+          {store.options.users[user].handle}
+          <small>{store.options.users[user].email}</small>
+        </p>
+        {#if store.options.currentUser == user}
+          <svg-icon src="/img/icon/check.svg"></svg-icon>
+        {/if}
+      </button>
+    {/each}
+
+    <button
+      onclick={async () => {
+        await oauth.logIn({ add: true });
+        location.reload();
+      }}
+    >
+      <svg-icon src="/img/icon/add.svg"></svg-icon>
+      <p>
+        {i18n.t({
+          en: "Add account",
+          ja: "アカウントの追加",
+          "zh-CN": "添加账户",
+        })}
+      </p>
+    </button>
+
+    <hr />
+
     <button
       onclick={() => {
         oauth.logOut();
         location.reload();
       }}
+      class="simple"
     >
-      Logout
+      <svg-icon src="/img/icon/logout.svg"></svg-icon>
+      <p>
+        {i18n.t({
+          en: "Log out",
+          ja: "ログアウト",
+          "zh-CN": "登出",
+        })}
+      </p>
     </button>
   </dialog>
 {/if}
@@ -70,18 +116,67 @@
 
   dialog {
     position: fixed;
+    flex-direction: column;
+    gap: var(--sp-xs);
     width: 240px;
     left: auto;
-    top: 48px;
+    top: 44px;
     right: 8px;
-    padding: 16px;
-
+    padding: 8px;
     border-radius: 12px;
     color: var(--color-base);
     background-color: var(--color-main);
-    box-shadow: 2px 8px 64px -16px rgb(0 0 0 / 0.1);
+    border: 1px solid color-mix(in srgb, var(--color-base) 20%, transparent);
+    box-shadow: 2px 12px 64px -24px rgb(0 0 0 / 0.4);
+    &[open] {
+      display: flex;
+    }
     &::backdrop {
       background-color: transparent;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid
+        color-mix(in srgb, var(--color-base) 20%, transparent);
+    }
+    button {
+      width: 100%;
+      display: flex;
+      gap: 0.5em;
+      align-items: center;
+      justify-content: start;
+      padding: 0 8px;
+      border-radius: 4px;
+      height: 40px;
+      p,
+      small {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      p {
+        text-align: left;
+        line-height: 1;
+        flex: 1;
+        small {
+          display: block;
+          margin-block-start: 2px;
+          font-size: 0.8em;
+          opacity: 0.5;
+        }
+      }
+      &:hover {
+        background: var(--color-theme);
+      }
+      img {
+        width: 24px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+      }
+      svg-icon {
+        font-size: 24px;
+      }
     }
   }
 </style>
