@@ -1,8 +1,8 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
-  import Nav from "@/lib/UI/Nav/Index.svelte";
   import i18n from "@/lib/i18n.svelte";
   import { store } from "@/lib/store.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
 
   const showNav = location.search.includes("nav");
 
@@ -62,9 +62,11 @@
     </select>
   </label>
 
-  <hr />
+  {#if store.options.currentUser}
+    <hr />
 
-  <h2>{i18n.t({ en: "Team ID", ja: "チームID", "zh-cn": "团队ID" })}</h2>
+    <h2>{i18n.t({ en: "Team ID", ja: "チームID", "zh-cn": "团队ID" })}</h2>
+  {/if}
 
   <hr />
 

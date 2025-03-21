@@ -1,7 +1,7 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
-  import Nav from "@/lib/UI/Nav/Index.svelte";
   import i18n from "@/lib/i18n.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
 
   const showNav = location.search.includes("nav");
   const isWelcome = location.search.includes("welcome");
