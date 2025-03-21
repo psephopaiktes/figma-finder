@@ -1,16 +1,16 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import Loader from "@/lib/UI/Loader.svelte";
-  import Nav from "@/lib/UI/Nav/Index.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
+import Layout from "@/lib/Layout.svelte";
+import Loader from "@/lib/UI/Loader.svelte";
+import Nav from "@/lib/UI/Nav/Index.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
 
-  let loading = $state(false);
-  const logIn = async () => {
-    loading = true;
-    await oauth.logIn();
-    location.reload();
-  };
+let loading = $state(false);
+const logIn = async () => {
+  loading = true;
+  await oauth.logIn();
+  location.reload();
+};
 </script>
 
 <Layout>
@@ -38,8 +38,6 @@
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
     non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
-
-  <a href="/help.html#team-id" target="_blank">What is Team ID?</a>
 </Layout>
 
 <style>

@@ -1,19 +1,19 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import Nav from "@/lib/Nav/Index.svelte";
-import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/UI/Nav/Index.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
 
-const isSidepanel = location.search.includes("sidepanel");
+  const showNav = location.search.includes("nav");
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
 <Layout class="l-document c-document">
-  {#if isSidepanel}
+  {#if showNav}
     <Nav
       title={{
         en: "Options",
@@ -24,6 +24,9 @@ $effect(() => {
     />
   {/if}
 
+  <h2>
+    {i18n.t({ en: "Display Settings", ja: "表示設定", "zh-cn": "显示设置" })}
+  </h2>
   <label>
     <h3>
       {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题" })}
@@ -61,7 +64,12 @@ $effect(() => {
 
   <hr />
 
+  <h2>{i18n.t({ en: "Team ID", ja: "チームID", "zh-cn": "团队ID" })}</h2>
+
+  <hr />
+
   <h2>{i18n.t({ en: "Information", ja: "情報", "zh-cn": "信息" })}</h2>
+  <!-- TODO: Helpに移動かな -->
   <h3>URL</h3>
   <ul>
     <li>
@@ -85,7 +93,13 @@ $effect(() => {
     </li>
   </ul>
 
-  <h3>{i18n.t({ ja: "支援する", en: "Support", "zh-cn": "支持" })}</h3>
+  <h3>
+    {i18n.t({
+      en: "Support the Developer",
+      ja: "制作者を支援",
+      "zh-cn": "支持开发者",
+    })}
+  </h3>
   <ul>
     <li>
       <a href="https://paypal.me/psephopaiktes" target="_blank"> PayPal </a>

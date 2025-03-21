@@ -7,6 +7,12 @@
   padding: 0;
 }
 
+/* View Transitions API */
+@view-transition {
+  /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+  navigation: auto;
+}
+
 /* Document & Root Element Styles */
 :root,
 body {
@@ -145,6 +151,12 @@ table {
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 
   *,

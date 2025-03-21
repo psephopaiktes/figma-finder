@@ -1,29 +1,40 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import Nav from "@/lib/Nav/Index.svelte";
-import i18n from "@/lib/i18n.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import Nav from "@/lib/UI/Nav/Index.svelte";
+  import i18n from "@/lib/i18n.svelte";
 
-let isWelcome = $state(false);
-let isPinned = $state(false);
-onMount(async () => {
-  isWelcome = location.search.includes("welcome");
-  const settings = await chrome.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
-});
+  const showNav = location.search.includes("nav");
+  const isWelcome = location.search.includes("welcome");
+  let isPinned = $state(false);
+  onMount(async () => {
+    const settings = await chrome.action.getUserSettings();
+    isPinned = settings.isOnToolbar;
+  });
 
-const runFF = async () => {
-  if (import.meta.env.CHROME) {
-    const queryOptions = { active: true, currentWindow: true };
-    const [tab] = await browser.tabs.query(queryOptions);
-    chrome.sidePanel.open({ windowId: tab.windowId });
-  } else {
-    // @ts-ignore
-    browser.sidebarAction.open();
-  }
-};
+  const runFF = async () => {
+    if (import.meta.env.CHROME) {
+      const queryOptions = { active: true, currentWindow: true };
+      const [tab] = await browser.tabs.query(queryOptions);
+      chrome.sidePanel.open({ windowId: tab.windowId });
+    } else {
+      // @ts-ignore
+      browser.sidebarAction.open();
+    }
+  };
 </script>
 
 <Layout class="l-document c-document">
+  {#if showNav}
+    <Nav
+      title={{
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+      }}
+      current="help"
+    />
+  {/if}
+
   {#if isWelcome}
     <h1>Welcome!</h1>
     <button onclick={runFF}>
@@ -33,15 +44,6 @@ const runFF = async () => {
         "zh-cn": "运行Figma Finder",
       })}
     </button>
-  {:else}
-    <Nav
-      title={{
-        en: "Help",
-        ja: "ヘルプ",
-        "zh-cn": "帮助",
-      }}
-      current="help"
-    />
   {/if}
 
   {#if !isPinned}

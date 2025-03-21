@@ -1,7 +1,41 @@
 <script lang="ts">
   import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
   import UserSelector from "./UserSelector.svelte";
+
+  const pageList = [
+    {
+      label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
+      href: "/sidepanel.html",
+      id: "home",
+    },
+    {
+      label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
+      href: "/options.html?nav",
+      id: "options",
+    },
+    {
+      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
+      href: "/help.html?nav",
+      id: "help",
+    },
+  ];
+
+  const extPageList = [
+    {
+      label: { en: "GitHub" },
+      href: "https://github.com/psephopaiktes/figma-finder",
+      id: "github",
+    },
+    {
+      label: {
+        en: "Support the Developer",
+        ja: "制作者を支援",
+        "zh-cn": "支持开发者",
+      },
+      href: "https://github.com/sponsors/psephopaiktes",
+      id: "love",
+    },
+  ];
 
   let { title = null, current = null, children = null } = $props();
   let drawer: HTMLDialogElement;
@@ -51,70 +85,57 @@
       </svg-icon>
     </button>
 
-    <h1>
-      <img src="/img/logo-symbol.svg" alt="Figma Finder" />
-    </h1>
+    <h1 class="u-textHidden">Figma Finder</h1>
 
     <hr />
 
     <ul>
-      <li>
-        <!-- Loopさせるとか、そもそももっとシンプル?TODO -->
-        <a
-          href="/sidepanel.html"
-          class:current={current === "home"}
-          inert={current === "home"}
-          onclick={(e) => {
-            e.preventDefault();
-            closeDrawer();
-            location.href = browser.runtime.getURL("/sidepanel.html");
-          }}
-        >
-          <svg-icon src="/img/icon/home.svg"></svg-icon>
-          home
-        </a>
-      </li>
+      {#each pageList as page}
+        <li>
+          <a
+            href={page.href}
+            class:current={current === page.id}
+            inert={current === page.id}
+          >
+            <svg-icon src="/img/icon/{page.id}.svg"></svg-icon>
+            {i18n.t(page.label)}
+          </a>
+        </li>
+      {/each}
+    </ul>
 
-      <li>
-        <a
-          href="/options.html?sidepanel"
-          class:current={current === "options"}
-          inert={current === "options"}
-          onclick={(e) => {
-            e.preventDefault();
-            closeDrawer();
-            location.href = browser.runtime.getURL("/options.html?sidepanel");
-          }}
-        >
-          <svg-icon src="/img/icon/options.svg"></svg-icon>
-          Options
-        </a>
-      </li>
+    <hr />
 
-      <li>
-        <a
-          href="/help.html"
-          class:current={current === "help"}
-          inert={current === "help"}
-          onclick={(e) => {
-            e.preventDefault();
-            closeDrawer();
-            location.href = browser.runtime.getURL("/help.html");
-          }}
-        >
-          <svg-icon src="/img/icon/help.svg"></svg-icon>
-          Help
-        </a>
-      </li>
+    <ul>
+      {#each extPageList as page}
+        <li>
+          <a href={page.href} target="_blank">
+            <svg-icon src="/img/icon/{page.id}.svg"></svg-icon>
+            {i18n.t(page.label)}
+            <svg-icon src="/img/icon/open.svg"></svg-icon>
+          </a>
+        </li>
+      {/each}
     </ul>
 
     <footer>
-      <a href="https://hira.page" target="_blank"> © Akira HIRATA </a>
+      <a href="https://hira.page" target="_blank">© Akira HIRATA</a>
     </footer>
   </dialog>
 </nav>
 
 <style>
+  button {
+    width: 40px;
+    aspect-ratio: 1;
+    font-size: 20px;
+    border-radius: 8px;
+    line-height: 100%;
+    &:hover {
+      background: color-mix(in srgb, var(--color-main) 5%, transparent);
+    }
+  }
+
   header {
     display: flex;
     justify-content: stretch;
@@ -126,16 +147,6 @@
     border-bottom: 1px solid
       color-mix(in srgb, var(--color-main) 10%, transparent);
 
-    button {
-      width: 40px;
-      aspect-ratio: 1;
-      font-size: 20px;
-      border-radius: 8px;
-      line-height: 100%;
-      &:hover {
-        background: color-mix(in srgb, var(--color-main) 5%, transparent);
-      }
-    }
     .child {
       flex: 1;
       h1 {
@@ -146,6 +157,7 @@
   }
 
   dialog {
+    padding: 8px;
     color: var(--color-main);
     background: var(--color-base);
     box-shadow:
@@ -156,60 +168,80 @@
       backdrop-filter: blur(2px);
     }
 
+    button {
+      vertical-align: top;
+    }
     h1 {
-      margin: 0;
-      color: var(--color-theme);
-      text-align: center;
-      padding: 48px 0 40px;
+      display: inline-block;
+      width: 31px;
+      height: 20px;
+      margin-inline-start: 52px;
+      margin-block-start: 10px;
+      mask-image: url(/img/logo-symbol.svg);
+      mask-size: cover;
+      background: currentColor;
+      opacity: 0.4;
     }
     hr {
-      margin-top: 8px;
+      margin-block-start: 16px;
+      margin-inline: 16px;
       border: 0;
       border-top: 1px solid var(--color-main);
       opacity: 0.1;
+      &:first-of-type {
+        margin-block-start: 24;
+      }
     }
     ul {
-      margin-top: 8px;
+      margin-block-start: 16px;
+      margin-inline: 8px;
       li {
+        margin-block-start: 2px;
         height: 48px;
-        padding: 2px 8px;
       }
       a {
         display: block;
         position: relative;
-        padding: 0 8px 0 48px;
-        line-height: 44px;
+        padding: 0 16px 0 40px;
+        line-height: 40px;
         border-radius: 6px;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 14px;
         opacity: 0.8;
         &:hover {
           background: color-mix(in srgb, var(--color-theme) 10%, transparent);
+          opacity: 1;
         }
         &.current {
           background: color-mix(in srgb, var(--color-theme) 20%, transparent);
           color: var(--color-theme);
+          font-weight: bolder;
         }
-      }
-      svg-icon {
-        width: 20px;
-        position: absolute;
-        top: 12px;
-        left: 10px;
+        svg-icon {
+          width: 20px;
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          &:nth-of-type(2) {
+            width: 14px;
+            top: 13px;
+            right: 13px;
+            left: auto;
+            opacity: 0.6;
+          }
+        }
       }
     }
 
     footer {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      inset: 0;
+      top: auto;
       padding: 24px;
       text-align: center;
       a {
         opacity: 0.6;
         font-size: 0.8em;
-        color: var(--color-theme);
         &:hover {
           opacity: 0.8;
         }

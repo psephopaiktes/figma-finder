@@ -8,7 +8,7 @@
   "extDescription": {
     "message": "You can quickly find and open Figma files."
   },
-  "popupTitle": {
+  "actTitle": {
     "message": "Find Figma Files"
   }
 }

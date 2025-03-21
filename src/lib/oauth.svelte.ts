@@ -1,3 +1,4 @@
+import i18n from "@/lib/i18n.svelte";
 import { store } from "@/lib/store.svelte";
 const client_id = import.meta.env.WXT_FIGMA_ID;
 const client_secret = import.meta.env.WXT_FIGMA_SECRET;
@@ -102,6 +103,11 @@ function logOut(): boolean {
     store.options.currentUser &&
     store.options.users[store.options.currentUser]
   ) {
+    const result = confirm(
+      i18n.t({ ja: "ログアウトしますか？", en: "Log out?", "zh-cn": "登出？" }),
+    );
+    if (!result) return false;
+
     delete store.options.users[store.options.currentUser];
     const userIds = Object.keys(store.options.users);
     store.options.currentUser = userIds.length > 0 ? userIds[0] : null;

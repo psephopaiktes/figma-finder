@@ -8,7 +8,7 @@
   "extDescription": {
     "message": "Figmaファイルを最速で探し、開くことができます。"
   },
-  "popupTitle": {
+  "actTitle": {
     "message": "Figmaファイルを検索"
   }
 }

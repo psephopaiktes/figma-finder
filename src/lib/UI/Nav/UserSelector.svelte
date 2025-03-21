@@ -1,25 +1,25 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
-  import { store } from "@/lib/store.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
+import { store } from "@/lib/store.svelte";
 
-  let selector: HTMLDialogElement;
+let selector: HTMLDialogElement;
 
-  function openSelector() {
-    selector.showModal();
+function openSelector() {
+  selector.showModal();
+}
+
+function closeSelector() {
+  selector.close();
+}
+
+function backdropClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  console.log(target);
+  if (target === selector) {
+    closeSelector();
   }
-
-  function closeSelector() {
-    selector.close();
-  }
-
-  function backdropClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    console.log(target);
-    if (target === selector) {
-      closeSelector();
-    }
-  }
+}
 </script>
 
 {#if !store.options.currentUser}
