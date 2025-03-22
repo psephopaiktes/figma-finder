@@ -1,27 +1,25 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
-  import Nav from "@/lib/ui/Nav/Index.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
 
-  const showNav = location.search.includes("nav");
+const showNav = location.search.includes("nav");
+const title = i18n.t({
+  en: "Options",
+  ja: "設定",
+  "zh-cn": "选项",
+});
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-    document.documentElement.dataset.theme = store.options.theme;
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+  document.documentElement.dataset.theme = store.options.theme;
+});
 </script>
 
-<Layout class="l-document c-document">
+<Layout class="l-document c-document" {title}>
   {#if showNav}
-    <Nav
-      title={{
-        en: "Options",
-        ja: "設定",
-        "zh-cn": "选项",
-      }}
-      current="options"
-    />
+    <Nav {title} current="options" />
   {/if}
 
   <h2>

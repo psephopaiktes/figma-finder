@@ -10,8 +10,19 @@
     const settings = await chrome.action.getUserSettings();
     isPinned = settings.isOnToolbar;
   });
+  const title = isWelcome
+    ? i18n.t({
+        en: "Welcome",
+        ja: "ようこそ",
+        "zh-cn": "欢迎",
+      })
+    : i18n.t({
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+      });
 
-  const runFF = async () => {
+  const runFigmaFinder = async () => {
     if (import.meta.env.CHROME) {
       const queryOptions = { active: true, currentWindow: true };
       const [tab] = await browser.tabs.query(queryOptions);
@@ -23,21 +34,14 @@
   };
 </script>
 
-<Layout class="l-document c-document">
+<Layout class="l-document c-document" {title}>
   {#if showNav}
-    <Nav
-      title={{
-        en: "Help",
-        ja: "ヘルプ",
-        "zh-cn": "帮助",
-      }}
-      current="help"
-    />
+    <Nav {title} current="help" />
   {/if}
 
   {#if isWelcome}
     <h1>Welcome!</h1>
-    <button onclick={runFF}>
+    <button onclick={runFigmaFinder}>
       {i18n.t({
         en: "Run Figma Finder",
         ja: "Figma Finderを実行する",

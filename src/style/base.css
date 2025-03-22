@@ -1,6 +1,7 @@
 /* basic site style */
 
-:root {
+:root,
+body {
   @media (prefers-color-scheme: light) {
     --color-theme: #0d99ff;
     --color-base: #fff;
@@ -43,15 +44,18 @@
   color: var(--color-main);
   background-color: var(--color-base);
   accent-color: var(--color-theme);
-}
 
-body {
   line-height: 1.6;
   font-weight: 500;
   font-size: 14px;
   @media (width < 480px) {
     font-size: 12px;
   }
+}
+
+* {
+  outline-color: var(--color-theme);
+  outline-offset: 2px;
 }
 
 a,

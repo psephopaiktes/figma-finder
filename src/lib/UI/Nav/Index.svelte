@@ -1,60 +1,60 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import UserSelector from "./UserSelector.svelte";
+import i18n from "@/lib/i18n.svelte";
+import UserSelector from "./UserSelector.svelte";
 
-  const pageList = [
-    {
-      label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
-      href: "/sidepanel.html",
-      id: "home",
-    },
-    {
-      label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
-      href: "/options.html?nav",
-      id: "options",
-    },
-    {
-      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
-      href: "/help.html?nav",
-      id: "help",
-    },
-  ];
+const pageList = [
+  {
+    label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
+    href: "/sidepanel.html",
+    id: "home",
+  },
+  {
+    label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
+    href: "/options.html?nav",
+    id: "options",
+  },
+  {
+    label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
+    href: "/help.html?nav",
+    id: "help",
+  },
+];
 
-  const extPageList = [
-    {
-      label: { en: "GitHub" },
-      href: "https://github.com/psephopaiktes/figma-finder",
-      id: "github",
+const extPageList = [
+  {
+    label: { en: "GitHub" },
+    href: "https://github.com/psephopaiktes/figma-finder",
+    id: "github",
+  },
+  {
+    label: {
+      en: "Support the Developer",
+      ja: "制作者を支援",
+      "zh-cn": "支持开发者",
     },
-    {
-      label: {
-        en: "Support the Developer",
-        ja: "制作者を支援",
-        "zh-cn": "支持开发者",
-      },
-      href: "https://github.com/sponsors/psephopaiktes",
-      id: "love",
-    },
-  ];
+    href: "https://github.com/sponsors/psephopaiktes",
+    id: "love",
+  },
+];
 
-  let { title = null, current = null, children = null } = $props();
-  let drawer: HTMLDialogElement;
+let { title = null, current = null, children = null } = $props();
+let drawer: HTMLDialogElement;
 
-  function openDrawer() {
-    drawer.showModal();
+function openDrawer() {
+  drawer.showModal();
+}
+
+function closeDrawer() {
+  drawer.close();
+}
+
+function backdropClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  console.log(target);
+  if (target === drawer) {
+    closeDrawer();
   }
-
-  function closeDrawer() {
-    drawer.close();
-  }
-
-  function backdropClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    console.log(target);
-    if (target === drawer) {
-      closeDrawer();
-    }
-  }
+}
 </script>
 
 <nav class="l-nav">
@@ -69,9 +69,7 @@
       {#if children}
         {@render children?.()}
       {:else if title}
-        <h1>{i18n.t(title)}</h1>
-      {:else}
-        <h1>Figma Finder</h1>
+        <h1>{title}</h1>
       {/if}
     </div>
 
@@ -132,7 +130,7 @@
     border-radius: 8px;
     line-height: 100%;
     &:hover {
-      background: color-mix(in srgb, var(--color-main) 5%, transparent);
+      background: rgb(from var(--color-main) r g b / 5%);
     }
   }
 
@@ -142,10 +140,9 @@
     align-items: center;
     gap: 8px;
     padding-inline: 8px;
-    background: color-mix(in srgb, var(--color-base) 60%, transparent);
+    background: rgb(from var(--color-base) r g b / 60%);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--color-main) 10%, transparent);
+    border-bottom: 1px solid rgb(from var(--color-main) r g b / 10%);
 
     .child {
       flex: 1;
@@ -209,11 +206,11 @@
         font-size: 14px;
         opacity: 0.8;
         &:hover {
-          background: color-mix(in srgb, var(--color-theme) 10%, transparent);
+          background: rgb(from var(--color-theme) r g b / 10%);
           opacity: 1;
         }
         &.current {
-          background: color-mix(in srgb, var(--color-theme) 20%, transparent);
+          background: rgb(from var(--color-theme) r g b / 20%);
           color: var(--color-theme);
           font-weight: bolder;
         }

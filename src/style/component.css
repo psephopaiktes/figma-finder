@@ -1,5 +1,6 @@
 .c-document {
   > h2 {
+    font-size: 1.4rem;
     margin-block-start: var(--sp-xl);
   }
   > h3 {
@@ -15,5 +16,43 @@
 
   > p a {
     color: var(--color-theme);
+  }
+}
+
+.c-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 12px;
+  gap: 8px;
+  min-width: 80px;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  background: var(--color-theme);
+  color: var(--color-base);
+  svg-icon {
+    font-size: 20px;
+    opacity: 0.6;
+    margin-inline: -2px;
+  }
+  &:hover,
+  &:active {
+    filter: brightness(1.1);
+  }
+}
+
+.c-twinkle:focus {
+  outline: 2px solid var(--color-theme);
+  outline-offset: 2px;
+  animation: twinkle 0.8s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% {
+    outline-color: rgb(from var(--color-theme) r g b / 0.2);
+  }
+  100% {
+    outline-color: rgb(from var(--color-theme) r g b / 0.8);
   }
 }

@@ -2,9 +2,11 @@
 // by Astrit Malsia
 // Released under the MIT license
 // URL：https://codepen.io/astrit
+
+let { size = "32px" } = $props();
 </script>
 
-<div class="figma">
+<div class="figma" style="font-size: {size};">
   <div class="top">
     <div class="pill-left"></div>
     <div class="pill-center"></div>
@@ -30,8 +32,9 @@
 
   .figma {
     display: inline-block;
-    width: 22px;
-    height: 32px;
+    opacity: 0.6;
+    width: 1em;
+    aspect-ratio: 1;
     position: relative;
     overflow: hidden;
     text-indent: 200%;
@@ -40,98 +43,98 @@
   .top {
     display: flex;
     margin: auto;
-    width: 22px;
-    height: 12px;
+    width: 0.6875em;
+    height: 0.375em;
   }
 
   .middle {
     display: flex;
-    margin: -2px auto auto;
-    width: 22px;
-    height: 12px;
+    margin: -0.0625em auto auto;
+    width: 0.6875em;
+    height: 0.375em;
     animation: middle-rotate 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
   }
 
   .bottom {
-    margin: -2px auto auto;
-    width: 22px;
-    height: 12px;
+    margin: -0.0625em auto auto;
+    width: 0.6875em;
+    height: 0.375em;
     animation: bottom-rotate 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
   }
 
   .pill-left {
-    width: 4px;
-    height: 8px;
-    border-left: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    width: 0.125em;
+    height: 0.25em;
+    border-left: 0.0625em solid currentColor;
+    border-top: 0.0625em solid currentColor;
+    border-bottom: 0.0625em solid currentColor;
+    border-top-left-radius: 0.3125em;
+    border-bottom-left-radius: 0.3125em;
     animation: pill-left-move 4s cubic-bezier(0.12, 0, 0.39, 0) infinite;
   }
 
   .pill-center {
-    width: 10px;
-    height: 8px;
-    border-top: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
+    width: 0.3125em;
+    height: 0.25em;
+    border-top: 0.0625em solid currentColor;
+    border-bottom: 0.0625em solid currentColor;
     animation: pill-center-scale 4s cubic-bezier(0.12, 0, 0.39, 0) infinite;
   }
 
   .pill-right {
-    width: 4px;
-    height: 8px;
-    border-right: 2px solid currentColor;
-    border-top: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    width: 0.125em;
+    height: 0.25em;
+    border-right: 0.0625em solid currentColor;
+    border-top: 0.0625em solid currentColor;
+    border-bottom: 0.0625em solid currentColor;
+    border-top-right-radius: 0.3125em;
+    border-bottom-right-radius: 0.3125em;
     animation: pill-right-move 4s cubic-bezier(0.12, 0, 0.39, 0) infinite;
   }
 
   .line-container {
     position: absolute;
-    top: -1px;
-    width: 18px;
-    height: 10px;
-    border-radius: 10px;
-    border: 2px solid transparent;
+    top: -0.03125em;
+    width: 0.5625em;
+    height: 0.3125em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid transparent;
     overflow: hidden;
     animation: line-container-scale 4s cubic-bezier(0.12, 0, 0.39, 0) infinite;
   }
   .middle-line {
-    width: 2px;
-    height: 10px;
+    width: 0.0625em;
+    height: 0.3125em;
     background-color: currentColor;
     margin: 0 auto;
     animation: middle-line-move 4s cubic-bezier(0.12, 0, 0.39, 0) infinite;
   }
 
   .petal {
-    width: 8px;
-    height: 8px;
-    border: 2px solid currentColor;
-    border-radius: 10px 0 0 10px;
-    transform: translate(8px);
+    width: 0.25em;
+    height: 0.25em;
+    border: 0.0625em solid currentColor;
+    border-radius: 0.3125em 0 0 0.3125em;
+    transform: translate(0.25em);
     transform-origin: right center;
     animation: petal-move 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
   }
 
   .circle {
-    width: 8px;
-    height: 8px;
-    margin-left: -2px;
-    border: 2px solid currentColor;
-    border-radius: 10px;
+    width: 0.25em;
+    height: 0.25em;
+    margin-left: -0.0625em;
+    border: 0.0625em solid currentColor;
+    border-radius: 0.3125em;
     transform-origin: left center;
     animation: circle-move 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
   }
 
   .drip {
-    width: 8px;
-    height: 8px;
-    border: 2px solid currentColor;
-    border-radius: 10px 0 10px 10px;
+    width: 0.25em;
+    height: 0.25em;
+    border: 0.0625em solid currentColor;
+    border-radius: 0.3125em 0 0.3125em 0.3125em;
     transform-origin: top right;
     animation: drip-move 4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
   }
@@ -179,19 +182,19 @@
 
   @keyframes pill-left-move {
     0% {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
     5% {
       transform: translate(0);
     }
     10% {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
     15% {
       transform: translate(0);
     }
     20% {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
     25% {
       transform: translate(0);
@@ -200,19 +203,19 @@
       transform: translate(0);
     }
     80% {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
     85% {
       transform: translate(0);
     }
     90% {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
     95% {
       transform: translate(0);
     }
     to {
-      transform: translate(5px);
+      transform: translate(0.15625em);
     }
   }
   @keyframes pill-center-scale {
@@ -255,19 +258,19 @@
   }
   @keyframes pill-right-move {
     0% {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
     5% {
       transform: translate(0);
     }
     10% {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
     15% {
       transform: translate(0);
     }
     20% {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
     25% {
       transform: translate(0);
@@ -276,19 +279,19 @@
       transform: translate(0);
     }
     80% {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
     85% {
       transform: translate(0);
     }
     90% {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
     95% {
       transform: translate(0);
     }
     to {
-      transform: translate(-5px);
+      transform: translate(-0.15625em);
     }
   }
   @keyframes line-container-scale {
@@ -331,25 +334,25 @@
   }
   @keyframes middle-line-move {
     0% {
-      transform: translate(-9px);
+      transform: translate(-0.28125em);
     }
     5% {
       transform: translate(0);
     }
     10% {
-      transform: translate(9px);
+      transform: translate(0.28125em);
     }
     10.1% {
-      transform: translate(-9px);
+      transform: translate(-0.28125em);
     }
     15% {
       transform: translate(0);
     }
     20% {
-      transform: translate(9px);
+      transform: translate(0.28125em);
     }
     20.1% {
-      transform: translate(-9px);
+      transform: translate(-0.28125em);
     }
     25% {
       transform: translate(0);
@@ -358,25 +361,25 @@
       transform: translate(0);
     }
     80% {
-      transform: translate(9px);
+      transform: translate(0.28125em);
     }
     80.1% {
-      transform: translate(-9px);
+      transform: translate(-0.28125em);
     }
     85% {
       transform: translate(0);
     }
     90% {
-      transform: translate(9px);
+      transform: translate(0.28125em);
     }
     90.1% {
-      transform: translate(-9px);
+      transform: translate(-0.28125em);
     }
     95% {
       transform: translate(0);
     }
     to {
-      transform: translate(9px);
+      transform: translate(0.28125em);
     }
   }
   @keyframes petal-move {

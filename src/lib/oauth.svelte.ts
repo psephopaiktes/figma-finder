@@ -75,6 +75,19 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     }
     const userData = await userResponse.json();
 
+    // Handle the case where the user already exists
+    if (store.options.users[oauthData.user_id]) {
+      console.log("User data:", userData);
+      alert(
+        i18n.t({
+          ja: "すでにログイン済みのユーザーです。",
+          en: "User already logged in.",
+          "zh-cn": "用户已登录。",
+        }),
+      );
+      throw new Error(`User already logged in: ${oauthData.user_id}`);
+    }
+
     // Save data to the Svelte store and browser.storage
     store.options.users[oauthData.user_id] = {
       access_token: oauthData.access_token,

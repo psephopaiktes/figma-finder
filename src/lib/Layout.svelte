@@ -5,7 +5,9 @@ import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { loadOptions, store } from "@/lib/store.svelte";
 
-let { class: className = "", children } = $props();
+let { title = null, class: className = "", children } = $props();
+
+const tabTitle = title ? `${title} - Figma Finder` : "Figma Finder";
 
 onMount(async () => {
   await loadOptions();
@@ -29,6 +31,10 @@ onMount(async () => {
   );
 });
 </script>
+
+<svelte:head>
+  <title>{tabTitle}</title>
+</svelte:head>
 
 <main class={["l-main", className]}>
   {@render children?.()}

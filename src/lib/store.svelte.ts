@@ -1,3 +1,5 @@
+import { readonly } from "svelte/store";
+
 interface Store {
   options: {
     currentUser: string | null;
@@ -13,7 +15,7 @@ interface User {
   access_token: string;
   refresh_token: string;
   expires_at: number;
-  // teams: Record<string, string>;
+  teams?: Record<string, string>;
 }
 
 export const store: Store = $state({
@@ -24,6 +26,15 @@ export const store: Store = $state({
     users: {},
   },
 });
+
+export const user = () => {
+  const user = $derived(
+    store.options.currentUser
+      ? store.options.users[store.options.currentUser]
+      : null,
+  );
+  return user;
+};
 
 export const loadOptions = async () => {
   const options = await storage.getItem("sync:options");
