@@ -1,11 +1,13 @@
 <script lang="ts">
-import { user } from "@/lib/store.svelte";
-import Home from "@/lib/view/Home.svelte";
-import Onborading from "@/lib/view/Onborading.svelte";
+  import { store, user } from "@/lib/store.svelte";
+  import Home from "@/lib/view/Home.svelte";
+
+  $effect(() => {
+    if (store.loading) return;
+    if (!user() || Object.keys(user()?.teams || {}).length <= 0) {
+      location.href = "/onboarding.html";
+    }
+  });
 </script>
 
-{#if !user() || !user()?.teams}
-  <Onborading />
-{:else}
-  <Home />
-{/if}
+<Home />

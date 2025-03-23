@@ -96,6 +96,7 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
       email: userData.email,
       handle: userData.handle,
       img_url: userData.img_url,
+      teams: {},
     };
     store.options.currentUser = oauthData.user_id;
     storage.setItem("sync:options", store.options);

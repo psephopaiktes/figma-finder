@@ -1,20 +1,21 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
+  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-const showNav = location.search.includes("nav");
-const title = i18n.t({
-  en: "Options",
-  ja: "設定",
-  "zh-cn": "选项",
-});
+  const showNav = location.search.includes("nav");
+  const title = i18n.t({
+    en: "Options",
+    ja: "設定",
+    "zh-cn": "选项",
+  });
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
 <Layout class="l-document c-document" {title}>
@@ -64,6 +65,7 @@ $effect(() => {
     <hr />
 
     <h2>{i18n.t({ en: "Team ID", ja: "チームID", "zh-cn": "团队ID" })}</h2>
+    <TeamSetting />
   {/if}
 
   <hr />

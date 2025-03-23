@@ -1,6 +1,5 @@
-import { readonly } from "svelte/store";
-
 interface Store {
+  loading: boolean;
   options: {
     currentUser: string | null;
     theme: string;
@@ -15,10 +14,11 @@ interface User {
   access_token: string;
   refresh_token: string;
   expires_at: number;
-  teams?: Record<string, string>;
+  teams: Record<string, string>;
 }
 
 export const store: Store = $state({
+  loading: true,
   options: {
     currentUser: null,
     theme: "system",

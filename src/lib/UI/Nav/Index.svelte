@@ -1,60 +1,60 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import UserSelector from "./UserSelector.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import UserSelector from "./UserSelector.svelte";
 
-const pageList = [
-  {
-    label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
-    href: "/sidepanel.html",
-    id: "home",
-  },
-  {
-    label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
-    href: "/options.html?nav",
-    id: "options",
-  },
-  {
-    label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
-    href: "/help.html?nav",
-    id: "help",
-  },
-];
-
-const extPageList = [
-  {
-    label: { en: "GitHub" },
-    href: "https://github.com/psephopaiktes/figma-finder",
-    id: "github",
-  },
-  {
-    label: {
-      en: "Support the Developer",
-      ja: "制作者を支援",
-      "zh-cn": "支持开发者",
+  const pageList = [
+    {
+      label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
+      href: "/sidepanel.html",
+      id: "home",
     },
-    href: "https://github.com/sponsors/psephopaiktes",
-    id: "love",
-  },
-];
+    {
+      label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
+      href: "/options.html?nav",
+      id: "options",
+    },
+    {
+      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
+      href: "/help.html?nav",
+      id: "help",
+    },
+  ];
 
-let { title = null, current = null, children = null } = $props();
-let drawer: HTMLDialogElement;
+  const extPageList = [
+    {
+      label: { en: "GitHub" },
+      href: "https://github.com/psephopaiktes/figma-finder",
+      id: "github",
+    },
+    {
+      label: {
+        en: "Support the Developer",
+        ja: "制作者を支援",
+        "zh-cn": "支持开发者",
+      },
+      href: "https://github.com/sponsors/psephopaiktes",
+      id: "love",
+    },
+  ];
 
-function openDrawer() {
-  drawer.showModal();
-}
+  let { title = null, current = null, children = null } = $props();
+  let drawer: HTMLDialogElement;
 
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  console.log(target);
-  if (target === drawer) {
-    closeDrawer();
+  function openDrawer() {
+    drawer.showModal();
   }
-}
+
+  function closeDrawer() {
+    drawer.close();
+  }
+
+  function backdropClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    console.log(target);
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav class="l-nav">
@@ -90,11 +90,7 @@ function backdropClick(event: MouseEvent): void {
     <ul>
       {#each pageList as page}
         <li>
-          <a
-            href={page.href}
-            class:current={current === page.id}
-            inert={current === page.id}
-          >
+          <a href={page.href} inert={current === page.id}>
             <svg-icon src="/img/icon/{page.id}.svg"></svg-icon>
             {i18n.t(page.label)}
           </a>
@@ -209,7 +205,7 @@ function backdropClick(event: MouseEvent): void {
           background: rgb(from var(--color-theme) r g b / 10%);
           opacity: 1;
         }
-        &.current {
+        &[inert] {
           background: rgb(from var(--color-theme) r g b / 20%);
           color: var(--color-theme);
           font-weight: bolder;

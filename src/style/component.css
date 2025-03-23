@@ -1,7 +1,7 @@
 .c-document {
   > h2 {
     font-size: 1.4rem;
-    margin-block-start: var(--sp-xl);
+    margin-block-start: var(--sp-l);
   }
   > h3 {
     margin-block-start: var(--sp-m);
@@ -11,16 +11,17 @@
     margin-block-end: var(--sp-xl);
   }
   > p {
-    margin-block-start: 0.8em;
+    margin-block-start: 0.8rem;
   }
 
   > p a {
     color: var(--color-theme);
+    text-decoration: none;
   }
 }
 
 .c-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   padding-inline: 12px;
@@ -37,9 +38,41 @@
     opacity: 0.6;
     margin-inline: -2px;
   }
+  &.-small {
+    padding-inline: 8px;
+    gap: 3px;
+    height: 28px;
+    min-width: 32px;
+    border-radius: 4px;
+    svg-icon {
+      font-size: 16px;
+    }
+  }
+  &.-gray {
+    background: rgb(from var(--color-main) r g b / 0.8);
+  }
+  &.-caution {
+    background: var(--color-caution);
+  }
   &:hover,
   &:active {
     filter: brightness(1.1);
+  }
+  &:disabled,
+  &[inert] {
+    filter: grayscale(1);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
+.c-input {
+  padding-inline: 8px;
+  min-height: 32px;
+  background: rgb(from var(--color-main) r g b / 5%);
+  border-radius: 8px;
+  &::placeholder {
+    color: rgb(from var(--color-main) r g b / 0.2);
   }
 }
 

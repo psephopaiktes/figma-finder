@@ -1,0 +1,85 @@
+<script lang="ts">
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import oauth from "@/lib/oauth.svelte";
+  import { user } from "@/lib/store.svelte";
+  import Loader from "@/lib/ui/Loader.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
+  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+
+  let loading = $state(false);
+  const logIn = async () => {
+    loading = true;
+    await oauth.logIn();
+    location.reload();
+  };
+</script>
+
+<Layout class="l-document c-document">
+  <Nav current="home" />
+
+  {#if !user()}
+    <h2>STEP 1 <small>/ 2</small></h2>
+    <p>
+      {i18n.t({
+        en: "Login with Figma Account.",
+        ja: "Figma アカウントでログインしてください。",
+        "zh-cn": "使用 Figma 帐户登录。",
+      })}
+    </p>
+    <button onclick={logIn} class="c-button">
+      {#if loading}
+        <Loader size="24px" />
+      {:else}
+        <svg-icon src="/img/icon/login.svg"></svg-icon>
+        {i18n.t({
+          en: "Log In",
+          ja: "ログイン",
+          "zh-cn": "登录",
+        })}
+      {/if}
+    </button>
+  {:else}
+    <h2>STEP 2 <small>/ 2</small></h2>
+    <p>
+      {i18n.t({
+        en: "Input your Team ID to add.",
+        ja: "チーム ID を入力し、追加してください。",
+        "zh-cn": "输入您的团队 ID 进行添加。",
+      })}
+    </p>
+    <p>
+      <a href="/help.html#team-id" target="_blank">
+        {i18n.t({
+          en: "What is Team ID?",
+          ja: "チーム ID とは？",
+          "zh-cn": "什么是团队 ID？",
+        })}
+      </a>
+    </p>
+
+    <TeamSetting />
+
+    <a
+      href="/sidepanel.html"
+      class="c-button"
+      inert={Object.keys(user()?.teams || {}).length == 0}
+    >
+      {i18n.t({
+        en: "Start",
+        ja: "開始する",
+        "zh-cn": "开始",
+      })}
+    </a>
+  {/if}
+</Layout>
+
+<style>
+  button,
+  a.c-button {
+    margin-block-start: var(--sp-m);
+  }
+  h2 small {
+    opacity: 0.6;
+  }
+</style>
