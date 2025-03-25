@@ -43,6 +43,23 @@
   }
 </script>
 
+<p>
+  {i18n.t({
+    en: "Enter the ID of the team you want to search for and add it.",
+    ja: "検索したいチームのIDを入力し、追加してください。",
+    "zh-cn": "输入您想搜索的团队 ID 并添加它。",
+  })}
+</p>
+<p>
+  <a href="/help.html#team-id" target="_blank">
+    {i18n.t({
+      en: "What is Team ID?",
+      ja: "チーム ID とは？",
+      "zh-cn": "什么是团队 ID？",
+    })}
+  </a>
+</p>
+
 <section>
   <p>
     {i18n.t({

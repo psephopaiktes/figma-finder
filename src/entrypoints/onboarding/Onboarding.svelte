@@ -41,23 +41,6 @@
     </button>
   {:else}
     <h2>STEP 2 <small>/ 2</small></h2>
-    <p>
-      {i18n.t({
-        en: "Input your Team ID to add.",
-        ja: "チーム ID を入力し、追加してください。",
-        "zh-cn": "输入您的团队 ID 进行添加。",
-      })}
-    </p>
-    <p>
-      <a href="/help.html#team-id" target="_blank">
-        {i18n.t({
-          en: "What is Team ID?",
-          ja: "チーム ID とは？",
-          "zh-cn": "什么是团队 ID？",
-        })}
-      </a>
-    </p>
-
     <TeamSetting />
 
     <a

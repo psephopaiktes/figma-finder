@@ -33,6 +33,7 @@
   font-size: 1rem;
   background: var(--color-theme);
   color: var(--color-base);
+  box-shadow: 0 4px 24px -12px rgb(0 0 0 / 0.2);
   svg-icon {
     font-size: 20px;
     opacity: 0.6;
@@ -76,7 +77,7 @@
   }
 }
 
-.c-twinkle:focus {
+.c-focus:focus {
   outline: 2px solid var(--color-theme);
   outline-offset: 2px;
   animation: twinkle 0.8s ease-in-out infinite alternate;

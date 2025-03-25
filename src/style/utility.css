@@ -13,27 +13,27 @@
 
 .u-showPc,
 .u-hideTabSp {
-  @media (width < 1024px) {
+  @media (width <= 1024px) {
     display: none !important;
   }
 }
 
 .u-showPcTab,
 .u-hideSp {
-  @media (width < 480px) {
+  @media (width <= 480px) {
     display: none !important;
   }
 }
 
 .u-showTabSp,
 .u-hidePc {
-  @media (width >= 1024px) {
+  @media (width > 1024px) {
     display: none !important;
   }
 }
 .u-showSp,
 .u-hidePcTab {
-  @media (width >= 480px) {
+  @media (width > 480px) {
     display: none !important;
   }
 }

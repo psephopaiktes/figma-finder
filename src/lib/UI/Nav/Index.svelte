@@ -136,9 +136,22 @@
     align-items: center;
     gap: 8px;
     padding-inline: 8px;
-    background: rgb(from var(--color-base) r g b / 60%);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgb(from var(--color-main) r g b / 10%);
+    /* background: rgb(from var(--color-base) r g b / 60%); */
+    /* backdrop-filter: blur(20px); */
+    /* border-bottom: 1px solid rgb(from var(--color-main) r g b / 10%); */
+
+    /* TODO: kokokara kesu? */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 -24px;
+      z-index: -1;
+      background: rgb(from var(--color-base) r g b / 60%);
+      mask-image: linear-gradient(#000 50%, transparent);
+      mask-composite: intersect;
+      backdrop-filter: blur(16px);
+    }
+    /* kokomade */
 
     .child {
       flex: 1;
