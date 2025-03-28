@@ -1,25 +1,25 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import oauth from "@/lib/oauth.svelte";
-import { store } from "@/lib/store.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import oauth from "@/lib/oauth.svelte";
+  import { store } from "@/lib/store.svelte";
 
-let users = $derived(store.options.users);
-let selector: HTMLDialogElement;
+  let users = $derived(store.options.users);
+  let selector: HTMLDialogElement;
 
-function openSelector() {
-  selector.showModal();
-}
-
-function closeSelector() {
-  selector.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  if (target === selector) {
-    closeSelector();
+  function openSelector() {
+    selector.showModal();
   }
-}
+
+  function closeSelector() {
+    selector.close();
+  }
+
+  function backdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target === selector) {
+      closeSelector();
+    }
+  }
 </script>
 
 {#if !store.options.currentUser}
@@ -64,6 +64,7 @@ function backdropClick(event: MouseEvent): void {
           en: "Add account",
           ja: "アカウントの追加",
           "zh-CN": "添加账户",
+          es: "Agregar cuenta",
         })}
       </p>
     </button>
@@ -83,6 +84,7 @@ function backdropClick(event: MouseEvent): void {
           en: "Log out",
           ja: "ログアウト",
           "zh-CN": "登出",
+          es: "Cerrar sesión",
         })}
       </p>
     </button>

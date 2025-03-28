@@ -23,6 +23,9 @@ const locales: LocaleSetting = {
     label: "简体中文",
     lang: "zh-CN",
   },
+  es: {
+    label: "Español",
+  },
 };
 
 export default {

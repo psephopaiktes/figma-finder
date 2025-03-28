@@ -4,17 +4,22 @@
 
   const pageList = [
     {
-      label: { en: "Home", ja: "ホーム", "zh-cn": "主页" },
+      label: { en: "Home", ja: "ホーム", "zh-cn": "主页", es: "Inicio" },
       href: "/sidepanel.html",
       id: "home",
     },
     {
-      label: { en: "Options", ja: "オプション", "zh-cn": "选项" },
+      label: {
+        en: "Options",
+        ja: "オプション",
+        "zh-cn": "选项",
+        es: "Opciones",
+      },
       href: "/options.html?nav",
       id: "options",
     },
     {
-      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助" },
+      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助", es: "Ayuda" },
       href: "/help.html?nav",
       id: "help",
     },
@@ -31,6 +36,7 @@
         en: "Support the Developer",
         ja: "制作者を支援",
         "zh-cn": "支持开发者",
+        es: "Apoyar al desarrollador",
       },
       href: "https://github.com/sponsors/psephopaiktes",
       id: "love",

@@ -25,6 +25,7 @@
         en: "Login with Figma Account.",
         ja: "Figma アカウントでログインしてください。",
         "zh-cn": "使用 Figma 帐户登录。",
+        es: "Inicia sesión con tu cuenta de Figma.",
       })}
     </p>
     <button onclick={logIn} class="c-button">
@@ -36,6 +37,7 @@
           en: "Log In",
           ja: "ログイン",
           "zh-cn": "登录",
+          es: "Iniciar sesión",
         })}
       {/if}
     </button>
@@ -52,6 +54,7 @@
         en: "Start",
         ja: "開始する",
         "zh-cn": "开始",
+        es: "Comenzar",
       })}
     </a>
   {/if}

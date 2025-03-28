@@ -25,6 +25,7 @@
           en: "Failed to fetch the team.\nError code",
           ja: "チームを取得できませんでした。\nエラーコード",
           "zh-cn": "无法获取团队。\n错误代码",
+          es: "No se pudo obtener el equipo.\nCódigo de error",
         })}: ${res.status}`,
       );
       return;

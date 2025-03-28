@@ -10,6 +10,7 @@
     en: "Options",
     ja: "設定",
     "zh-cn": "选项",
+    es: "Opciones",
   });
 
   $effect(() => {
@@ -24,11 +25,16 @@
   {/if}
 
   <h2>
-    {i18n.t({ en: "Display Settings", ja: "表示設定", "zh-cn": "显示设置" })}
+    {i18n.t({
+      en: "Display Settings",
+      ja: "表示設定",
+      "zh-cn": "显示设置",
+      es: "Configuración de pantalla",
+    })}
   </h2>
   <label>
     <h3>
-      {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题" })}
+      {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题", es: "Tema" })}
     </h3>
 
     <select bind:value={store.options.theme}>
@@ -46,7 +52,7 @@
 
   <label>
     <h3>
-      {i18n.t({ en: "Language", ja: "言語", "zh-cn": "语言" })}
+      {i18n.t({ en: "Language", ja: "言語", "zh-cn": "语言", es: "Idioma" })}
     </h3>
 
     <select bind:value={store.options.locale}>
