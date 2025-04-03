@@ -37,6 +37,7 @@
         onclick={() => {
           store.options.currentUser = id;
           storage.setItem("sync:options", store.options);
+          storage.removeItem("local:projects");
           location.reload();
         }}
         inert={store.options.currentUser == id}

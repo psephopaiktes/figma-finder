@@ -33,47 +33,59 @@ export const loadOptions = async () => {
 };
 
 const req = async <T>(path: string) => {
+  const authToken = user()?.access_token;
+  if (!authToken) {
+    throw new Error("No access token available");
+  }
+
   const res = await fetch(`https://api.figma.com/v1${path}`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${user()?.access_token}`,
+      Authorization: `Bearer ${authToken}`,
     },
   });
 
   if (!res.ok) {
-    return Promise.reject(res);
+    const errorText = await res.text();
+    throw new Error(`Error: ${res.status} ${res.statusText} - ${errorText}`);
   }
 
   return res.json() as Promise<T>;
 };
 
 export const loadFiles = async () => {
-  // 1. local:にあればstoreに反映
-  const projects: Record<string, Project> =
-    (await storage.getItem("local:projects")) || {};
-  if (Object.keys(projects).length !== 0) {
-    Object.assign(store.projects, projects);
+  // 1. localにあればstoreに反映
+  const localProjects = await storage.getItem("local:projects");
+  if (localProjects) {
+    Object.assign(store.projects, localProjects);
+    console.log("Loaded projects from local storage");
+    console.dir(localProjects);
   }
 
-  // 2. APIから読み込んでstoreを上書き
-  //// 2-1. チームをループしてProjectsを取得
-  for (const [teamId, teamName] of Object.entries(user()?.teams || {})) {
-    // Promise.all で並列にすべきかも
-    const data = await req<GetTeamProjectsResponse>(
-      `/teams/${teamId}/projects`,
-    );
-    for (const project of data.projects) {
-      projects[project.id] = {
+  // 2. teamsをループして配下のprojectsを取得
+  const projects: Record<string, Project> = {};
+  const teamRequests = Object.entries(user()?.teams || {}).map(
+    async ([teamId, teamName]) => {
+      const data = await req<GetTeamProjectsResponse>(
+        `/teams/${teamId}/projects`,
+      );
+      return data.projects.map((project) => ({
+        id: project.id,
         team: teamName,
         name: project.name,
         files: {},
-      };
+      }));
+    },
+  );
+  const results = await Promise.all(teamRequests);
+  for (const projectsArray of results) {
+    for (const project of projectsArray) {
+      projects[project.id] = project;
     }
   }
 
-  //// 2-1. projectsをループしてFileを取得
-  for (const [projectId] of Object.entries(projects)) {
-    // Promise.all で並列にすべきかも
+  // 3. projectsをループして配下のfilesを取得
+  const fileRequests = Object.entries(projects).map(async ([projectId]) => {
     const data = await req<GetProjectFilesResponse>(
       `/projects/${projectId}/files`,
     );
@@ -84,11 +96,11 @@ export const loadFiles = async () => {
         thumbnail_url: file.thumbnail_url || "",
       };
     }
-  }
+  });
+  await Promise.all(fileRequests);
 
-  // storeへの反映は最後にいっきにやる！
-  store.projects = projects;
+  store.projects = { ...projects };
   await storage.setItem("local:projects", projects);
-
-  // 3. retrun
+  console.log("Loaded from API");
+  console.dir(projects);
 };
