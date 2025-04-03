@@ -18,7 +18,6 @@
         },
       },
     );
-    console.dir(res);
     if (!res.ok) {
       alert(
         `${i18n.t({

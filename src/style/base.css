@@ -1,7 +1,6 @@
 /* basic site style */
 
-:root,
-body {
+:root {
   @media (prefers-color-scheme: light) {
     --color-theme: #0d99ff;
     --color-base: #fff;
@@ -42,7 +41,9 @@ body {
     --sp-s: 12px;
     --sp-xs: 5px;
   }
+}
 
+body {
   color: var(--color-main);
   background-color: var(--color-base);
   accent-color: var(--color-theme);
