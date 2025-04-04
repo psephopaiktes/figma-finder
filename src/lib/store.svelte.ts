@@ -58,29 +58,35 @@ export const loadFiles = async () => {
   const localProjects = await storage.getItem("local:projects");
   if (localProjects) {
     Object.assign(store.projects, localProjects);
-    console.log("Loaded projects from local storage");
-    console.dir(localProjects);
   }
 
   // 2. teamsをループして配下のprojectsを取得
   const projects: Record<string, Project> = {};
   const teamRequests = Object.entries(user()?.teams || {}).map(
     async ([teamId, teamName]) => {
-      const data = await req<GetTeamProjectsResponse>(
-        `/teams/${teamId}/projects`,
-      );
-      return data.projects.map((project) => ({
-        id: project.id,
-        team: teamName,
-        name: project.name,
-        files: {},
-      }));
+      try {
+        const data = await req<GetTeamProjectsResponse>(
+          `/teams/${teamId}/projects`,
+        );
+        return data.projects.map((project) => ({
+          id: project.id,
+          team: teamName,
+          name: project.name,
+        }));
+      } catch (error) {
+        console.warn(`Failed to fetch projects for team id: ${teamId}:`, error);
+        return []; // スキップする
+      }
     },
   );
   const results = await Promise.all(teamRequests);
   for (const projectsArray of results) {
     for (const project of projectsArray) {
-      projects[project.id] = project;
+      projects[project.id] = {
+        team: project.team,
+        name: project.name,
+        files: {},
+      };
     }
   }
 
@@ -101,6 +107,4 @@ export const loadFiles = async () => {
 
   store.projects = { ...projects };
   await storage.setItem("local:projects", projects);
-  console.log("Loaded from API");
-  console.dir(projects);
 };

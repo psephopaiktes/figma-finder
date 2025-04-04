@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { store } from "@/lib/store.svelte";
+  import type { Project } from "@/types";
+  let { projects }: { projects: Record<string, Project> } = $props();
 </script>
 
 <ul>
-  {#each Object.entries(store.projects) as [id, project]}
+  {#each Object.entries(projects) as [id, project]}
     {@const fileCount = Object.keys(project.files).length}
     <li>
       <details open>

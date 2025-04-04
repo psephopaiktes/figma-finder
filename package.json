@@ -16,6 +16,7 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "fuse.js": "^7.1.0",
     "svg-mask-icon": "^2.2.0"
   },
   "devDependencies": {

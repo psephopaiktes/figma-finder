@@ -100,6 +100,7 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     };
     store.options.currentUser = oauthData.user_id;
     storage.setItem("sync:options", store.options);
+    storage.removeItem("local:projects");
 
     return true;
   } catch (error) {
