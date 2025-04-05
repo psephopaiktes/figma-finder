@@ -127,6 +127,7 @@ function logOut(): boolean {
     const userIds = Object.keys(store.options.users);
     store.options.currentUser = userIds.length > 0 ? userIds[0] : null;
     storage.setItem("sync:options", store.options);
+    storage.removeItem("local:projects");
     return true;
   }
   console.warn("No user logged in.");

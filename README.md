@@ -26,7 +26,3 @@ To review the source code and build it, please run the following command:
 ```zsh
 npm run build:firefox
 ```
-
----
-
-This project was inspired by Raycast's [Figma File Search](https://www.raycast.com/michaelschultz/figma-files-raycast-extension) extension. Many thanks for the amazing extension.

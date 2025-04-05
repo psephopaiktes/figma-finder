@@ -1,26 +1,23 @@
 <script lang="ts">
-  import type { Project } from "@/types";
-  let { projects }: { projects: Record<string, Project> } = $props();
+import type { Project } from "@/types";
+import { slide } from "svelte/transition";
+let { projects }: { projects: Record<string, Project> } = $props();
 </script>
 
-<ul>
+<ul class="root">
   {#each Object.entries(projects) as [id, project]}
     {@const fileCount = Object.keys(project.files).length}
-    <li>
+    <li transition:slide>
       <details open>
         <summary>{project.team} - {project.name} ( {fileCount} files )</summary>
         <ul>
-          {#if fileCount === 0}
-            <li>No files</li>
-          {:else}
-            {#each Object.entries(project.files) as [id, file]}
-              <li>
-                <a href={`https://figma.com/${id}`} target="_blank">
-                  {file.name}
-                </a>
-              </li>
-            {/each}
-          {/if}
+          {#each Object.entries(project.files) as [id, file]}
+            <li transition:slide>
+              <a href={`https://figma.com/${id}`} target="_blank">
+                {file.name}
+              </a>
+            </li>
+          {/each}
         </ul>
       </details>
     </li>
@@ -28,11 +25,15 @@
 </ul>
 
 <style>
-  ul {
+  .root {
     margin-top: 80px;
-    ul {
-      margin-top: 8px;
+    > li {
+      margin-top: 32px;
     }
+  }
+
+  details {
+    border: 2px solid #ccc;
   }
 
   details > summary::marker {

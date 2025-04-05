@@ -1,18 +1,18 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
-  import { user } from "@/lib/store.svelte";
-  import Loader from "@/lib/ui/Loader.svelte";
-  import Nav from "@/lib/ui/Nav/Index.svelte";
-  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
+import { user } from "@/lib/store.svelte";
+import Loader from "@/lib/ui/Loader.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
+import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-  let loading = $state(false);
-  const logIn = async () => {
-    loading = true;
-    await oauth.logIn();
-    location.reload();
-  };
+let loading = $state(false);
+const logIn = async () => {
+  loading = true;
+  await oauth.logIn();
+  location.reload();
+};
 </script>
 
 <Layout class="l-document c-document">
