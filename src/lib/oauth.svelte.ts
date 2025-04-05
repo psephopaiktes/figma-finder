@@ -77,7 +77,6 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
 
     // Handle the case where the user already exists
     if (store.options.users[oauthData.user_id]) {
-      console.log("User data:", userData);
       alert(
         i18n.t({
           ja: "すでにログイン済みのユーザーです。",

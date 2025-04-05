@@ -1,66 +1,65 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import UserSelector from "./UserSelector.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import UserSelector from "./UserSelector.svelte";
 
-const pageList = [
-  {
-    label: { en: "Home", ja: "ホーム", "zh-cn": "主页", es: "Inicio" },
-    href: "/sidepanel.html",
-    id: "home",
-  },
-  {
-    label: {
-      en: "Options",
-      ja: "オプション",
-      "zh-cn": "选项",
-      es: "Opciones",
+  const pageList = [
+    {
+      label: { en: "Home", ja: "ホーム", "zh-cn": "主页", es: "Inicio" },
+      href: "/sidepanel.html",
+      id: "home",
     },
-    href: "/options.html?nav",
-    id: "options",
-  },
-  {
-    label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助", es: "Ayuda" },
-    href: "/help.html?nav",
-    id: "help",
-  },
-];
-
-const extPageList = [
-  {
-    label: { en: "GitHub" },
-    href: "https://github.com/psephopaiktes/figma-finder",
-    id: "github",
-  },
-  {
-    label: {
-      en: "Support",
-      ja: "制作者を支援",
-      "zh-cn": "支持开发者",
-      es: "Apoyar",
+    {
+      label: {
+        en: "Options",
+        ja: "オプション",
+        "zh-cn": "选项",
+        es: "Opciones",
+      },
+      href: "/options.html?nav",
+      id: "options",
     },
-    href: "https://github.com/sponsors/psephopaiktes",
-    id: "love",
-  },
-];
+    {
+      label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助", es: "Ayuda" },
+      href: "/help.html?nav",
+      id: "help",
+    },
+  ];
 
-let { title = null, current = null, children = null } = $props();
-let drawer: HTMLDialogElement;
+  const extPageList = [
+    {
+      label: { en: "GitHub" },
+      href: "https://github.com/psephopaiktes/figma-finder",
+      id: "github",
+    },
+    {
+      label: {
+        en: "Support",
+        ja: "制作者を支援",
+        "zh-cn": "支持开发者",
+        es: "Apoyar",
+      },
+      href: "https://github.com/sponsors/psephopaiktes",
+      id: "love",
+    },
+  ];
 
-function openDrawer() {
-  drawer.showModal();
-}
+  let { title = null, current = null, children = null } = $props();
+  let drawer: HTMLDialogElement;
 
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent) {
-  const target = event.target as HTMLElement;
-  console.log(target);
-  if (target === drawer) {
-    closeDrawer();
+  function openDrawer() {
+    drawer.showModal();
   }
-}
+
+  function closeDrawer() {
+    drawer.close();
+  }
+
+  function backdropClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav class="l-nav">

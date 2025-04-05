@@ -1,7 +1,7 @@
 export type Store = {
   loading: boolean;
   projects: Record<string, Project>;
-  // projectOrder: string[]; // 手動の並び替えが必要になったとき
+  projectOrder: string[];
   options: {
     currentUser: string | null;
     theme: string;
@@ -23,6 +23,7 @@ export type User = {
 export type Project = {
   team: string;
   name: string;
+  open: boolean;
   files: Record<string, File>;
 };
 

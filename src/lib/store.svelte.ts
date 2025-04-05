@@ -7,6 +7,7 @@ import { storage } from "@wxt-dev/storage";
 
 export const store: Store = $state({
   projects: {},
+  projectOrder: [],
   loading: true,
   options: {
     currentUser: null,
@@ -54,10 +55,14 @@ const req = async <T>(path: string) => {
 };
 
 export const loadFiles = async () => {
-  // 1. localにあればstoreに反映
+  // 1. いったんlocalをstoreに反映
   const localProjects = await storage.getItem("local:projects");
   if (localProjects) {
     Object.assign(store.projects, localProjects);
+  }
+  const localProjectOrder = await storage.getItem<string>("local:projectOrder");
+  if (localProjectOrder) {
+    store.projectOrder = JSON.parse(localProjectOrder); //WXT対策
   }
 
   // 2. teamsをループして配下のprojectsを取得
@@ -86,6 +91,7 @@ export const loadFiles = async () => {
         team: project.team,
         name: project.name,
         files: {},
+        open: store.projects[project.id]?.open ?? true,
       };
     }
   }
@@ -105,6 +111,37 @@ export const loadFiles = async () => {
   });
   await Promise.all(fileRequests);
 
+  // 4. レスポンスに存在していないプロジェクトは削除
+  for (const oldId of Object.keys(store.projects)) {
+    if (!projects[oldId]) delete store.projects[oldId];
+  }
+
+  // 5. プロジェクトの順序を更新
+  if (localProjectOrder) {
+    // 削除されたプロジェクトは除去
+    const filteredOrder = JSON.parse(localProjectOrder).filter(
+      (id: string) => id in projects,
+    );
+    // 新しく追加されたプロジェクト
+    const newProjectIds = Object.keys(projects).filter(
+      (id) => !filteredOrder.includes(id),
+    );
+    store.projectOrder = [...filteredOrder, ...newProjectIds];
+  } else {
+    store.projectOrder = Object.entries(projects)
+      .sort(([, a], [, b]) => {
+        const nameA = `${a.team} - ${a.name}`;
+        const nameB = `${b.team} - ${b.name}`;
+        return nameA.localeCompare(nameB);
+      })
+      .map(([id]) => id);
+  }
+  await storage.setItem<string>(
+    "local:projectOrder",
+    JSON.stringify(store.projectOrder), //WXT対策
+  );
+
+  // 6. storeに反映
   store.projects = { ...projects };
   await storage.setItem("local:projects", projects);
 };

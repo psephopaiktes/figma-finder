@@ -39,5 +39,6 @@
 .l-document {
   max-inline-size: 800px;
   padding-inline: var(--sp-l);
+  padding-block-end: var(--sp-2xl);
   margin-inline: auto;
 }
