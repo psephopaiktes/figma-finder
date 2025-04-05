@@ -8,6 +8,7 @@ let { value = $bindable() } = $props();
   <svg-icon src="/img/icon/search.svg"></svg-icon>
   <input
     type="search"
+    autofocus
     placeholder={i18n.t({
       en: "Find Figma Files",
       ja: "Figmaファイルを探す",

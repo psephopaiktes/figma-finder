@@ -8,7 +8,10 @@
   "extDescription": {
     "message": "You can quickly find and open Figma files."
   },
-  "actTitle": {
-    "message": "Find Figma Files"
+  "iconTitle": {
+    "message": "Open Side Panel"
+  },
+  "keyboardAction": {
+    "message": "Open Popup"
   }
 }

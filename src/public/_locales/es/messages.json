@@ -1,0 +1,17 @@
+{
+  "locale": {
+    "message": "es"
+  },
+  "extName": {
+    "message": "Figma Finder"
+  },
+  "extDescription": {
+    "message": "Puedes buscar y abrir archivos de Figma rápidamente."
+  },
+  "iconTitle": {
+    "message": "Abrir panel lateral"
+  },
+  "keyboardAction": {
+    "message": "Abrir ventana emergente"
+  }
+}

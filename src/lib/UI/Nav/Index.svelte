@@ -33,10 +33,10 @@ const extPageList = [
   },
   {
     label: {
-      en: "Support the Developer",
+      en: "Support",
       ja: "制作者を支援",
       "zh-cn": "支持开发者",
-      es: "Apoyar al desarrollador",
+      es: "Apoyar",
     },
     href: "https://github.com/sponsors/psephopaiktes",
     id: "love",

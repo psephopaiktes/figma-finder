@@ -8,7 +8,10 @@
   "extDescription": {
     "message": "Figmaファイルを最速で探し、開くことができます。"
   },
-  "actTitle": {
-    "message": "Figmaファイルを検索"
+  "iconTitle": {
+    "message": "サイドパネルを開く"
+  },
+  "keyboardAction": {
+    "message": "ポップアップを開く"
   }
 }

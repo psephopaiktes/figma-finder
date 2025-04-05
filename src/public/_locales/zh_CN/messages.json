@@ -6,9 +6,12 @@
     "message": "Figma Finder"
   },
   "extDescription": {
-    "message": "您可以最快速地查找和打开Figma文件。"
+    "message": "您可以最快速地查找和打开Figma文件"
   },
-  "actTitle": {
-    "message": "查找Figma文件"
+  "iconTitle": {
+    "message": "打开侧边栏"
+  },
+  "keyboardAction": {
+    "message": "打开弹出窗口"
   }
 }

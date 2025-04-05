@@ -27,6 +27,7 @@ body {
   word-break: auto-phrase;
   font-kerning: normal;
   hanging-punctuation: allow-end;
+  text-autospace: normal;
 }
 
 /* Typography */

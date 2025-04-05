@@ -1,25 +1,45 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import oauth from "@/lib/oauth.svelte";
-import { store } from "@/lib/store.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import oauth from "@/lib/oauth.svelte";
+  import { store } from "@/lib/store.svelte";
+  import { openSidePanel } from "@/lib/utils.svelte";
 
-let users = $derived(store.options.users);
-let selector: HTMLDialogElement;
+  let users = $derived(store.options.users);
+  let selector: HTMLDialogElement;
 
-function openSelector() {
-  selector.showModal();
-}
-
-function closeSelector() {
-  selector.close();
-}
-
-function backdropClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  if (target === selector) {
-    closeSelector();
+  function openSelector() {
+    selector.showModal();
   }
-}
+
+  function closeSelector() {
+    selector.close();
+  }
+
+  async function addAccount() {
+    if (window.location.pathname.includes("popup")) {
+      const result = confirm(
+        i18n.t({
+          en: "You need to add an account from the side panel. Do you want to open the side panel?",
+          ja: "アカウントの追加はサイドパネル上から行う必要があります。サイドパネルを開きますか？",
+          "zh-CN": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
+          es: "Necesita agregar una cuenta desde el panel lateral. ¿Quieres abrir el panel lateral?",
+        }),
+      );
+      if (!result) return;
+      openSidePanel();
+      window.close();
+      return;
+    }
+    await oauth.logIn({ add: true });
+    location.reload();
+  }
+
+  function backdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target === selector) {
+      closeSelector();
+    }
+  }
 </script>
 
 {#if !store.options.currentUser}
@@ -53,12 +73,7 @@ function backdropClick(event: MouseEvent): void {
       </button>
     {/each}
 
-    <button
-      onclick={async () => {
-        await oauth.logIn({ add: true });
-        location.reload();
-      }}
-    >
+    <button onclick={addAccount}>
       <svg-icon src="/img/icon/add.svg"></svg-icon>
       <p>
         {i18n.t({

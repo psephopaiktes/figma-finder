@@ -2,6 +2,7 @@
 import Layout from "@/lib/Layout.svelte";
 import i18n from "@/lib/i18n.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
+import { openSidePanel } from "@/lib/utils.svelte";
 
 const showNav = location.search.includes("nav");
 const isWelcome = location.search.includes("welcome");
@@ -23,17 +24,6 @@ const title = isWelcome
       "zh-cn": "帮助",
       es: "Ayuda",
     });
-
-const runFigmaFinder = async () => {
-  if (import.meta.env.CHROME) {
-    const queryOptions = { active: true, currentWindow: true };
-    const [tab] = await browser.tabs.query(queryOptions);
-    chrome.sidePanel.open({ windowId: tab.windowId });
-  } else {
-    // @ts-ignore
-    browser.sidebarAction.open();
-  }
-};
 </script>
 
 <Layout class="l-document c-document" {title}>
@@ -43,7 +33,7 @@ const runFigmaFinder = async () => {
 
   {#if isWelcome}
     <h1>Welcome!</h1>
-    <button onclick={runFigmaFinder}>
+    <button onclick={openSidePanel}>
       {i18n.t({
         en: "Run Figma Finder",
         ja: "Figma Finderを実行する",

@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <a href="https://figma.new/" target="_blank">
   <!-- TODO 設定に応じてAppで開く? -->
   <svg-icon src="/img/icon/add.svg"> New File </svg-icon>

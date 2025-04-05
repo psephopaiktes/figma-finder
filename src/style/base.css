@@ -56,6 +56,11 @@ body {
   }
 }
 
+#app {
+  min-width: 320px;
+  min-height: 640px;
+}
+
 * {
   outline-color: var(--color-theme);
   outline-offset: 2px;

@@ -19,4 +19,12 @@ export default defineBackground(() => {
       browser.sidebarAction.open();
     });
   }
+
+  // ショートカットでのみポップアップを開く
+  browser.commands.onCommand.addListener((command) => {
+    if (command === "open-popup") {
+      browser.action.setPopup({ popup: "popup.html" });
+      browser.action.openPopup();
+    }
+  });
 });
