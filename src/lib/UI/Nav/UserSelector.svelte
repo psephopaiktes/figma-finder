@@ -116,19 +116,17 @@
   }
 
   dialog {
-    position: fixed;
     left: auto;
+    width: 240px;
     top: 44px;
     right: 8px;
     button {
       width: 100%;
+      height: 40px;
       display: flex;
       gap: 0.5em;
       align-items: center;
       justify-content: start;
-      padding: 0 8px;
-      border-radius: 4px;
-      height: 40px;
       p,
       small {
         overflow: hidden;
@@ -136,7 +134,6 @@
         white-space: nowrap;
       }
       p {
-        text-align: left;
         line-height: 1;
         flex: 1;
         small {
@@ -145,9 +142,6 @@
           font-size: 0.8em;
           opacity: 0.5;
         }
-      }
-      &:hover {
-        background: var(--color-theme);
       }
       img {
         width: 24px;

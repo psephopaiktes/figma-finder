@@ -92,17 +92,27 @@
 }
 
 .c-popover {
+  position: fixed;
+  user-select: none;
   flex-direction: column;
-  gap: var(--sp-s);
-  width: 240px;
+  gap: var(--sp-xs);
   color: var(--color-base);
-  padding: 8px;
+  padding: var(--sp-s);
   border-radius: 12px;
   background-color: var(--color-main);
   border: 1px solid rgb(from var(--color-base) r g b / 20%);
   box-shadow: 2px 12px 64px -24px rgb(0 0 0 / 0.4);
   &:popover-open {
     display: flex;
+  }
+  button,
+  a {
+    text-align: left;
+    padding: var(--sp-s);
+    border-radius: 4px;
+    &:hover {
+      background: var(--color-theme);
+    }
   }
   hr {
     border: 0;
