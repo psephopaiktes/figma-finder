@@ -1,7 +1,7 @@
 export type Store = {
   loading: boolean;
   projects: Record<string, Project>;
-  projectOrder: string[];
+  localProjectState: LocalProjectState[];
   options: {
     currentUser: string | null;
     theme: string;
@@ -23,7 +23,6 @@ export type User = {
 export type Project = {
   team: string;
   name: string;
-  open: boolean;
   files: Record<string, File>;
 };
 
@@ -31,4 +30,9 @@ export type File = {
   last_modified: string;
   name: string;
   thumbnail_url: string;
+};
+
+export type LocalProjectState = {
+  id: string;
+  open: boolean;
 };

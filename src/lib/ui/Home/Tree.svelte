@@ -9,14 +9,15 @@
   }: { projects: Record<string, Project>; isInputed: boolean } = $props();
   let dragIndex = $state(0);
 
-  $effect(() => {
-    // TODO: Changedが呼び出されすぎているのは気になる
-    // あとOpen/Closeをすぐにやるとローカルに上書きされなおしちゃう
-    // [[1234, false], [1234, true], [1234, false]]みたいなタプルにしちゃうのもありかも。share-itみたいなdefaultButtonList
-    storage.setItem("local:projects", store.projects);
-  });
+  $inspect(store.localProjectState);
 
-  // ドラッグ＆ドロップのイベントハンドラ
+  const saveState = () => {
+    storage.setItem<string>(
+      "local:localProjectState",
+      JSON.stringify(store.localProjectState), //WXT対策
+    );
+  };
+
   const dragstart = (index: number) => {
     dragIndex = index;
   };
@@ -35,23 +36,24 @@
     event.preventDefault();
     (event.currentTarget as HTMLElement).style.borderTop = "";
     if (index === dragIndex) return;
-    alert("onDrop");
 
-    // const moveValue = { ...buttons[dragIndex] };
-    // buttons.splice(dragIndex, 1);
+    const moveProject = { ...store.localProjectState[dragIndex] };
+    store.localProjectState.splice(dragIndex, 1);
 
-    // if (dragIndex < index) {
-    //   buttons.splice(index - 1, 0, moveValue);
-    // } else {
-    //   buttons.splice(index, 0, moveValue);
-    // }
+    if (dragIndex < index) {
+      store.localProjectState.splice(index - 1, 0, moveProject);
+    } else {
+      store.localProjectState.splice(index, 0, moveProject);
+    }
+
+    saveState();
   };
 </script>
 
 <ul class="root">
-  {#each store.projectOrder as id, index}
-    {#if projects[id]}
-      {@const project = projects[id]}
+  {#each store.localProjectState as localProject, index}
+    {#if projects[localProject.id]}
+      {@const project = projects[localProject.id]}
       {@const fileCount = Object.keys(project.files).length}
       <li
         transition:slide
@@ -61,10 +63,9 @@
         ondragleave={dragleave}
         ondrop={(event) => ondrop(index, event)}
       >
-        <details bind:open={store.projects[id].open}>
+        <details bind:open={localProject.open} onchange={saveState}>
           <summary>
             {project.team} / {project.name}
-            <p>Index: {index}</p>
             <small>{fileCount}files</small>
             {#if !isInputed}
               <svg-icon src="/img/icon/drag.svg">draggable</svg-icon>

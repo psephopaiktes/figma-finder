@@ -1,4 +1,4 @@
-import type { Project, Store } from "@/types";
+import type { LocalProjectState, Project, Store } from "@/types";
 import type {
   GetProjectFilesResponse,
   GetTeamProjectsResponse,
@@ -7,7 +7,7 @@ import { storage } from "@wxt-dev/storage";
 
 export const store: Store = $state({
   projects: {},
-  projectOrder: [],
+  localProjectState: [],
   loading: true,
   options: {
     currentUser: null,
@@ -38,19 +38,16 @@ const req = async <T>(path: string) => {
   if (!authToken) {
     throw new Error("No access token available");
   }
-
   const res = await fetch(`https://api.figma.com/v1${path}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
   });
-
   if (!res.ok) {
     const errorText = await res.text();
     throw new Error(`Error: ${res.status} ${res.statusText} - ${errorText}`);
   }
-
   return res.json() as Promise<T>;
 };
 
@@ -60,9 +57,11 @@ export const loadFiles = async () => {
   if (localProjects) {
     Object.assign(store.projects, localProjects);
   }
-  const localProjectOrder = await storage.getItem<string>("local:projectOrder");
-  if (localProjectOrder) {
-    store.projectOrder = JSON.parse(localProjectOrder); //WXT対策
+  const localProjectState = await storage.getItem<string>(
+    "local:localProjectState",
+  );
+  if (localProjectState) {
+    store.localProjectState = JSON.parse(localProjectState); //WXT対策
   }
 
   // 2. teamsをループして配下のprojectsを取得
@@ -91,7 +90,6 @@ export const loadFiles = async () => {
         team: project.team,
         name: project.name,
         files: {},
-        open: store.projects[project.id]?.open ?? true,
       };
     }
   }
@@ -117,28 +115,39 @@ export const loadFiles = async () => {
   }
 
   // 5. プロジェクトの順序を更新
-  if (localProjectOrder) {
+  if (localProjectState) {
     // 削除されたプロジェクトは除去
-    const filteredOrder = JSON.parse(localProjectOrder).filter(
-      (id: string) => id in projects,
+    const filteredState = store.localProjectState.filter(
+      (localProject: LocalProjectState) => localProject.id in projects,
     );
     // 新しく追加されたプロジェクト
-    const newProjectIds = Object.keys(projects).filter(
-      (id) => !filteredOrder.includes(id),
-    );
-    store.projectOrder = [...filteredOrder, ...newProjectIds];
+    const newProjectStates = Object.keys(projects)
+      .filter(
+        (id) =>
+          !filteredState.some(
+            (localProject: LocalProjectState) => localProject.id === id,
+          ),
+      )
+      .map((id) => ({
+        id,
+        open: true,
+      }));
+    store.localProjectState = [...filteredState, ...newProjectStates];
   } else {
-    store.projectOrder = Object.entries(projects)
+    store.localProjectState = Object.entries(projects)
       .sort(([, a], [, b]) => {
         const nameA = `${a.team} - ${a.name}`;
         const nameB = `${b.team} - ${b.name}`;
         return nameA.localeCompare(nameB);
       })
-      .map(([id]) => id);
+      .map(([id]) => ({
+        id,
+        open: true,
+      }));
   }
   await storage.setItem<string>(
-    "local:projectOrder",
-    JSON.stringify(store.projectOrder), //WXT対策
+    "local:localProjectState",
+    JSON.stringify(store.localProjectState), //WXT対策
   );
 
   // 6. storeに反映
