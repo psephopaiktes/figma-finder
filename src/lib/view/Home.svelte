@@ -19,8 +19,12 @@
     loading = false;
   });
 
+  let isInputed: boolean = $derived.by(() => {
+    return query.trim().length > 0;
+  });
+
   let filterdProjects: Record<string, Project> = $derived.by(() => {
-    if (!query.trim()) {
+    if (!isInputed) {
       return store.projects;
     }
 
@@ -66,7 +70,7 @@
   </Nav>
 
   {#if Object.keys(store.projects).length !== 0}
-    <Tree projects={filterdProjects} />
+    <Tree projects={filterdProjects} {isInputed} />
   {:else if loading}
     <Loader />
   {:else}
@@ -75,6 +79,3 @@
 
   <NewFAB />
 </Layout>
-
-<style>
-</style>
