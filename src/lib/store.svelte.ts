@@ -13,6 +13,7 @@ export const store: Store = $state({
     currentUser: null,
     theme: "system",
     locale: null,
+    openInApp: false,
     users: {},
   },
 });

@@ -1,21 +1,21 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { store, user } from "@/lib/store.svelte";
-import { openSidePanel } from "@/lib/utils.svelte";
-import Home from "@/lib/view/Home.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store, user } from "@/lib/store.svelte";
+  import { openSidePanel } from "@/lib/utils.svelte";
+  import Home from "@/lib/view/Home.svelte";
 
-let needSidepanel = $state(false);
+  let needSidepanel = $state(false);
 
-$effect(() => {
-  if (store.loading) return;
-  if (!user() || Object.keys(user()?.teams || {}).length <= 0) {
-    needSidepanel = true;
-  }
-});
+  $effect(() => {
+    if (store.loading) return;
+    if (!user() || Object.keys(user()?.teams || {}).length <= 0) {
+      needSidepanel = true;
+    }
+  });
 </script>
 
 {#if needSidepanel}
-  <section class="caution">
+  <section class="l-centeringContainer">
     <svg-icon src="/img/icon/info-circle.svg"></svg-icon>
     <h2>
       {i18n.t({
@@ -53,19 +53,10 @@ $effect(() => {
 {/if}
 
 <style>
-  .caution {
-    height: 100vh;
-    padding: var(--sp-m);
-    display: grid;
-    place-content: center;
-    place-items: center;
-    gap: var(--sp-l);
-    text-align: center;
-    svg-icon {
-      font-size: 48px;
-    }
-    button {
-      width: fit-content;
-    }
+  svg-icon {
+    font-size: 48px;
+  }
+  button {
+    width: fit-content;
   }
 </style>

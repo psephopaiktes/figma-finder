@@ -82,6 +82,7 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
           ja: "すでにログイン済みのユーザーです。",
           en: "User already logged in.",
           "zh-cn": "用户已登录。",
+          es: "El usuario ya ha iniciado sesión.",
         }),
       );
       throw new Error(`User already logged in: ${oauthData.user_id}`);
@@ -118,7 +119,12 @@ function logOut(): boolean {
     store.options.users[store.options.currentUser]
   ) {
     const result = confirm(
-      i18n.t({ ja: "ログアウトしますか？", en: "Log out?", "zh-cn": "登出？" }),
+      i18n.t({
+        ja: "ログアウトしますか？",
+        en: "Log out?",
+        "zh-cn": "登出？",
+        es: "¿Cerrar sesión?",
+      }),
     );
     if (!result) return false;
 

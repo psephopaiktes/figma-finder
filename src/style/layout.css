@@ -42,3 +42,13 @@
   padding-block-end: var(--sp-2xl);
   margin-inline: auto;
 }
+
+.l-centeringContainer {
+  min-height: 60vh;
+  padding: var(--sp-xl) var(--sp-m) var(--sp-2xl);
+  display: grid;
+  place-content: center;
+  place-items: center;
+  gap: var(--sp-m);
+  text-align: center;
+}

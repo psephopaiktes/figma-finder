@@ -1,5 +1,6 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
   import { loadFiles } from "@/lib/store.svelte";
   import { store } from "@/lib/store.svelte";
   import Input from "@/lib/ui/Home/Input.svelte";
@@ -72,10 +73,27 @@
   {#if Object.keys(store.projects).length !== 0}
     <Tree projects={filterdProjects} {isInputed} />
   {:else if loading}
-    <Loader />
+    <section class="l-centeringContainer">
+      <Loader />
+    </section>
   {:else}
-    No Project
+    <section class="l-centeringContainer">
+      <p>
+        {i18n.t({
+          en: "No projects found.",
+          ja: "プロジェクトがありません。",
+          "zh-cn": "没有找到项目。",
+          es: "No se encontraron proyectos.",
+        })}
+      </p>
+    </section>
   {/if}
 
   <NewFAB />
 </Layout>
+
+<style>
+  p {
+    opacity: 0.6;
+  }
+</style>

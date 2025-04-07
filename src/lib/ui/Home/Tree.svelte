@@ -1,5 +1,6 @@
 <script lang="ts">
   import { store } from "@/lib/store.svelte";
+  import { formatEditedDate } from "@/lib/utils.svelte";
   import type { Project } from "@/types";
   import { slide } from "svelte/transition";
 
@@ -8,8 +9,6 @@
     isInputed = false,
   }: { projects: Record<string, Project>; isInputed: boolean } = $props();
   let dragIndex = $state(0);
-
-  $inspect(store.localProjectState);
 
   const saveState = () => {
     storage.setItem<string>(
@@ -48,7 +47,33 @@
 
     saveState();
   };
+
+  const openMenu = (event: MouseEvent) => {
+    event.preventDefault();
+    const contextMenu = document.getElementById("contextMenu");
+    if (!contextMenu) return;
+
+    contextMenu.style.top = `${event.pageY - scrollY}px`;
+    contextMenu.style.left = `${event.pageX}px`;
+    contextMenu.showPopover();
+
+    // Popover内の項目がクリックされたら閉じる (自動で閉じる場合もあるが念のため)
+    // contextMenu.addEventListener("click", (event) => {
+    //   if (event.target.tagName === "LI") {
+    //     contextMenu.hidePopover();
+    //   }
+    // });
+
+    // それかメニュー以外の場所をクリックしたらメニューを閉じる
+    document.addEventListener("click", () => {
+      contextMenu.hidePopover();
+    });
+  };
 </script>
+
+<div popover="manual" id="contextMenu" class="c-popover">
+  This is a sample Menu.
+</div>
 
 <ul class="root">
   {#each store.localProjectState as localProject, index}
@@ -61,21 +86,30 @@
         ondragstart={() => dragstart(index)}
         ondragover={dragover}
         ondragleave={dragleave}
-        ondrop={(event) => ondrop(index, event)}
+        ondrop={(e) => ondrop(index, e)}
       >
         <details bind:open={localProject.open} onchange={saveState}>
-          <summary>
-            {project.team} / {project.name}
+          <summary oncontextmenu={(e) => openMenu(e)}>
+            <span>{project.team} /</span>
+            {project.name}
             <small>{fileCount}files</small>
             {#if !isInputed}
               <svg-icon src="/img/icon/drag.svg">draggable</svg-icon>
             {/if}
           </summary>
-          <ul>
+          <ul class="files">
             {#each Object.entries(project.files).sort( ([, fileA], [, fileB]) => fileA.name.localeCompare(fileB.name), ) as [fileId, file]}
               <li transition:slide>
-                <a href={`https://figma.com/${fileId}`} target="_blank">
-                  {file.name}
+                <a
+                  href={store.options.openInApp
+                    ? `figma://file/${fileId}`
+                    : `https://figma.com/file/${fileId}`}
+                  target="_blank"
+                  oncontextmenu={(e) => openMenu(e)}
+                >
+                  <img src={file.thumbnail_url} alt="thumbnail" />
+                  <h3>{file.name}</h3>
+                  <p>{formatEditedDate(file.last_modified)}</p>
                 </a>
               </li>
             {/each}
@@ -88,7 +122,7 @@
 
 <style>
   .root {
-    margin-inline: var(--sp-m);
+    margin: var(--sp-m) var(--sp-m) 0;
     > li {
       margin-block-start: var(--sp-xs);
       padding-block-start: var(--sp-xs);
@@ -98,20 +132,18 @@
   details {
     border: 2px solid rgb(from var(--color-main) r g b / 0.1);
     border-radius: 10px;
-    padding: 4px;
+    padding: 6px;
 
     &::details-content {
       display: block;
       height: 0;
       opacity: 0;
-      overflow: hidden;
       transition: 0.2s ease-out allow-discrete;
     }
 
     &[open]::details-content {
       height: calc-size(auto, size);
       opacity: 1;
-      overflow: auto;
     }
 
     summary {
@@ -121,11 +153,17 @@
       gap: 4px;
       justify-content: start;
       align-items: center;
+      border-radius: 4px;
       &::marker {
         content: "";
       }
+      span {
+        opacity: 0.4;
+      }
       small {
         flex: 1;
+        font-size: 11px;
+        opacity: 0.4;
       }
       svg-icon {
         width: 16px;
@@ -147,5 +185,53 @@
     &[open] summary::before {
       mask-image: url(/img/icon/folder-open.svg);
     }
+  }
+
+  .files li {
+    margin-block-start: var(--sp-xs);
+  }
+  .files li > a {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px 8px;
+    align-items: center;
+    padding: 4px;
+    border-radius: 4px;
+    img {
+      grid-row: 1 / span 2;
+      background: rgb(from var(--color-main) r g b / 0.1);
+      border: 1px solid rgb(from var(--color-main) r g b / 0.1);
+      width: 100%;
+      aspect-ratio: 96 / 54;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    h3 {
+      font-size: 1rem;
+      line-height: 1.3;
+      font-weight: 500;
+      overflow: hidden;
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      align-self: end;
+    }
+    p {
+      opacity: 0.4;
+      font-size: 10px;
+      align-self: start;
+    }
+
+    &:hover {
+      background: rgb(from var(--color-theme) r g b / 0.1);
+    }
+  }
+
+  #contextMenu {
+    position: fixed;
+    user-select: none;
   }
 </style>

@@ -66,7 +66,7 @@
   <header class="l-navHeader">
     <button onclick={openDrawer}>
       <svg-icon src="/img/icon/menu.svg">
-        {i18n.t({ en: "Menu", ja: "メニュー", "zh-cn": "菜单" })}
+        {i18n.t({ en: "Menu", ja: "メニュー", "zh-cn": "菜单", es: "Menú" })}
       </svg-icon>
     </button>
 
@@ -84,7 +84,7 @@
   <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">
     <button onclick={closeDrawer}>
       <svg-icon src="/img/icon/close.svg">
-        {i18n.t({ en: "Close", ja: "閉じる", "zh-cn": "关闭" })}
+        {i18n.t({ en: "Close", ja: "閉じる", "zh-cn": "关闭", es: "Cerrar" })}
       </svg-icon>
     </button>
 
@@ -151,6 +151,7 @@
       mask-image: linear-gradient(#000 50%, transparent);
       mask-composite: intersect;
       backdrop-filter: blur(16px);
+      pointer-events: none;
     }
 
     .child {

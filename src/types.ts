@@ -6,6 +6,7 @@ export type Store = {
     currentUser: string | null;
     theme: string;
     locale: string | null;
+    openInApp: boolean;
     users: Record<string, User>;
   };
 };

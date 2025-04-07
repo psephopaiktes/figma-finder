@@ -5,15 +5,6 @@
   import { openSidePanel } from "@/lib/utils.svelte";
 
   let users = $derived(store.options.users);
-  let selector: HTMLDialogElement;
-
-  function openSelector() {
-    selector.showModal();
-  }
-
-  function closeSelector() {
-    selector.close();
-  }
 
   async function addAccount() {
     if (window.location.pathname.includes("popup")) {
@@ -33,13 +24,6 @@
     await oauth.logIn({ add: true });
     location.reload();
   }
-
-  function backdropClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    if (target === selector) {
-      closeSelector();
-    }
-  }
 </script>
 
 {#if !store.options.currentUser}
@@ -47,11 +31,11 @@
     <img src="/img/figma.svg" alt="Figma" />
   </a>
 {:else}
-  <button onclick={openSelector} class="selectorButton">
+  <button popovertarget="userSelector" class="selectorButton">
     <img src={users[store.options.currentUser].img_url} alt="User Selector" />
   </button>
 
-  <dialog bind:this={selector} onclick={backdropClick}>
+  <dialog popover id="userSelector" class="c-popover">
     {#each Object.keys(users) as id}
       <button
         onclick={() => {
@@ -133,29 +117,9 @@
 
   dialog {
     position: fixed;
-    flex-direction: column;
-    gap: var(--sp-xs);
-    width: 240px;
     left: auto;
     top: 44px;
     right: 8px;
-    padding: 8px;
-    border-radius: 12px;
-    color: var(--color-base);
-    background-color: var(--color-main);
-    border: 1px solid rgb(from var(--color-base) r g b / 20%);
-    box-shadow: 2px 12px 64px -24px rgb(0 0 0 / 0.4);
-    &[open] {
-      display: flex;
-    }
-    &::backdrop {
-      background-color: transparent;
-    }
-
-    hr {
-      border: 0;
-      border-top: 1px solid rgb(from var(--color-base) r g b / 20%);
-    }
     button {
       width: 100%;
       display: flex;

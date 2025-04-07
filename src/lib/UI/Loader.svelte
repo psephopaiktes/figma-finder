@@ -1,9 +1,9 @@
 <script lang="ts">
-// by Astrit Malsia
-// Released under the MIT license
-// URL：https://codepen.io/astrit
+  // by Astrit Malsia
+  // Released under the MIT license
+  // URL：https://codepen.io/astrit
 
-let { size = "32px" } = $props();
+  let { size = "32px" } = $props();
 </script>
 
 <div class="figma" style="font-size: {size};">
@@ -26,6 +26,15 @@ let { size = "32px" } = $props();
 </div>
 
 <style>
+  @keyframes twinkle {
+    0% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0.8;
+    }
+  }
+
   div {
     box-sizing: content-box;
   }
@@ -33,6 +42,7 @@ let { size = "32px" } = $props();
   .figma {
     display: inline-block;
     opacity: 0.6;
+    animation: twinkle 0.5s ease-in-out infinite alternate;
     width: 1em;
     aspect-ratio: 1;
     position: relative;

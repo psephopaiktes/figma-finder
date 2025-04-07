@@ -1,22 +1,22 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
+  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-const showNav = location.search.includes("nav");
-const title = i18n.t({
-  en: "Options",
-  ja: "設定",
-  "zh-cn": "选项",
-  es: "Opciones",
-});
+  const showNav = location.search.includes("nav");
+  const title = i18n.t({
+    en: "Options",
+    ja: "設定",
+    "zh-cn": "选项",
+    es: "Opciones",
+  });
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
 <Layout class="l-document c-document" {title}>
@@ -32,23 +32,6 @@ $effect(() => {
       es: "Configuración de pantalla",
     })}
   </h2>
-  <label>
-    <h3>
-      {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题", es: "Tema" })}
-    </h3>
-
-    <select bind:value={store.options.theme}>
-      <option value="system">
-        {i18n.t({ en: "System", ja: "システム", "zh-cn": "系统" })}
-      </option>
-      <option value="light">
-        {i18n.t({ en: "Light", ja: "ライト", "zh-cn": "亮" })}
-      </option>
-      <option value="dark">
-        {i18n.t({ en: "Dark", ja: "ダーク", "zh-cn": "暗" })}
-      </option>
-    </select>
-  </label>
 
   <label>
     <h3>
@@ -57,7 +40,12 @@ $effect(() => {
 
     <select bind:value={store.options.locale}>
       <option value={null}>
-        {i18n.t({ en: "System", ja: "システム", "zh-cn": "系统" })}
+        {i18n.t({
+          en: "System",
+          ja: "システム",
+          "zh-cn": "系统",
+          es: "Sistema",
+        })}
       </option>
       {#each Object.keys(i18n.locales) as locale}
         <option value={locale}>
@@ -67,26 +55,95 @@ $effect(() => {
     </select>
   </label>
 
+  <label>
+    <h3>
+      {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题", es: "Tema" })}
+    </h3>
+
+    <select bind:value={store.options.theme}>
+      <option value="system">
+        {i18n.t({
+          en: "System",
+          ja: "システム",
+          "zh-cn": "系统",
+          es: "Sistema",
+        })}
+      </option>
+      <option value="light">
+        {i18n.t({ en: "Light", ja: "ライト", "zh-cn": "亮", es: "Luz" })}
+      </option>
+      <option value="dark">
+        {i18n.t({ en: "Dark", ja: "ダーク", "zh-cn": "暗", es: "Oscuro" })}
+      </option>
+    </select>
+  </label>
+
+  <h3>
+    {i18n.t({
+      en: "File Opening Method",
+      ja: "ファイルの開き方",
+      "zh-cn": "文件打开方式",
+      es: "Método de apertura de archivos",
+    })}
+  </h3>
+  <label>
+    <input type="radio" bind:group={store.options.openInApp} value={false} />
+    {i18n.t({
+      en: "Open in Browser",
+      ja: "ブラウザで開く",
+      "zh-cn": "在浏览器中打开",
+      es: "Abrir en el navegador",
+    })}
+  </label>
+  <label>
+    <input type="radio" bind:group={store.options.openInApp} value={true} />
+    {i18n.t({
+      en: "Open in Desktop App",
+      ja: "デスクトップアプリで開く",
+      "zh-cn": "在桌面应用程序中打开",
+      es: "Abrir en la aplicación de escritorio",
+    })}
+  </label>
+
   {#if store.options.currentUser}
     <hr />
 
-    <h2>{i18n.t({ en: "Team ID", ja: "チームID", "zh-cn": "团队ID" })}</h2>
+    <h2>
+      {i18n.t({
+        en: "Team ID",
+        ja: "チームID",
+        "zh-cn": "团队ID",
+        es: "ID del equipo",
+      })}
+    </h2>
     <TeamSetting />
   {/if}
 
   <hr />
 
-  <h2>{i18n.t({ en: "Information", ja: "情報", "zh-cn": "信息" })}</h2>
+  <h2>
+    {i18n.t({
+      en: "Information",
+      ja: "情報",
+      "zh-cn": "信息",
+      es: "Información",
+    })}
+  </h2>
   <!-- TODO: Helpに移動かな -->
   <h3>URL</h3>
   <ul>
     <li>
       <a href="https://TODO動的に" target="_blank">
-        {i18n.t({ en: "Store Page", ja: "ストアページ", "zh-cn": "商店页面" })}
+        {i18n.t({
+          en: "Store Page",
+          ja: "ストアページ",
+          "zh-cn": "商店页面",
+          es: "Página de la tienda",
+        })}
       </a>
     </li>
     <li>
-      <a href="https://github.com/psephopaiktes/tabulasa" target="_blank">
+      <a href="https://github.com/psephopaiktes/figma-finder" target="_blank">
         GitHub
       </a>
     </li>
@@ -96,6 +153,7 @@ $effect(() => {
           en: "Author's Website",
           ja: "制作者HP",
           "zh-cn": "作者网站",
+          es: "Sitio web del autor",
         })}
       </a>
     </li>
@@ -106,6 +164,7 @@ $effect(() => {
       en: "Support the Developer",
       ja: "制作者を支援",
       "zh-cn": "支持开发者",
+      es: "Apoyar al desarrollador",
     })}
   </h3>
   <ul>

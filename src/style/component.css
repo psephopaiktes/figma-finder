@@ -90,3 +90,22 @@
     outline-color: rgb(from var(--color-theme) r g b / 0.8);
   }
 }
+
+.c-popover {
+  flex-direction: column;
+  gap: var(--sp-s);
+  width: 240px;
+  color: var(--color-base);
+  padding: 8px;
+  border-radius: 12px;
+  background-color: var(--color-main);
+  border: 1px solid rgb(from var(--color-base) r g b / 20%);
+  box-shadow: 2px 12px 64px -24px rgb(0 0 0 / 0.4);
+  &:popover-open {
+    display: flex;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid rgb(from var(--color-base) r g b / 20%);
+  }
+}

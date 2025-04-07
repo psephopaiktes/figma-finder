@@ -43,6 +43,7 @@
   }
 }
 
+:root,
 body {
   color: var(--color-main);
   background-color: var(--color-base);
@@ -58,7 +59,7 @@ body {
 
 #app {
   min-width: 320px;
-  min-height: 640px;
+  min-height: 560px;
 }
 
 * {

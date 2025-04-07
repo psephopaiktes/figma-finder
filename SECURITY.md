@@ -4,7 +4,7 @@
 
 If you discover a security vulnerability in this project, please report it to us directly. Do not report vulnerabilities in public GitHub issues.
 
-Please submit your report using the GitHub security advisories page: [Create a security advisory](https://github.com/psephopaiktes/tabulasa/security/advisories/new). We will respond as soon as possible and prioritize a fix.
+Please submit your report using the GitHub security advisories page: [Create a security advisory](https://github.com/psephopaiktes/figma-finder/security/advisories/new). We will respond as soon as possible and prioritize a fix.
 
 ## Security Considerations
 

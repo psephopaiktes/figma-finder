@@ -1,7 +1,7 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
+  import i18n from "@/lib/i18n.svelte";
 
-let { value = $bindable() } = $props();
+  let { value = $bindable() } = $props();
 </script>
 
 <form>
@@ -23,6 +23,8 @@ let { value = $bindable() } = $props();
   form {
     display: grid;
     width: 100%;
+    background-color: var(--color-base);
+    border-radius: 6px;
   }
 
   svg-icon {

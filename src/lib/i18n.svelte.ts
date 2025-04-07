@@ -39,6 +39,8 @@ export default {
       );
     }
 
+    // TODO: 足りないキーがあったら警告
+
     const userLang =
       store.options.locale ||
       browser.i18n.getUILanguage().toLowerCase() ||
