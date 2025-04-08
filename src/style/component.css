@@ -110,6 +110,7 @@
     text-align: left;
     padding: var(--sp-s);
     border-radius: 4px;
+    line-height: 1.3;
     &:hover {
       background: var(--color-theme);
     }

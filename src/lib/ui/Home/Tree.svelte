@@ -1,9 +1,9 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
   import { store } from "@/lib/store.svelte";
   import { formatEditedDate } from "@/lib/utils.svelte";
   import type { Project } from "@/types";
   import { slide } from "svelte/transition";
+  import ContextMenu from "./ContextMenu.svelte";
 
   let {
     projects,
@@ -11,7 +11,12 @@
   }: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
   let dragIndex = $state(0);
-  let contextMenuProps = $state({ id: "", type: "" });
+
+  let contextMenuProps: [
+    event: MouseEvent | null,
+    id: string,
+    type: "file" | "project",
+  ] = $state([null, "", "file"]);
 
   const saveState = () => {
     storage.setItem<string>(
@@ -50,81 +55,13 @@
 
     saveState();
   };
-
-  const openContextMenu = (
-    event: MouseEvent,
-    id: string,
-    type: "project" | "file",
-  ) => {
-    event.preventDefault();
-    const contextMenu = document.getElementById("contextMenu");
-
-    if (!contextMenu) return;
-    if (contextMenu.matches(":popover-open")) {
-      contextMenu.hidePopover();
-      return;
-    }
-
-    contextMenuProps.id = id;
-    contextMenuProps.type = type;
-
-    // TODO: XYの最大値を設定。できれば画面幅
-    contextMenu.style.top = `${event.pageY - scrollY}px`;
-    contextMenu.style.left = `${event.pageX}px`;
-    contextMenu.showPopover();
-
-    // それかメニュー以外の場所をクリックしたらメニューを閉じる
-    document.addEventListener("click", () => {
-      contextMenu.hidePopover();
-    });
-  };
 </script>
 
-<dialog popover="manual" id="contextMenu" class="c-popover">
-  <a
-    href={contextMenuProps.type === "file"
-      ? `https://figma.com/file/${contextMenuProps.id}`
-      : `https://figma.com/files/project/${contextMenuProps.id}`}
-    target="_blank"
-  >
-    {i18n.t({
-      en: "Open in Browser",
-      ja: "ブラウザで開く",
-      "zh-cn": "在浏览器中打开",
-      es: "Abrir en el navegador",
-    })}
-  </a>
-  <a
-    href={contextMenuProps.type === "file"
-      ? `figma://file/${contextMenuProps.id}`
-      : `figma://files/project/${contextMenuProps.id}`}
-    target="_blank"
-  >
-    {i18n.t({
-      en: "Open in Desktop App",
-      ja: "デスクトップアプリで開く",
-      "zh-cn": "在桌面应用程序中打开",
-      es: "Abrir en la aplicación de escritorio",
-    })}
-  </a>
-  <hr />
-  <button
-    onclick={() => {
-      const url =
-        contextMenuProps.type === "file"
-          ? `https://figma.com/file/${contextMenuProps.id}`
-          : `https://figma.com/files/project/${contextMenuProps.id}`;
-      navigator.clipboard.writeText(url);
-    }}
-  >
-    {i18n.t({
-      en: "Copy URL",
-      ja: "URLをコピー",
-      "zh-cn": "复制链接",
-      es: "Copiar URL",
-    })}
-  </button>
-</dialog>
+<ContextMenu
+  bind:event={contextMenuProps[0]}
+  bind:id={contextMenuProps[1]}
+  bind:type={contextMenuProps[2]}
+/>
 
 <ul class="root">
   {#each store.localProjectState as localProject, index}
@@ -141,8 +78,9 @@
       >
         <details bind:open={localProject.open} onchange={saveState}>
           <summary
-            oncontextmenu={(e) =>
-              openContextMenu(e, localProject.id, "project")}
+            oncontextmenu={(e) => {
+              contextMenuProps = [e, localProject.id, "project"];
+            }}
           >
             <span>{project.team} /</span>
             {project.name}
@@ -159,7 +97,9 @@
                     ? `figma://file/${fileId}`
                     : `https://figma.com/file/${fileId}`}
                   target="_blank"
-                  oncontextmenu={(e) => openContextMenu(e, fileId, "file")}
+                  oncontextmenu={(e) => {
+                    contextMenuProps = [e, fileId, "file"];
+                  }}
                 >
                   <img src={file.thumbnail_url} alt="thumbnail" />
                   <h3>{file.name}</h3>
@@ -282,9 +222,5 @@
     &:hover {
       background: rgb(from var(--color-theme) r g b / 0.1);
     }
-  }
-
-  #contextMenu {
-    width: 200px;
   }
 </style>
