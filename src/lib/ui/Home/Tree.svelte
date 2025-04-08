@@ -2,6 +2,7 @@
   import { store } from "@/lib/store.svelte";
   import { formatEditedDate } from "@/lib/utils.svelte";
   import type { Project } from "@/types";
+  import { tick } from "svelte";
   import { slide } from "svelte/transition";
   import ContextMenu from "./ContextMenu.svelte";
 
@@ -18,6 +19,20 @@
     type: "file" | "project",
   ] = $state([null, "", "file"]);
 
+  let renderdProjects = $derived.by(() => {
+    const renderdProjects = [];
+    for (const localProject of store.localProjectState) {
+      if (projects[localProject.id]) {
+        renderdProjects.push({
+          id: localProject.id,
+          ...projects[localProject.id],
+        });
+      }
+    }
+    return renderdProjects;
+  });
+  $inspect(renderdProjects, "renderdProjects");
+
   const saveState = () => {
     storage.setItem<string>(
       "local:localProjectState",
@@ -25,23 +40,31 @@
     );
   };
 
-  const dragstart = (index: number) => {
+  const dragstart = (index: number, event: DragEvent) => {
     dragIndex = index;
+    (event.currentTarget as HTMLElement).classList.add("dragstart");
+
+    const ghost = (event.currentTarget as HTMLElement).querySelector("summary");
+    if (!ghost) return;
+
+    event.dataTransfer?.setDragImage(ghost, 50, 50);
+  };
+  const dragend = (event: DragEvent) => {
+    (event.currentTarget as HTMLElement).classList.remove("dragstart");
   };
 
   const dragover = (event: DragEvent) => {
     event.preventDefault();
-    (event.currentTarget as HTMLElement).style.borderTop =
-      "2px solid rgb(from var(--color-theme) r g b / 0.4)";
+    (event.currentTarget as HTMLElement).classList.add("dragover");
   };
 
   const dragleave = (event: DragEvent) => {
-    (event.currentTarget as HTMLElement).style.borderTop = "";
+    (event.currentTarget as HTMLElement).classList.remove("dragover");
   };
 
   const ondrop = (index: number, event: DragEvent) => {
     event.preventDefault();
-    (event.currentTarget as HTMLElement).style.borderTop = "";
+    (event.currentTarget as HTMLElement).classList.remove("dragover");
     if (index === dragIndex) return;
 
     const moveProject = { ...store.localProjectState[dragIndex] };
@@ -55,6 +78,23 @@
 
     saveState();
   };
+
+  // $effect(() => {
+  //   projects;
+  //   tick().then(() => {
+  //     if (!isInputed) return;
+
+  //     const files = document.querySelectorAll(
+  //       ".projects > li .files > li:first-child a",
+  //     );
+  //     console.log("files", files[0]);
+  //     if (files.length === 0) return;
+  //     for (const file of files) {
+  //       file.classList.remove("isFirst");
+  //     }
+  //     files[0].classList.add("isFirst");
+  //   });
+  // });
 </script>
 
 <ContextMenu
@@ -63,7 +103,7 @@
   bind:type={contextMenuProps[2]}
 />
 
-<ul class="root">
+<ul class="projects">
   {#each store.localProjectState as localProject, index}
     {#if projects[localProject.id]}
       {@const project = projects[localProject.id]}
@@ -71,7 +111,8 @@
       <li
         transition:slide
         draggable={!isInputed}
-        ondragstart={() => dragstart(index)}
+        ondragstart={(e) => dragstart(index, e)}
+        ondragend={dragend}
         ondragover={dragover}
         ondragleave={dragleave}
         ondrop={(e) => ondrop(index, e)}
@@ -89,6 +130,7 @@
               <svg-icon src="/img/icon/drag.svg">draggable</svg-icon>
             {/if}
           </summary>
+
           <ul class="files">
             {#each Object.entries(project.files).sort( ([, fileA], [, fileB]) => fileA.name.localeCompare(fileB.name), ) as [fileId, file]}
               <li transition:slide>
@@ -115,11 +157,23 @@
 </ul>
 
 <style>
-  .root {
+  .projects {
     margin: var(--sp-m) var(--sp-m) 0;
-    > li {
-      margin-block-start: var(--sp-xs);
-      padding-block-start: var(--sp-xs);
+    padding-block-end: var(--sp-xl);
+  }
+  .projects > li {
+    margin-block-start: var(--sp-xs);
+    padding-block-start: var(--sp-xs);
+    border-top: 2px solid transparent;
+    :global {
+      &.dragover {
+        opacity: 0.9;
+        border-color: rgb(from var(--color-theme) r g b / 0.6);
+      }
+      &.dragstart details {
+        opacity: 0.8;
+        border-style: dashed;
+      }
     }
   }
 
@@ -185,6 +239,7 @@
     margin-block-start: var(--sp-xs);
   }
   .files li > a {
+    position: relative;
     display: grid;
     grid-template-columns: 96px 1fr;
     grid-template-rows: auto auto;
@@ -218,9 +273,23 @@
       font-size: 10px;
       align-self: start;
     }
-
-    &:hover {
+    :global(&.isFirst) {
       background: rgb(from var(--color-theme) r g b / 0.1);
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        bottom: 4px;
+        right: 8px;
+        width: 16px;
+        aspect-ratio: 1;
+        mask-image: url(/img/icon/enter.svg);
+        mask-size: cover;
+        background: var(--color-theme);
+      }
+    }
+    &:hover {
+      background: rgb(from var(--color-theme) r g b / 0.2);
     }
   }
 </style>

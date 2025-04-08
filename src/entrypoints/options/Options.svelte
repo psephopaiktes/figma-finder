@@ -8,7 +8,7 @@
   const showNav = location.search.includes("nav");
   const title = i18n.t({
     en: "Options",
-    ja: "設定",
+    ja: "オプション",
     "zh-cn": "选项",
     es: "Opciones",
   });
@@ -37,7 +37,6 @@
     <h3>
       {i18n.t({ en: "Language", ja: "言語", "zh-cn": "语言", es: "Idioma" })}
     </h3>
-
     <select bind:value={store.options.locale}>
       <option value={null}>
         {i18n.t({
@@ -86,24 +85,28 @@
       es: "Método de apertura de archivos",
     })}
   </h3>
-  <label>
-    <input type="radio" bind:group={store.options.openInApp} value={false} />
-    {i18n.t({
-      en: "Open in Browser",
-      ja: "ブラウザで開く",
-      "zh-cn": "在浏览器中打开",
-      es: "Abrir en el navegador",
-    })}
-  </label>
-  <label>
-    <input type="radio" bind:group={store.options.openInApp} value={true} />
-    {i18n.t({
-      en: "Open in Desktop App",
-      ja: "デスクトップアプリで開く",
-      "zh-cn": "在桌面应用程序中打开",
-      es: "Abrir en la aplicación de escritorio",
-    })}
-  </label>
+  <p>
+    <label>
+      <input type="radio" bind:group={store.options.openInApp} value={false} />
+      {i18n.t({
+        en: "Open in Browser",
+        ja: "ブラウザで開く",
+        "zh-cn": "在浏览器中打开",
+        es: "Abrir en el navegador",
+      })}
+    </label>
+  </p>
+  <p>
+    <label>
+      <input type="radio" bind:group={store.options.openInApp} value={true} />
+      {i18n.t({
+        en: "Open in Desktop App",
+        ja: "デスクトップアプリで開く",
+        "zh-cn": "在桌面应用程序中打开",
+        es: "Abrir en la aplicación de escritorio",
+      })}
+    </label>
+  </p>
 
   {#if store.options.currentUser}
     <hr />
@@ -129,7 +132,6 @@
       es: "Información",
     })}
   </h2>
-  <!-- TODO: Helpに移動かな -->
   <h3>URL</h3>
   <ul>
     <li>
@@ -161,10 +163,10 @@
 
   <h3>
     {i18n.t({
-      en: "Support the Developer",
-      ja: "制作者を支援",
-      "zh-cn": "支持开发者",
-      es: "Apoyar al desarrollador",
+      en: "Support the Developer🙏",
+      ja: "制作者を支援🙏",
+      "zh-cn": "支持开发者🙏",
+      es: "Apoyar al desarrollador🙏",
     })}
   </h3>
   <ul>
@@ -193,4 +195,32 @@
 </Layout>
 
 <style>
+  ul {
+    list-style: disc;
+    margin-block-start: 0.8rem;
+    padding-inline-start: 1.5em;
+  }
+  li > a {
+    color: var(--color-theme);
+    text-decoration: none;
+  }
+  select {
+    border: 2px solid rgb(from var(--color-main) r g b / 0.1);
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    margin-block-start: 0.6rem;
+  }
+  input[type="radio"] {
+    width: 1em;
+    aspect-ratio: 1;
+    margin: calc(1lh - 1em) 0;
+    vertical-align: middle;
+    appearance: none;
+    border-radius: 50%;
+    border: 1px solid rgb(from var(--color-main) r g b / 0.6);
+    &:checked {
+      background: var(--color-theme);
+      box-shadow: var(--color-base) 0 0 0 2px inset;
+    }
+  }
 </style>

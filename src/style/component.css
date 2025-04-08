@@ -1,19 +1,22 @@
 .c-document {
-  > h2 {
-    font-size: 1.4rem;
+  h2 {
+    font-size: 1.6rem;
     margin-block-start: var(--sp-l);
+    letter-spacing: .05em;
   }
-  > h3 {
+  h3 {
     margin-block-start: var(--sp-m);
+    opacity: 0.8;
   }
   > hr {
     margin-block-start: var(--sp-xl);
     margin-block-end: var(--sp-xl);
+    border: 0;
+    border-top: 1px solid rgb(from var(--color-main) r g b / 0.1);
   }
   > p {
-    margin-block-start: 0.8rem;
+    margin-block-start: 0.6rem;
   }
-
   > p a {
     color: var(--color-theme);
     text-decoration: none;

@@ -31,7 +31,7 @@
     <img src="/img/figma.svg" alt="Figma" />
   </a>
 {:else}
-  <button popovertarget="userSelector" class="selectorButton">
+  <button popovertarget="userSelector" class="selectorButton" tabindex="-1">
     <img src={users[store.options.currentUser].img_url} alt="User Selector" />
   </button>
 

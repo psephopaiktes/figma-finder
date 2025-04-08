@@ -15,13 +15,13 @@
   let loading = $state(true);
   let query = $state("");
 
+  let isInputed: boolean = $derived.by(() => {
+    return query.trim().length > 0;
+  });
+
   onMount(async () => {
     await loadFiles();
     loading = false;
-  });
-
-  let isInputed: boolean = $derived.by(() => {
-    return query.trim().length > 0;
   });
 
   let filterdProjects: Record<string, Project> = $derived.by(() => {
@@ -63,11 +63,17 @@
 
     return filteredProjects;
   });
+
+  const openFirst = () => {
+    alert("submit");
+    // const input = event.target as HTMLInputElement;
+    // query = input.value;
+  };
 </script>
 
 <Layout>
   <Nav current="home">
-    <Input bind:value={query} />
+    <Input bind:value={query} submit={openFirst} />
   </Nav>
 
   {#if Object.keys(store.projects).length !== 0}

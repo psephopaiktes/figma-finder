@@ -1,21 +1,30 @@
 <script lang="ts">
   import i18n from "@/lib/i18n.svelte";
 
-  let { value = $bindable() } = $props();
+  let { value = $bindable(), submit } = $props();
+
+  function autofocus(node: HTMLElement) {
+    node.focus();
+  }
 </script>
 
-<form>
+<form
+  onsubmit={(e) => {
+    e.preventDefault();
+    submit();
+  }}
+>
   <svg-icon src="/img/icon/search.svg"></svg-icon>
   <input
     type="search"
-    autofocus
+    use:autofocus
+    bind:value
     placeholder={i18n.t({
       en: "Find Figma Files",
       ja: "Figmaファイルを探す",
       "zh-cn": "查找Figma文件",
       es: "Encontrar archivos de Figma",
     })}
-    bind:value
   />
 </form>
 
