@@ -19,27 +19,6 @@
     type: "file" | "project",
   ] = $state([null, "", "file"]);
 
-  let renderdProjects = $derived.by(() => {
-    const renderdProjects = [];
-    for (const localProject of store.localProjectState) {
-      if (projects[localProject.id]) {
-        renderdProjects.push({
-          id: localProject.id,
-          ...projects[localProject.id],
-        });
-      }
-    }
-    return renderdProjects;
-  });
-  $inspect(renderdProjects, "renderdProjects");
-
-  const saveState = () => {
-    storage.setItem<string>(
-      "local:localProjectState",
-      JSON.stringify(store.localProjectState), //WXT対策
-    );
-  };
-
   const dragstart = (index: number, event: DragEvent) => {
     dragIndex = index;
     (event.currentTarget as HTMLElement).classList.add("dragstart");
@@ -75,26 +54,17 @@
     } else {
       store.localProjectState.splice(index, 0, moveProject);
     }
-
-    saveState();
   };
 
-  // $effect(() => {
-  //   projects;
-  //   tick().then(() => {
-  //     if (!isInputed) return;
-
-  //     const files = document.querySelectorAll(
-  //       ".projects > li .files > li:first-child a",
-  //     );
-  //     console.log("files", files[0]);
-  //     if (files.length === 0) return;
-  //     for (const file of files) {
-  //       file.classList.remove("isFirst");
-  //     }
-  //     files[0].classList.add("isFirst");
-  //   });
-  // });
+  $effect(() => {
+    tick().then(() => {
+      storage.setItem<string>(
+        "local:localProjectState",
+        JSON.stringify(store.localProjectState), //WXT対策
+      );
+    });
+  });
+  $inspect(store.localProjectState, "localProjectState");
 </script>
 
 <ContextMenu
@@ -117,7 +87,7 @@
         ondragleave={dragleave}
         ondrop={(e) => ondrop(index, e)}
       >
-        <details bind:open={localProject.open} onchange={saveState}>
+        <details bind:open={localProject.open}>
           <summary
             oncontextmenu={(e) => {
               contextMenuProps = [e, localProject.id, "project"];
@@ -273,23 +243,24 @@
       font-size: 10px;
       align-self: start;
     }
-    :global(&.isFirst) {
-      background: rgb(from var(--color-theme) r g b / 0.1);
-      &::after {
-        content: "";
-        position: absolute;
-        display: block;
-        bottom: 4px;
-        right: 8px;
-        width: 16px;
-        aspect-ratio: 1;
-        mask-image: url(/img/icon/enter.svg);
-        mask-size: cover;
-        background: var(--color-theme);
-      }
-    }
     &:hover {
       background: rgb(from var(--color-theme) r g b / 0.2);
+    }
+  }
+
+  :global(.projects > li:first-of-type li:first-of-type a) {
+    background: rgb(from var(--color-theme) r g b / 0.1);
+    &::after {
+      content: "";
+      position: absolute;
+      display: block;
+      bottom: 4px;
+      right: 8px;
+      width: 16px;
+      aspect-ratio: 1;
+      mask-image: url(/img/icon/enter.svg);
+      mask-size: cover;
+      background: var(--color-theme);
     }
   }
 </style>

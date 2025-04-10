@@ -11,6 +11,7 @@
   import type { File, Project } from "@/types";
   import Fuse from "fuse.js";
   import { onMount } from "svelte";
+  import { tick } from "svelte";
 
   let loading = $state(true);
   let query = $state("");
@@ -64,16 +65,18 @@
     return filteredProjects;
   });
 
-  const openFirst = () => {
-    alert("submit");
-    // const input = event.target as HTMLInputElement;
-    // query = input.value;
+  const openFirstFile = () => {
+    tick().then(() => {
+      const firstFile = document.querySelector(".projects > li .files > li a");
+      if (!firstFile) return;
+      window.open(firstFile.getAttribute("href") || "");
+    });
   };
 </script>
 
 <Layout>
   <Nav current="home">
-    <Input bind:value={query} submit={openFirst} />
+    <Input bind:value={query} submit={openFirstFile} />
   </Nav>
 
   {#if Object.keys(store.projects).length !== 0}
