@@ -35,9 +35,8 @@ const manifest = {
 export default defineConfig({
   srcDir: "src",
   outDir: "build",
-  extensionApi: "chrome",
   modules: ["@wxt-dev/module-svelte", "@wxt-dev/auto-icons"],
-  runner: {
+  webExt: {
     startUrls: [
       "https://figma.com/",
       "chrome-extension://klifomaejfaibpkbigbpljdmelbkehbe/options.html?nav",

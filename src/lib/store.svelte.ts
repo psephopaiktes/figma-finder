@@ -3,7 +3,6 @@ import type {
   GetProjectFilesResponse,
   GetTeamProjectsResponse,
 } from "@figma/rest-api-spec";
-import { storage } from "@wxt-dev/storage";
 
 export const store: Store = $state({
   projects: {},
