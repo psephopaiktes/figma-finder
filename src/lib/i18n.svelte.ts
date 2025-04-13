@@ -28,23 +28,44 @@ const locales: LocaleSetting = {
   },
 };
 
+type LocaleKey = keyof typeof locales;
+
 export default {
   default_locale,
   locales,
 
-  t(translations: Record<string, string | undefined>): string {
+  t(
+    translations: Partial<Record<LocaleKey, string>> &
+      Record<typeof default_locale, string>,
+  ): string {
     if (!(default_locale in translations)) {
       throw new Error(
         `The default locale '${default_locale}' is required in the translations`,
       );
     }
 
-    // TODO: 足りないキーがあったら警告
-
     const userLang =
       store.options.locale ||
       browser.i18n.getUILanguage().toLowerCase() ||
       default_locale;
-    return translations[userLang] ?? translations[default_locale] ?? "";
+
+    if (import.meta.env.DEV) {
+      if (userLang in locales && !(userLang in translations)) {
+        console.warn(
+          `Missing translation for locale '${userLang}' \n at "${translations[default_locale]}"`,
+        );
+      }
+      for (const key of Object.keys(translations)) {
+        if (!(key in locales) && key !== default_locale) {
+          console.warn(
+            `Unsupported locale key '${key}' in translations \n at "${translations[default_locale]}"`,
+          );
+        }
+      }
+    }
+
+    return (
+      translations[userLang as LocaleKey] ?? translations[default_locale] ?? ""
+    );
   },
 };

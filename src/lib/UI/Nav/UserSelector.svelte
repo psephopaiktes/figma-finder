@@ -12,7 +12,7 @@
         i18n.t({
           en: "You need to add an account from the side panel. Do you want to open the side panel?",
           ja: "アカウントの追加はサイドパネル上から行う必要があります。サイドパネルを開きますか？",
-          "zh-CN": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
+          "zh-cn": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
           es: "Necesita agregar una cuenta desde el panel lateral. ¿Quieres abrir el panel lateral?",
         }),
       );
@@ -63,7 +63,7 @@
         {i18n.t({
           en: "Add account",
           ja: "アカウントの追加",
-          "zh-CN": "添加账户",
+          "zh-cn": "添加账户",
           es: "Agregar cuenta",
         })}
       </p>
@@ -83,7 +83,7 @@
         {i18n.t({
           en: "Log out",
           ja: "ログアウト",
-          "zh-CN": "登出",
+          "zh-cn": "登出",
           es: "Cerrar sesión",
         })}
       </p>

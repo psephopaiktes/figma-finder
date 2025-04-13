@@ -8,7 +8,7 @@
   title={i18n.t({
     en: "New File",
     ja: "新規ファイル",
-    "zh-CN": "新文件",
+    "zh-cn": "新文件",
     es: "Nuevo archivo",
   })}
 >
