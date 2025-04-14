@@ -1,11 +1,11 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
+  import i18n from "@/lib/i18n.svelte";
 
-let { value = $bindable(), submit } = $props();
+  let { value = $bindable(), submit } = $props();
 
-function autofocus(node: HTMLElement) {
-  node.focus();
-}
+  function autofocus(node: HTMLElement) {
+    node.focus();
+  }
 </script>
 
 <form
@@ -16,6 +16,7 @@ function autofocus(node: HTMLElement) {
 >
   <svg-icon src="/img/icon/search.svg"></svg-icon>
   <input
+    id="search"
     type="search"
     use:autofocus
     bind:value

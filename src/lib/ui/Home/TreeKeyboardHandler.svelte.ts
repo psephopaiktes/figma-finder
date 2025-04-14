@@ -54,12 +54,7 @@ const parentHandler = (e: KeyboardEvent) => {
   const details = target.closest("details");
   if (!details) return;
 
-  const isLeft =
-    e.key === "ArrowLeft" || (e.ctrlKey && e.key.toLowerCase() === "b");
-  const isRight =
-    e.key === "ArrowRight" || (e.ctrlKey && e.key.toLowerCase() === "f");
-
-  if (isLeft) {
+  if (e.key === "ArrowLeft") {
     e.preventDefault();
     if (details.open) {
       details.open = false;
@@ -67,7 +62,7 @@ const parentHandler = (e: KeyboardEvent) => {
     return;
   }
 
-  if (isRight) {
+  if (e.key === "ArrowRight") {
     e.preventDefault();
     if (!details.open) {
       details.open = true;
@@ -94,9 +89,7 @@ const childHandler = (e: KeyboardEvent) => {
   if (!details) return;
   const summary = details.querySelector("summary") as HTMLElement | null;
 
-  const isLeft =
-    e.key === "ArrowLeft" || (e.ctrlKey && e.key.toLowerCase() === "b");
-  if (isLeft) {
+  if (e.key === "ArrowLeft") {
     e.preventDefault();
     summary?.focus();
   }
@@ -149,6 +142,19 @@ const documentHandler = (e: KeyboardEvent) => {
     localStorage.lastReloadTime = String(now);
     e.preventDefault();
     location.reload();
+  }
+
+  if (
+    (!e.isComposing &&
+      (e.ctrlKey || e.metaKey) &&
+      e.key.toLowerCase() === "f") ||
+    (!e.ctrlKey && !e.metaKey && !e.altKey && e.key === "/")
+  ) {
+    const input = document.getElementById("search");
+    if (input && document.activeElement !== input) {
+      e.preventDefault();
+      (input as HTMLElement).focus();
+    }
   }
 };
 
