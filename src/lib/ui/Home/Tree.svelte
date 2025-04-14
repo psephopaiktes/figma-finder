@@ -31,16 +31,13 @@
   const dragend = (event: DragEvent) => {
     (event.currentTarget as HTMLElement).classList.remove("dragstart");
   };
-
   const dragover = (event: DragEvent) => {
     event.preventDefault();
     (event.currentTarget as HTMLElement).classList.add("dragover");
   };
-
   const dragleave = (event: DragEvent) => {
     (event.currentTarget as HTMLElement).classList.remove("dragover");
   };
-
   const ondrop = (index: number, event: DragEvent) => {
     event.preventDefault();
     (event.currentTarget as HTMLElement).classList.remove("dragover");
@@ -56,7 +53,7 @@
     }
   };
 
-  // 配列内オブジェクトの更新はそのままだと$effectで監視できない
+  //  Objects in array updates cannot be tracked by $effect directly
   let watcher = $derived(JSON.stringify(store.localProjectState));
   $effect(() => {
     watcher;

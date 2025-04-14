@@ -135,7 +135,12 @@
   <h3>URL</h3>
   <ul>
     <li>
-      <a href="https://TODO動的に" target="_blank">
+      <a
+        href={import.meta.env.CHROME
+          ? "https://chrome.google.com/webstore/detail/klifomaejfaibpkbigbpljdmelbkehbe"
+          : "TODO"}
+        target="_blank"
+      >
         {i18n.t({
           en: "Store Page",
           ja: "ストアページ",

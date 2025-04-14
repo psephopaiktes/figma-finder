@@ -54,13 +54,13 @@ const req = async <T>(path: string) => {
 export const loadFiles = async () => {
   // 1. いったんlocalをstoreに反映
   const localProjects = await storage.getItem("local:projects");
-  if (localProjects) {
+  if (localProjects && JSON.stringify(localProjects) !== "{}") {
     Object.assign(store.projects, localProjects);
   }
   const localProjectState = await storage.getItem<string>(
     "local:localProjectState",
   );
-  if (localProjectState) {
+  if (localProjectState && localProjectState !== "[]") {
     store.localProjectState = JSON.parse(localProjectState); //WXT対策
   }
 

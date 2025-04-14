@@ -1,17 +1,17 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { store, user } from "@/lib/store.svelte";
-  import { openSidePanel } from "@/lib/utils.svelte";
-  import Home from "@/lib/view/Home.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store, user } from "@/lib/store.svelte";
+import { openSidePanel } from "@/lib/utils.svelte";
+import Home from "@/lib/view/Home.svelte";
 
-  let needSidepanel = $state(false);
+let needSidepanel = $state(false);
 
-  $effect(() => {
-    if (store.loading) return;
-    if (!user() || Object.keys(user()?.teams || {}).length <= 0) {
-      needSidepanel = true;
-    }
-  });
+$effect(() => {
+  if (store.loading) return;
+  if (!user() || Object.keys(user()?.teams || {}).length <= 0) {
+    needSidepanel = true;
+  }
+});
 </script>
 
 {#if needSidepanel}

@@ -7,10 +7,8 @@ https://psephopaiktes.github.io/figma-finder/
 
 ![Hero Image](design/cover.png)
 
-TODO
-
 ## Get the Extension
-* [Chrome Web Store](TODO)
+* [Chrome Web Store](https://chrome.google.com/webstore/detail/klifomaejfaibpkbigbpljdmelbkehbe)
 * [Add-ons for Firefox](TODO)
 <!-- * [Edge Add-ons](TODO) -->
 

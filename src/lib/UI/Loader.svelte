@@ -1,9 +1,9 @@
 <script lang="ts">
-  // by Astrit Malsia
-  // Released under the MIT license
-  // URL：https://codepen.io/astrit
+// by Astrit Malsia
+// Released under the MIT license
+// URL：https://codepen.io/astrit
 
-  let { size = "32px" } = $props();
+let { size = "32px" } = $props();
 </script>
 
 <div class="figma" style="font-size: {size};">

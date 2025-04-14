@@ -1,36 +1,36 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
+import i18n from "@/lib/i18n.svelte";
 
-  let {
-    event = $bindable(),
-    id = $bindable(),
-    type = $bindable(),
-  }: {
-    event: MouseEvent | null;
-    id: string;
-    type: "file" | "project";
-  } = $props();
+let {
+  event = $bindable(),
+  id = $bindable(),
+  type = $bindable(),
+}: {
+  event: MouseEvent | null;
+  id: string;
+  type: "file" | "project";
+} = $props();
 
-  $effect(() => {
-    const contextMenu = document.getElementById("contextMenu");
+$effect(() => {
+  const contextMenu = document.getElementById("contextMenu");
 
-    if (!contextMenu || !event || id === "") return;
-    event.preventDefault();
+  if (!contextMenu || !event || id === "") return;
+  event.preventDefault();
 
-    if (contextMenu.matches(":popover-open")) {
-      contextMenu.hidePopover();
-      return;
-    }
+  if (contextMenu.matches(":popover-open")) {
+    contextMenu.hidePopover();
+    return;
+  }
 
-    const maxX = window.innerWidth - 200;
-    contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
-    contextMenu.style.top = `${event.pageY - scrollY}px`;
-    contextMenu.showPopover();
+  const maxX = window.innerWidth - 200;
+  contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
+  contextMenu.style.top = `${event.pageY - scrollY}px`;
+  contextMenu.showPopover();
 
-    document.addEventListener("click", () => {
-      contextMenu.hidePopover();
-    });
+  document.addEventListener("click", () => {
+    contextMenu.hidePopover();
   });
+});
 </script>
 
 <dialog popover="manual" id="contextMenu" class="c-popover">

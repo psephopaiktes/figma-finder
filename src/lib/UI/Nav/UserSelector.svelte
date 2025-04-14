@@ -1,29 +1,29 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
-  import { store } from "@/lib/store.svelte";
-  import { openSidePanel } from "@/lib/utils.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
+import { store } from "@/lib/store.svelte";
+import { openSidePanel } from "@/lib/utils.svelte";
 
-  let users = $derived(store.options.users);
+let users = $derived(store.options.users);
 
-  async function addAccount() {
-    if (window.location.pathname.includes("popup")) {
-      const result = confirm(
-        i18n.t({
-          en: "You need to add an account from the side panel. Do you want to open the side panel?",
-          ja: "アカウントの追加はサイドパネル上から行う必要があります。サイドパネルを開きますか？",
-          "zh-cn": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
-          es: "Necesita agregar una cuenta desde el panel lateral. ¿Quieres abrir el panel lateral?",
-        }),
-      );
-      if (!result) return;
-      openSidePanel();
-      window.close();
-      return;
-    }
-    await oauth.logIn({ add: true });
-    location.reload();
+async function addAccount() {
+  if (window.location.pathname.includes("popup")) {
+    const result = confirm(
+      i18n.t({
+        en: "You need to add an account from the side panel. Do you want to open the side panel?",
+        ja: "アカウントの追加はサイドパネル上から行う必要があります。サイドパネルを開きますか？",
+        "zh-cn": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
+        es: "Necesita agregar una cuenta desde el panel lateral. ¿Quieres abrir el panel lateral?",
+      }),
+    );
+    if (!result) return;
+    openSidePanel();
+    window.close();
+    return;
   }
+  await oauth.logIn({ add: true });
+  location.reload();
+}
 </script>
 
 {#if !store.options.currentUser}

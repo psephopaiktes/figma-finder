@@ -1,9 +1,10 @@
 <script lang="ts">
   import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
 </script>
 
 <a
-  href="https://figma.new/"
+  href={store.options.openInApp ? "figma://design/new" : "https://figma.new/"}
   target="_blank"
   title={i18n.t({
     en: "New File",
