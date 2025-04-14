@@ -64,11 +64,6 @@ export const loadFiles = async () => {
     store.localProjectState = JSON.parse(localProjectState); //WXT対策
   }
 
-  // TODO TMP
-  const testData = await browser.storage.local.get("test");
-  // const userButtons: ButtonConfig[] = testData.options?.buttons || [];
-  console.log("isArray getted:", Array.isArray(testData));
-
   // 2. teamsをループして配下のprojectsを取得
   const projects: Record<string, Project> = {};
   const teamRequests = Object.entries(user()?.teams || {}).map(

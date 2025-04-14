@@ -56,22 +56,17 @@
     }
   };
 
+  // 配列内オブジェクトの更新はそのままだと$effectで監視できない
+  let watcher = $derived(JSON.stringify(store.localProjectState));
   $effect(() => {
-    store.localProjectState;
-    // TODO
-    console.log("called");
+    watcher;
     tick().then(() => {
       storage.setItem<string>(
         "local:localProjectState",
         JSON.stringify(store.localProjectState), //WXT対策
       );
-      // TODO TMP
-      browser.storage.local.set({ test: store.localProjectState }).then(() => {
-        console.log("isArray setted:", Array.isArray(store.localProjectState));
-      });
     });
   });
-  // $inspect(store.localProjectState, "localProjectState");
 </script>
 
 <ContextMenu
