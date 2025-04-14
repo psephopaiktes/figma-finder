@@ -1,29 +1,31 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import { openSidePanel } from "@/lib/utils.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
+  import { openSidePanel } from "@/lib/utils.svelte";
 
-const showNav = location.search.includes("nav");
-const isWelcome = location.search.includes("welcome");
-let isPinned = $state(false);
-onMount(async () => {
-  const settings = await chrome.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
-});
-const title = isWelcome
-  ? i18n.t({
-      en: "Welcome",
-      ja: "ようこそ",
-      "zh-cn": "欢迎",
-      es: "Bienvenido",
-    })
-  : i18n.t({
-      en: "Help",
-      ja: "ヘルプ",
-      "zh-cn": "帮助",
-      es: "Ayuda",
-    });
+  const showNav = location.search.includes("nav");
+  const isWelcome = location.search.includes("welcome");
+  let isPinned = $state(false);
+
+  onMount(async () => {
+    const settings = await chrome.action.getUserSettings();
+    isPinned = settings.isOnToolbar;
+  });
+
+  const title = isWelcome
+    ? i18n.t({
+        en: "Welcome",
+        ja: "ようこそ",
+        "zh-cn": "欢迎",
+        es: "Bienvenido",
+      })
+    : i18n.t({
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+        es: "Ayuda",
+      });
 </script>
 
 <Layout class="l-document c-document" {title}>

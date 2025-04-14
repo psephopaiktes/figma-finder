@@ -6,6 +6,7 @@
   import { slide } from "svelte/transition";
   import ContextMenu from "./TreeContextMenu.svelte";
   import drag from "./TreeDragHandler.svelte";
+  import key from "./TreeKeyboardHandler.svelte";
 
   let {
     projects,
@@ -30,6 +31,8 @@
     });
   });
 </script>
+
+<svelte:window onkeydown={(e) => key.documentHandler(e)} />
 
 <ContextMenu
   bind:event={contextMenuProps[0]}
@@ -56,6 +59,7 @@
             oncontextmenu={(e) => {
               contextMenuProps = [e, localProject.id, "project"];
             }}
+            onkeydown={(e) => key.parentHandler(e)}
           >
             <span>{project.team} /</span>
             {project.name}
@@ -76,6 +80,7 @@
                   oncontextmenu={(e) => {
                     contextMenuProps = [e, fileId, "file"];
                   }}
+                  onkeydown={(e) => key.childHandler(e)}
                 >
                   <img src={file.thumbnail_url} alt="thumbnail" />
                   <h3>{file.name}</h3>
