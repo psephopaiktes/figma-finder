@@ -1,4 +1,5 @@
 import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
 
 export const openSidePanel = async () => {
   if (import.meta.env.CHROME) {
@@ -81,3 +82,27 @@ export const formatEditedDate = (isoDateStr: string): string => {
     es: `Editado hace ${diffDays} días`,
   });
 };
+
+export const figPath = (path: string, env?: "browser" | "app") => {
+  if (env === "browser") {
+    return `https://figma.com/${path}`;
+  }
+
+  if (env === "app") {
+    return `figma://${path}`;
+  }
+
+  return store.options.openInApp
+    ? `figma://${path}`
+    : `https://figma.com/${path}`;
+};
+
+export const isMac =
+  "userAgentData" in navigator
+    ? (navigator.userAgentData as NavigatorUAData).platform === "macOS"
+    : navigator.userAgent.includes("Mac");
+interface NavigatorUAData {
+  platform: string;
+  brands: { brand: string; version: string }[];
+  mobile: boolean;
+}

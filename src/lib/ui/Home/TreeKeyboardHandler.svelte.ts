@@ -1,5 +1,6 @@
 import i18n from "@/lib/i18n.svelte";
 import { store } from "@/lib/store.svelte";
+import { figPath } from "@/lib/utility.svelte";
 
 const focusableSelector = `
   a[href],
@@ -49,7 +50,7 @@ const moveFocusByOffset = (offset: number) => {
   focusableElements[nextIndex]?.focus();
 };
 
-const parentHandler = (e: KeyboardEvent) => {
+const handleParent = (e: KeyboardEvent) => {
   const target = e.currentTarget as HTMLElement;
   const details = target.closest("details");
   if (!details) return;
@@ -74,16 +75,9 @@ const parentHandler = (e: KeyboardEvent) => {
       focusables[0]?.focus();
     }
   }
-
-  if (e.altKey && e.code === "KeyL") {
-    e.preventDefault();
-    for (const project of store.localProjectState) {
-      project.open = false;
-    }
-  }
 };
 
-const childHandler = (e: KeyboardEvent) => {
+const handleChild = (e: KeyboardEvent) => {
   const target = e.currentTarget as HTMLElement;
   const details = target.closest("details");
   if (!details) return;
@@ -103,7 +97,8 @@ const childHandler = (e: KeyboardEvent) => {
   }
 };
 
-const documentHandler = (e: KeyboardEvent) => {
+const handleDocument = (e: KeyboardEvent) => {
+  // ↑↓ to move focus
   if (e.key === "ArrowDown") {
     e.preventDefault();
     moveFocusByOffset(1);
@@ -112,6 +107,7 @@ const documentHandler = (e: KeyboardEvent) => {
     moveFocusByOffset(-1);
   }
 
+  // ^N or ^P to move focus
   if (e.ctrlKey && !e.shiftKey && !e.altKey) {
     if (e.key.toLowerCase() === "n") {
       e.preventDefault();
@@ -122,6 +118,15 @@ const documentHandler = (e: KeyboardEvent) => {
     }
   }
 
+  // ⌥L to close all projects
+  if (e.altKey && e.code === "KeyL") {
+    e.preventDefault();
+    for (const project of store.localProjectState) {
+      project.open = false;
+    }
+  }
+
+  // ⌘R or F5 to reload
   if (
     ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r") ||
     e.key === "F5"
@@ -144,6 +149,7 @@ const documentHandler = (e: KeyboardEvent) => {
     location.reload();
   }
 
+  // ⌘F or / to focus search input
   if (
     (!e.isComposing &&
       (e.ctrlKey || e.metaKey) &&
@@ -160,7 +166,7 @@ const documentHandler = (e: KeyboardEvent) => {
 
 export default {
   moveFocusByOffset,
-  parentHandler,
-  childHandler,
-  documentHandler,
+  handleParent,
+  handleChild,
+  handleDocument,
 };

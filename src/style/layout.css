@@ -1,7 +1,7 @@
 /* define the layout and structure of the entire page */
 
 .l-main {
-  z-index: 1;
+  z-index: var(--z-main);
 }
 
 .l-nav {
@@ -9,7 +9,7 @@
 }
 
 .l-navHeader {
-  z-index: 2;
+  z-index: var(--z-navHeader);
   position: fixed;
   inset: 0;
   width: 100%;

@@ -41,6 +41,10 @@
     --sp-s: 12px;
     --sp-xs: 5px;
   }
+
+  --z-main: 1;
+  --z-navHeader: 2;
+  --z-tooltip: 3;
 }
 
 :root,

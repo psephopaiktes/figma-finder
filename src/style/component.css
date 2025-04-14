@@ -44,16 +44,24 @@
   }
   &.-small {
     padding-inline: 8px;
-    gap: 3px;
+    gap: 4px;
     height: 28px;
     min-width: 32px;
     border-radius: 4px;
     svg-icon {
-      font-size: 16px;
+      font-size: 19px;
     }
   }
   &.-gray {
     background: rgb(from var(--color-main) r g b / 0.8);
+  }
+  &.-lightGray {
+    background: rgb(from var(--color-main) r g b / 0.1);
+    color: var(--color-main);
+    &:hover,
+    &:active {
+      background: rgb(from var(--color-main) r g b / 0.15);
+    }
   }
   &.-caution {
     background: var(--color-caution);
@@ -80,6 +88,7 @@
   }
 }
 
+/* TODO消す? それかファイルだけつける? */
 .c-focus:focus {
   outline: 2px solid var(--color-theme);
   outline-offset: 2px;
@@ -121,5 +130,40 @@
   hr {
     border: 0;
     border-top: 1px solid rgb(from var(--color-base) r g b / 20%);
+  }
+}
+
+.c-tooltip {
+  position: relative;
+  word-break: keep-all;
+  filter: none !important;
+
+  &::after {
+    position: absolute;
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: .2s ease;
+    pointer-events: none;
+    z-index: var(--z-tooltip);
+    content: attr(title);
+    margin-inline: auto;
+    bottom: 100%;
+    padding: 0.2em 0.5em;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    background: var(--color-main);
+    color: rgb(from var(--color-base) r g b / 0.8);
+  }
+  &:hover,
+  &:active {
+    &::after {
+      opacity: 0.8;
+      bottom: 120%;
+    }
   }
 }

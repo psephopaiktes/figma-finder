@@ -1,7 +1,7 @@
 <script lang="ts">
 import i18n from "@/lib/i18n.svelte";
 import { store, user } from "@/lib/store.svelte";
-import { openSidePanel } from "@/lib/utils.svelte";
+import { openSidePanel } from "@/lib/utility.svelte";
 import Home from "@/lib/view/Home.svelte";
 
 let needSidepanel = $state(false);

@@ -1,11 +1,12 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { figPath } from "@/lib/utility.svelte";
 </script>
 
 <a
-  href={store.options.openInApp ? "figma://design/new" : "https://figma.new/"}
+  href={figPath("design/new")}
   target="_blank"
+  class="c-tooltip"
   title={i18n.t({
     en: "New File",
     ja: "新規ファイル",
@@ -13,8 +14,7 @@
     es: "Nuevo archivo",
   })}
 >
-  <!-- TODO 設定に応じてAppで開く? -->
-  <svg-icon src="/img/icon/add.svg"> New File </svg-icon>
+  <svg-icon src="/img/icon/add.svg">New File</svg-icon>
 </a>
 
 <style>
@@ -33,6 +33,11 @@
     box-shadow: 4px 8px 16px -8px rgb(0 0 0 / 0.5);
     &:hover {
       scale: 1.05;
+    }
+    &::after {
+      left: auto;
+      right: 0;
+      transform: none;
     }
   }
 </style>

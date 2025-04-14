@@ -1,5 +1,6 @@
 <script lang="ts">
 import i18n from "@/lib/i18n.svelte";
+import { figPath } from "@/lib/utility.svelte";
 
 let {
   event = $bindable(),
@@ -31,15 +32,16 @@ $effect(() => {
     contextMenu.hidePopover();
   });
 });
+
+const getUrl = (env?: "browser" | "app") => {
+  return type === "file"
+    ? figPath(`file/${id}`, env)
+    : figPath(`files/project/${id}`, env);
+};
 </script>
 
 <dialog popover="manual" id="contextMenu" class="c-popover">
-  <a
-    href={type === "file"
-      ? `https://figma.com/file/${id}`
-      : `https://figma.com/files/project/${id}`}
-    target="_blank"
-  >
+  <a href={getUrl("browser")} target="_blank">
     {i18n.t({
       en: "Open in Browser",
       ja: "ブラウザで開く",
@@ -47,12 +49,7 @@ $effect(() => {
       es: "Abrir en el navegador",
     })}
   </a>
-  <a
-    href={type === "file"
-      ? `figma://file/${id}`
-      : `figma://files/project/${id}`}
-    target="_blank"
-  >
+  <a href={getUrl("app")} target="_blank">
     {i18n.t({
       en: "Open in Desktop App",
       ja: "デスクトップアプリで開く",
@@ -61,15 +58,7 @@ $effect(() => {
     })}
   </a>
   <hr />
-  <button
-    onclick={() => {
-      const url =
-        type === "file"
-          ? `https://figma.com/file/${id}`
-          : `https://figma.com/files/project/${id}`;
-      navigator.clipboard.writeText(url);
-    }}
-  >
+  <button onclick={() => navigator.clipboard.writeText(getUrl("browser"))}>
     {i18n.t({
       en: "Copy URL",
       ja: "URLをコピー",

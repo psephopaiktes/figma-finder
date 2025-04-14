@@ -2,7 +2,7 @@
 import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { store } from "@/lib/store.svelte";
-import { openSidePanel } from "@/lib/utils.svelte";
+import { openSidePanel } from "@/lib/utility.svelte";
 
 let users = $derived(store.options.users);
 

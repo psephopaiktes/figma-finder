@@ -1,38 +1,38 @@
 <script lang="ts">
-  import { store } from "@/lib/store.svelte";
-  import { formatEditedDate } from "@/lib/utils.svelte";
-  import type { Project } from "@/types";
-  import { tick } from "svelte";
-  import { slide } from "svelte/transition";
-  import ContextMenu from "./TreeContextMenu.svelte";
-  import drag from "./TreeDragHandler.svelte";
-  import key from "./TreeKeyboardHandler.svelte";
+import { store } from "@/lib/store.svelte";
+import { figPath, formatEditedDate } from "@/lib/utility.svelte";
+import type { Project } from "@/types";
+import { tick } from "svelte";
+import { slide } from "svelte/transition";
+import ContextMenu from "./TreeContextMenu.svelte";
+import drag from "./TreeDragHandler.svelte";
+import key from "./TreeKeyboardHandler.svelte";
 
-  let {
-    projects,
-    isInputed = false,
-  }: { projects: Record<string, Project>; isInputed: boolean } = $props();
+let {
+  projects,
+  isInputed = false,
+}: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
-  let contextMenuProps: [
-    event: MouseEvent | null,
-    id: string,
-    type: "file" | "project",
-  ] = $state([null, "", "file"]);
+let contextMenuProps: [
+  event: MouseEvent | null,
+  id: string,
+  type: "file" | "project",
+] = $state([null, "", "file"]);
 
-  //  Objects in array updates cannot be tracked by $effect directly
-  let watcher = $derived(JSON.stringify(store.localProjectState));
-  $effect(() => {
-    watcher;
-    tick().then(() => {
-      storage.setItem<string>(
-        "local:localProjectState",
-        JSON.stringify(store.localProjectState), //WXT対策
-      );
-    });
+//  Objects in array updates cannot be tracked by $effect directly
+let watcher = $derived(JSON.stringify(store.localProjectState));
+$effect(() => {
+  watcher;
+  tick().then(() => {
+    storage.setItem<string>(
+      "local:localProjectState",
+      JSON.stringify(store.localProjectState), //WXT対策
+    );
   });
+});
 </script>
 
-<svelte:window onkeydown={(e) => key.documentHandler(e)} />
+<svelte:window onkeydown={(e) => key.handleDocument(e)} />
 
 <ContextMenu
   bind:event={contextMenuProps[0]}
@@ -59,7 +59,7 @@
             oncontextmenu={(e) => {
               contextMenuProps = [e, localProject.id, "project"];
             }}
-            onkeydown={(e) => key.parentHandler(e)}
+            onkeydown={(e) => key.handleParent(e)}
           >
             <span>{project.team} /</span>
             {project.name}
@@ -73,14 +73,12 @@
             {#each Object.entries(project.files).sort( ([, fileA], [, fileB]) => fileA.name.localeCompare(fileB.name), ) as [fileId, file]}
               <li transition:slide>
                 <a
-                  href={store.options.openInApp
-                    ? `figma://file/${fileId}`
-                    : `https://figma.com/file/${fileId}`}
+                  href={figPath(`file/${fileId}`)}
                   target="_blank"
                   oncontextmenu={(e) => {
                     contextMenuProps = [e, fileId, "file"];
                   }}
-                  onkeydown={(e) => key.childHandler(e)}
+                  onkeydown={(e) => key.handleChild(e)}
                 >
                   <img src={file.thumbnail_url} alt="thumbnail" />
                   <h3>{file.name}</h3>
