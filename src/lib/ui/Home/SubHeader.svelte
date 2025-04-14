@@ -2,9 +2,23 @@
   import i18n from "@/lib/i18n.svelte";
   import { store } from "@/lib/store.svelte";
   import { figPath, isMac } from "@/lib/utility.svelte";
+
+  let header: HTMLHeadElement;
+
+  function checkInView() {
+    if (window.scrollY < 28) {
+      header.classList.add("show");
+    } else {
+      header.classList.remove("show");
+    }
+  }
+
+  onMount(() => window.scroll(0, 56));
 </script>
 
-<header>
+<svelte:window onscroll={checkInView} />
+
+<header bind:this={header}>
   <button
     class="c-button -small -lightGray c-tooltip"
     onclick={() => {
@@ -62,6 +76,13 @@
     place-content: center;
     align-items: center;
     gap: 6px;
+    opacity: 0;
+    transition: 0.2s ease-out;
+    filter: blur(16px);
+    :global(&.show) {
+      opacity: 1;
+      filter: none;
+    }
   }
   .c-button span {
     overflow: hidden;
@@ -70,5 +91,8 @@
   }
   :global(.l-main) {
     min-height: calc(100vh + 56px);
+  }
+  :global(:root) {
+    scroll-behavior: inherit;
   }
 </style>
