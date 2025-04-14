@@ -4,54 +4,19 @@
   import type { Project } from "@/types";
   import { tick } from "svelte";
   import { slide } from "svelte/transition";
-  import ContextMenu from "./ContextMenu.svelte";
+  import ContextMenu from "./TreeContextMenu.svelte";
+  import drag from "./TreeDragHandler.svelte";
 
   let {
     projects,
     isInputed = false,
   }: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
-  let dragIndex = $state(0);
-
   let contextMenuProps: [
     event: MouseEvent | null,
     id: string,
     type: "file" | "project",
   ] = $state([null, "", "file"]);
-
-  const dragstart = (index: number, event: DragEvent) => {
-    dragIndex = index;
-    (event.currentTarget as HTMLElement).classList.add("dragstart");
-
-    const ghost = (event.currentTarget as HTMLElement).querySelector("summary");
-    if (!ghost) return;
-
-    event.dataTransfer?.setDragImage(ghost, 50, 50);
-  };
-  const dragend = (event: DragEvent) => {
-    (event.currentTarget as HTMLElement).classList.remove("dragstart");
-  };
-  const dragover = (event: DragEvent) => {
-    event.preventDefault();
-    (event.currentTarget as HTMLElement).classList.add("dragover");
-  };
-  const dragleave = (event: DragEvent) => {
-    (event.currentTarget as HTMLElement).classList.remove("dragover");
-  };
-  const ondrop = (index: number, event: DragEvent) => {
-    event.preventDefault();
-    (event.currentTarget as HTMLElement).classList.remove("dragover");
-    if (index === dragIndex) return;
-
-    const moveProject = { ...store.localProjectState[dragIndex] };
-    store.localProjectState.splice(dragIndex, 1);
-
-    if (dragIndex < index) {
-      store.localProjectState.splice(index - 1, 0, moveProject);
-    } else {
-      store.localProjectState.splice(index, 0, moveProject);
-    }
-  };
 
   //  Objects in array updates cannot be tracked by $effect directly
   let watcher = $derived(JSON.stringify(store.localProjectState));
@@ -80,11 +45,11 @@
       <li
         transition:slide
         draggable={!isInputed}
-        ondragstart={(e) => dragstart(index, e)}
-        ondragend={dragend}
-        ondragover={dragover}
-        ondragleave={dragleave}
-        ondrop={(e) => ondrop(index, e)}
+        ondragstart={(e) => drag.start(index, e)}
+        ondragend={drag.end}
+        ondragover={drag.over}
+        ondragleave={drag.leave}
+        ondrop={(e) => drag.ondrop(index, e)}
       >
         <details bind:open={localProject.open}>
           <summary
