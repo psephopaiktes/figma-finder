@@ -8,6 +8,7 @@ export const store: Store = $state({
   projects: {},
   localProjectState: [],
   loading: true,
+  targetProps: ["", "file"],
   options: {
     currentUser: null,
     theme: "system",
@@ -24,6 +25,24 @@ export const user = () => {
       : null,
   );
   return user;
+};
+
+export const getFigUrl = (path: string, env?: "browser" | "app") => {
+  if (env === "browser") {
+    return `https://figma.com/${path}`;
+  }
+  if (env === "app") {
+    return `figma://${path}`;
+  }
+  return store.options.openInApp
+    ? `figma://${path}`
+    : `https://figma.com/${path}`;
+};
+
+export const getTargetUrl = (env?: "browser" | "app") => {
+  return store.targetProps[1] === "file"
+    ? getFigUrl(`file/${store.targetProps[0]}`, env)
+    : getFigUrl(`files/project/${store.targetProps[0]}`, env);
 };
 
 export const loadOptions = async () => {

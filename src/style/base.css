@@ -69,6 +69,15 @@ body {
 * {
   outline-color: var(--color-theme);
   outline-offset: 2px;
+  animation: twinkle 0.8s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% {
+    outline-color: rgb(from var(--color-theme) r g b / 1);
+  }
+  100% {
+    outline-color: rgb(from var(--color-theme) r g b / 0.5);
+  }
 }
 
 a,

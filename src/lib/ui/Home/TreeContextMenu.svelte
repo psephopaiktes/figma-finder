@@ -1,47 +1,32 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { figPath } from "@/lib/utility.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { getTargetUrl, store } from "@/lib/store.svelte";
 
-let {
-  event = $bindable(),
-  id = $bindable(),
-  type = $bindable(),
-}: {
-  event: MouseEvent | null;
-  id: string;
-  type: "file" | "project";
-} = $props();
+  let contextMenu: HTMLDialogElement;
+  let { event }: { event: MouseEvent | null } = $props();
 
-$effect(() => {
-  const contextMenu = document.getElementById("contextMenu");
+  $effect(() => {
+    if (!event || store.targetProps[0] === "") return;
+    event.preventDefault();
 
-  if (!contextMenu || !event || id === "") return;
-  event.preventDefault();
+    if (contextMenu.matches(":popover-open")) {
+      contextMenu.hidePopover();
+      return;
+    }
 
-  if (contextMenu.matches(":popover-open")) {
-    contextMenu.hidePopover();
-    return;
-  }
+    const maxX = window.innerWidth - 200;
+    contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
+    contextMenu.style.top = `${event.pageY - scrollY}px`;
+    contextMenu.showPopover();
 
-  const maxX = window.innerWidth - 200;
-  contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
-  contextMenu.style.top = `${event.pageY - scrollY}px`;
-  contextMenu.showPopover();
-
-  document.addEventListener("click", () => {
-    contextMenu.hidePopover();
+    document.addEventListener("click", () => contextMenu.hidePopover());
+    return () =>
+      document.removeEventListener("click", () => contextMenu.hidePopover());
   });
-});
-
-const getUrl = (env?: "browser" | "app") => {
-  return type === "file"
-    ? figPath(`file/${id}`, env)
-    : figPath(`files/project/${id}`, env);
-};
 </script>
 
-<dialog popover="manual" id="contextMenu" class="c-popover">
-  <a href={getUrl("browser")} target="_blank">
+<dialog popover="manual" bind:this={contextMenu} class="c-popover">
+  <a href={getTargetUrl("browser")} target="_blank">
     {i18n.t({
       en: "Open in Browser",
       ja: "ブラウザで開く",
@@ -49,7 +34,7 @@ const getUrl = (env?: "browser" | "app") => {
       es: "Abrir en el navegador",
     })}
   </a>
-  <a href={getUrl("app")} target="_blank">
+  <a href={getTargetUrl("app")} target="_blank">
     {i18n.t({
       en: "Open in Desktop App",
       ja: "デスクトップアプリで開く",
@@ -58,7 +43,9 @@ const getUrl = (env?: "browser" | "app") => {
     })}
   </a>
   <hr />
-  <button onclick={() => navigator.clipboard.writeText(getUrl("browser"))}>
+  <button
+    onclick={() => navigator.clipboard.writeText(getTargetUrl("browser"))}
+  >
     {i18n.t({
       en: "Copy URL",
       ja: "URLをコピー",
@@ -69,7 +56,7 @@ const getUrl = (env?: "browser" | "app") => {
 </dialog>
 
 <style>
-  #contextMenu {
+  dialog {
     width: 200px;
   }
 </style>

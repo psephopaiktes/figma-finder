@@ -1,7 +1,7 @@
 <script lang="ts">
   import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
-  import { figPath, isMac } from "@/lib/utility.svelte";
+  import { getFigUrl, store } from "@/lib/store.svelte";
+  import { isMac } from "@/lib/utility.svelte";
 
   let header: HTMLHeadElement;
 
@@ -58,7 +58,7 @@
   </button>
 
   <a
-    href={figPath("files/recent")}
+    href={getFigUrl("files/recent")}
     target="_blank"
     class="c-button -small -lightGray"
     tabindex="-1"

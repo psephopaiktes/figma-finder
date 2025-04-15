@@ -88,21 +88,6 @@
   }
 }
 
-/* TODO消す? それかファイルだけつける? */
-.c-focus:focus {
-  outline: 2px solid var(--color-theme);
-  outline-offset: 2px;
-  animation: twinkle 0.8s ease-in-out infinite alternate;
-}
-@keyframes twinkle {
-  0% {
-    outline-color: rgb(from var(--color-theme) r g b / 0.2);
-  }
-  100% {
-    outline-color: rgb(from var(--color-theme) r g b / 0.8);
-  }
-}
-
 .c-popover {
   position: fixed;
   user-select: none;

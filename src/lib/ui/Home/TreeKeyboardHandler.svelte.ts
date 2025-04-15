@@ -1,6 +1,5 @@
 import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
-import { figPath } from "@/lib/utility.svelte";
+import { getTargetUrl, store } from "@/lib/store.svelte";
 
 const focusableSelector = `
   a[href],
@@ -55,6 +54,7 @@ const handleParent = (e: KeyboardEvent) => {
   const details = target.closest("details");
   if (!details) return;
 
+  // ← to close project
   if (e.key === "ArrowLeft") {
     e.preventDefault();
     if (details.open) {
@@ -63,6 +63,7 @@ const handleParent = (e: KeyboardEvent) => {
     return;
   }
 
+  // → to open project, or move focus to first child
   if (e.key === "ArrowRight") {
     e.preventDefault();
     if (!details.open) {
@@ -75,6 +76,18 @@ const handleParent = (e: KeyboardEvent) => {
       focusables[0]?.focus();
     }
   }
+
+  // ⌘Enter or Ctrl+Enter to open in browser
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+    e.preventDefault();
+    open(getTargetUrl("browser"));
+  }
+
+  // ⌥Enter to open in app
+  if (e.altKey && e.key === "Enter") {
+    e.preventDefault();
+    open(getTargetUrl("app"));
+  }
 };
 
 const handleChild = (e: KeyboardEvent) => {
@@ -83,17 +96,31 @@ const handleChild = (e: KeyboardEvent) => {
   if (!details) return;
   const summary = details.querySelector("summary") as HTMLElement | null;
 
+  // ← to focus parent
   if (e.key === "ArrowLeft") {
     e.preventDefault();
     summary?.focus();
   }
 
+  // ⌥L to close all projects and focus parent
   if (e.altKey && e.code === "KeyL") {
     e.preventDefault();
     summary?.focus();
     for (const project of store.localProjectState) {
       project.open = false;
     }
+  }
+
+  // ⌘Enter or Ctrl+Enter to open in browser
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+    e.preventDefault();
+    open(getTargetUrl("browser"));
+  }
+
+  // ⌥Enter to open in app
+  if (e.altKey && e.key === "Enter") {
+    e.preventDefault();
+    open(getTargetUrl("app"));
   }
 };
 
@@ -165,7 +192,6 @@ const handleDocument = (e: KeyboardEvent) => {
 };
 
 export default {
-  moveFocusByOffset,
   handleParent,
   handleChild,
   handleDocument,

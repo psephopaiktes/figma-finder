@@ -1,10 +1,10 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { figPath } from "@/lib/utility.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { getFigUrl } from "@/lib/store.svelte";
 </script>
 
 <a
-  href={figPath("design/new")}
+  href={getFigUrl("design/new")}
   target="_blank"
   class="c-tooltip"
   title={i18n.t({
@@ -13,6 +13,7 @@ import { figPath } from "@/lib/utility.svelte";
     "zh-cn": "新文件",
     es: "Nuevo archivo",
   })}
+  tabindex="-1"
 >
   <svg-icon src="/img/icon/add.svg">New File</svg-icon>
 </a>

@@ -1,44 +1,47 @@
 <script lang="ts">
-import { store } from "@/lib/store.svelte";
-import { figPath, formatEditedDate } from "@/lib/utility.svelte";
-import type { Project } from "@/types";
-import { tick } from "svelte";
-import { slide } from "svelte/transition";
-import ContextMenu from "./TreeContextMenu.svelte";
-import drag from "./TreeDragHandler.svelte";
-import key from "./TreeKeyboardHandler.svelte";
+  import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
+  import { formatEditedDate } from "@/lib/utility.svelte";
+  import type { Project } from "@/types";
+  import { tick } from "svelte";
+  import { slide } from "svelte/transition";
+  import ContextMenu from "./TreeContextMenu.svelte";
+  import drag from "./TreeDragHandler.svelte";
+  import key from "./TreeKeyboardHandler.svelte";
 
-let {
-  projects,
-  isInputed = false,
-}: { projects: Record<string, Project>; isInputed: boolean } = $props();
+  let {
+    projects,
+    isInputed = false,
+  }: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
-let contextMenuProps: [
-  event: MouseEvent | null,
-  id: string,
-  type: "file" | "project",
-] = $state([null, "", "file"]);
+  let contextMenuEvent: MouseEvent | null = $state(null);
 
-//  Objects in array updates cannot be tracked by $effect directly
-let watcher = $derived(JSON.stringify(store.localProjectState));
-$effect(() => {
-  watcher;
-  tick().then(() => {
-    storage.setItem<string>(
-      "local:localProjectState",
-      JSON.stringify(store.localProjectState), //WXT対策
-    );
+  const handleClick = (e: MouseEvent) => {
+    if ((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) {
+      e.preventDefault();
+      open(getTargetUrl("browser"));
+    }
+    if (e.altKey) {
+      e.preventDefault();
+      open(getTargetUrl("app"));
+    }
+  };
+
+  //  Objects in array updates cannot be tracked by $effect directly
+  let watcher = $derived(JSON.stringify(store.localProjectState));
+  $effect(() => {
+    watcher;
+    tick().then(() => {
+      storage.setItem<string>(
+        "local:localProjectState",
+        JSON.stringify(store.localProjectState), //WXT対策
+      );
+    });
   });
-});
 </script>
 
 <svelte:window onkeydown={(e) => key.handleDocument(e)} />
 
-<ContextMenu
-  bind:event={contextMenuProps[0]}
-  bind:id={contextMenuProps[1]}
-  bind:type={contextMenuProps[2]}
-/>
+<ContextMenu event={contextMenuEvent} />
 
 <ul class="projects">
   {#each store.localProjectState as localProject, index}
@@ -57,9 +60,17 @@ $effect(() => {
         <details bind:open={localProject.open}>
           <summary
             oncontextmenu={(e) => {
-              contextMenuProps = [e, localProject.id, "project"];
+              store.targetProps = [localProject.id, "project"];
+              contextMenuEvent = e;
             }}
-            onkeydown={(e) => key.handleParent(e)}
+            onclick={(e) => {
+              store.targetProps = [localProject.id, "project"];
+              handleClick(e);
+            }}
+            onkeydown={(e) => {
+              store.targetProps = [localProject.id, "project"];
+              key.handleParent(e);
+            }}
           >
             <span>{project.team} /</span>
             {project.name}
@@ -73,12 +84,20 @@ $effect(() => {
             {#each Object.entries(project.files).sort( ([, fileA], [, fileB]) => fileA.name.localeCompare(fileB.name), ) as [fileId, file]}
               <li transition:slide>
                 <a
-                  href={figPath(`file/${fileId}`)}
+                  href={getFigUrl(`file/${fileId}`)}
                   target="_blank"
                   oncontextmenu={(e) => {
-                    contextMenuProps = [e, fileId, "file"];
+                    store.targetProps = [fileId, "file"];
+                    contextMenuEvent = e;
                   }}
-                  onkeydown={(e) => key.handleChild(e)}
+                  onclick={(e) => {
+                    store.targetProps = [fileId, "file"];
+                    handleClick(e);
+                  }}
+                  onkeydown={(e) => {
+                    store.targetProps = [fileId, "file"];
+                    key.handleChild(e);
+                  }}
                 >
                   <img src={file.thumbnail_url} alt="thumbnail" />
                   <h3>{file.name}</h3>

@@ -2,6 +2,7 @@ export type Store = {
   loading: boolean;
   projects: Record<string, Project>;
   localProjectState: LocalProjectState[];
+  targetProps: [id: string, type: "file" | "project"];
   options: {
     currentUser: string | null;
     theme: string;
