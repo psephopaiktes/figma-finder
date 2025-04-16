@@ -56,14 +56,17 @@ body {
   line-height: 1.6;
   font-weight: 500;
   font-size: 12px;
+  /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+  text-box: trim-both cap alphabetic;
   @media (width > 480px) {
     font-size: 14px;
   }
 }
 
-#app {
+#app,
+main {
   min-width: 320px;
-  min-height: 560px;
+  min-height: 100vh;
 }
 
 * {

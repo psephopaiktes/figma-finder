@@ -4,6 +4,9 @@ import type {
   GetTeamProjectsResponse,
 } from "@figma/rest-api-spec";
 
+/**
+ * Global state store for the application
+ */
 export const store: Store = $state({
   projects: {},
   localProjectState: [],
@@ -18,6 +21,10 @@ export const store: Store = $state({
   },
 });
 
+/**
+ * Returns the current user information if available
+ * @returns Current user data or null if not logged in
+ */
 export const user = () => {
   const user = $derived(
     store.options.currentUser
@@ -27,6 +34,12 @@ export const user = () => {
   return user;
 };
 
+/**
+ * Constructs a Figma URL based on path and environment
+ * @param path - The path to append to the Figma URL
+ * @param env - Optional environment, either "browser" or "app"
+ * @returns Complete Figma URL
+ */
 export const getFigUrl = (path: string, env?: "browser" | "app") => {
   if (env === "browser") {
     return `https://figma.com/${path}`;
@@ -39,12 +52,20 @@ export const getFigUrl = (path: string, env?: "browser" | "app") => {
     : `https://figma.com/${path}`;
 };
 
+/**
+ * Gets the target URL based on current store state
+ * @param env - Optional environment, either "browser" or "app"
+ * @returns Complete Figma URL to either a file or project
+ */
 export const getTargetUrl = (env?: "browser" | "app") => {
   return store.targetProps[1] === "file"
     ? getFigUrl(`file/${store.targetProps[0]}`, env)
     : getFigUrl(`files/project/${store.targetProps[0]}`, env);
 };
 
+/**
+ * Loads user options from storage
+ */
 export const loadOptions = async () => {
   const options = await storage.getItem("sync:options");
   if (options) {
@@ -52,6 +73,12 @@ export const loadOptions = async () => {
   }
 };
 
+/**
+ * Makes an authenticated request to the Figma API
+ * @param path - API endpoint path
+ * @returns Promise resolving to the API response
+ * @throws Error if authentication fails or request is unsuccessful
+ */
 const req = async <T>(path: string) => {
   const authToken = user()?.access_token;
   if (!authToken) {
@@ -70,7 +97,17 @@ const req = async <T>(path: string) => {
   return res.json() as Promise<T>;
 };
 
+/**
+ * Loads project and file data from Figma API
+ *
+ * Process:
+ * 1. Loads cached data from local storage
+ * 2. Fetches team projects
+ * 3. Fetches files for each project
+ * 4. Updates local state and storage
+ */
 export const loadFiles = async () => {
+  console.log("OK");
   // 1. いったんlocalをstoreに反映
   const localProjects = await storage.getItem("local:projects");
   if (localProjects && JSON.stringify(localProjects) !== "{}") {

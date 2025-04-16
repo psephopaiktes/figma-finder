@@ -8,6 +8,16 @@ const focusableSelector = `
   summary
 `;
 
+/**
+ * Gets all currently visible and focusable elements in the document
+ *
+ * Filters out elements that are:
+ * - Not visible (offsetParent is null)
+ * - Disabled inputs or buttons
+ * - Inside closed details elements (except summary elements)
+ *
+ * @returns Array of focusable HTML elements
+ */
 const getFocusableElements = (): HTMLElement[] => {
   return Array.from(
     document.querySelectorAll<HTMLElement>(focusableSelector),
@@ -34,6 +44,11 @@ const getFocusableElements = (): HTMLElement[] => {
   });
 };
 
+/**
+ * Moves focus to another element based on direction
+ *
+ * @param offset - Number of elements to move (positive = forward, negative = backward)
+ */
 const moveFocusByOffset = (offset: number) => {
   const focusableElements = getFocusableElements();
   const activeElement = document.activeElement;
@@ -49,6 +64,10 @@ const moveFocusByOffset = (offset: number) => {
   focusableElements[nextIndex]?.focus();
 };
 
+/**
+ * Handles keyboard events for parent (summary) elements
+ * @param e - Keyboard event
+ */
 const handleParent = (e: KeyboardEvent) => {
   const target = e.currentTarget as HTMLElement;
   const details = target.closest("details");
@@ -90,6 +109,10 @@ const handleParent = (e: KeyboardEvent) => {
   }
 };
 
+/**
+ * Handles keyboard events for child elements
+ * @param e - Keyboard event
+ */
 const handleChild = (e: KeyboardEvent) => {
   const target = e.currentTarget as HTMLElement;
   const details = target.closest("details");
@@ -124,6 +147,10 @@ const handleChild = (e: KeyboardEvent) => {
   }
 };
 
+/**
+ * Handles global keyboard events for the document
+ * @param e - Keyboard event
+ */
 const handleDocument = (e: KeyboardEvent) => {
   // ↑↓ to move focus
   if (e.key === "ArrowDown") {
@@ -151,29 +178,6 @@ const handleDocument = (e: KeyboardEvent) => {
     for (const project of store.localProjectState) {
       project.open = false;
     }
-  }
-
-  // ⌘R or F5 to reload
-  if (
-    ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r") ||
-    e.key === "F5"
-  ) {
-    const now = Date.now();
-    if (now - +(localStorage.lastReloadTime || 0) < 500) {
-      alert(
-        i18n.t({
-          en: "Please wait a moment before reloading.",
-          ja: "リロードするまでしばらくお待ちください。",
-          "zh-cn": "请稍等片刻再重新加载。",
-          es: "Espere un momento antes de volver a cargar.",
-        }),
-      );
-      e.preventDefault();
-      return;
-    }
-    localStorage.lastReloadTime = String(now);
-    e.preventDefault();
-    location.reload();
   }
 
   // ⌘F or / to focus search input

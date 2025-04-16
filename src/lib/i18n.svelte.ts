@@ -11,6 +11,9 @@ interface LocaleSetting {
   };
 }
 
+/**
+ * Supported locales configuration
+ */
 const locales: LocaleSetting = {
   en: {
     label: "English",
@@ -28,12 +31,20 @@ const locales: LocaleSetting = {
   },
 };
 
+/**
+ * Internationalization utilities
+ */
 type LocaleKey = keyof typeof locales;
-
 export default {
   default_locale,
   locales,
 
+  /**
+   * Translates text based on user's locale settings
+   * @param translations - Object containing translations for different locales
+   * @returns Translated string for the current locale or default locale
+   * @throws Error if default locale translation is missing
+   */
   t(
     translations: Partial<Record<LocaleKey, string>> &
       Record<typeof default_locale, string>,

@@ -6,6 +6,7 @@ const manifest = {
   default_locale: "en",
   homepage_url: "https://github.com/psephopaiktes/figma-finder",
   permissions: ["tabs", "storage", "activeTab", "identity"],
+  minimum_chrome_version: "126",
   commands: {
     "open-popup": {
       suggested_key: {

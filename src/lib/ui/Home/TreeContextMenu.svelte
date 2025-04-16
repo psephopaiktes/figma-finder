@@ -1,28 +1,28 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { getTargetUrl, store } from "@/lib/store.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { getTargetUrl, store } from "@/lib/store.svelte";
 
-  let contextMenu: HTMLDialogElement;
-  let { event }: { event: MouseEvent | null } = $props();
+let contextMenu: HTMLDialogElement;
+let { event }: { event: MouseEvent | null } = $props();
 
-  $effect(() => {
-    if (!event || store.targetProps[0] === "") return;
-    event.preventDefault();
+$effect(() => {
+  if (!event || store.targetProps[0] === "") return;
+  event.preventDefault();
 
-    if (contextMenu.matches(":popover-open")) {
-      contextMenu.hidePopover();
-      return;
-    }
+  if (contextMenu.matches(":popover-open")) {
+    contextMenu.hidePopover();
+    return;
+  }
 
-    const maxX = window.innerWidth - 200;
-    contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
-    contextMenu.style.top = `${event.pageY - scrollY}px`;
-    contextMenu.showPopover();
+  const maxX = window.innerWidth - 200;
+  contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
+  contextMenu.style.top = `${event.pageY - scrollY}px`;
+  contextMenu.showPopover();
 
-    document.addEventListener("click", () => contextMenu.hidePopover());
-    return () =>
-      document.removeEventListener("click", () => contextMenu.hidePopover());
-  });
+  document.addEventListener("click", () => contextMenu.hidePopover());
+  return () =>
+    document.removeEventListener("click", () => contextMenu.hidePopover());
+});
 </script>
 
 <dialog popover="manual" bind:this={contextMenu} class="c-popover">

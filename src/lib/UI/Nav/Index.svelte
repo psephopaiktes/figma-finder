@@ -145,12 +145,12 @@
     &::before {
       content: "";
       position: absolute;
-      inset: 0 0 -24px;
+      inset: 0 0 calc(-1 * var(--sp-m));
       z-index: -1;
       background: rgb(from var(--color-base) r g b / 40%);
       mask-image: linear-gradient(#000 50%, transparent);
       mask-composite: intersect;
-      backdrop-filter: blur(16px);
+      backdrop-filter: saturate(180%) blur(16px);
       pointer-events: none;
     }
 

@@ -1,22 +1,23 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
+  import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
+  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-const showNav = location.search.includes("nav");
-const title = i18n.t({
-  en: "Options",
-  ja: "オプション",
-  "zh-cn": "选项",
-  es: "Opciones",
-});
+  const showNav = location.search.includes("nav");
+  const title = i18n.t({
+    en: "Options",
+    ja: "オプション",
+    "zh-cn": "选项",
+    es: "Opciones",
+  });
 
-$effect(() => {
-  storage.setItem("sync:options", store.options);
-  document.documentElement.dataset.theme = store.options.theme;
-});
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+    document.documentElement.dataset.theme = store.options.theme;
+  });
 </script>
 
 <Layout class="l-document c-document" {title}>
@@ -122,93 +123,10 @@ $effect(() => {
     <TeamSetting />
   {/if}
 
-  <hr />
-
-  <h2>
-    {i18n.t({
-      en: "Information",
-      ja: "情報",
-      "zh-cn": "信息",
-      es: "Información",
-    })}
-  </h2>
-  <h3>URL</h3>
-  <ul>
-    <li>
-      <a
-        href={import.meta.env.CHROME
-          ? "https://chrome.google.com/webstore/detail/klifomaejfaibpkbigbpljdmelbkehbe"
-          : "TODO"}
-        target="_blank"
-      >
-        {i18n.t({
-          en: "Store Page",
-          ja: "ストアページ",
-          "zh-cn": "商店页面",
-          es: "Página de la tienda",
-        })}
-      </a>
-    </li>
-    <li>
-      <a href="https://github.com/psephopaiktes/figma-finder" target="_blank">
-        GitHub
-      </a>
-    </li>
-    <li>
-      <a href="https://hira.page" target="_blank">
-        {i18n.t({
-          en: "Author's Website",
-          ja: "制作者HP",
-          "zh-cn": "作者网站",
-          es: "Sitio web del autor",
-        })}
-      </a>
-    </li>
-  </ul>
-
-  <h3>
-    {i18n.t({
-      en: "Support the Developer🙏",
-      ja: "制作者を支援🙏",
-      "zh-cn": "支持开发者🙏",
-      es: "Apoyar al desarrollador🙏",
-    })}
-  </h3>
-  <ul>
-    <li>
-      <a href="https://paypal.me/psephopaiktes" target="_blank"> PayPal </a>
-    </li>
-    <li>
-      <a href="https://github.com/sponsors/psephopaiktes" target="_blank">
-        GitHub sponsors
-      </a>
-    </li>
-    <li>
-      <a href="https://ko-fi.com/psephopaiktes" target="_blank"> Ko-fi </a>
-    </li>
-    <li>
-      <a href="https://buymeacoffee.com/psephopaiktes" target="_blank">
-        Buy me a coffee
-      </a>
-    </li>
-  </ul>
-
-  <hr />
-  <footer>
-    <a href="https://hira.page" target="_blank"> © Akira HIRATA </a>
-  </footer>
+  <DocumentFooter />
 </Layout>
 
 <style>
-  ul {
-    list-style: disc;
-    margin-block-start: 0.8rem;
-    padding-inline-start: 1.5em;
-  }
-  li > a {
-    color: var(--color-theme);
-    text-decoration: none;
-  }
   select {
     border: 2px solid rgb(from var(--color-main) r g b / 0.1);
     border-radius: 4px;

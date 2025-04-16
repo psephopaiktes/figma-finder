@@ -1,6 +1,6 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { getFigUrl } from "@/lib/store.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { getFigUrl } from "@/lib/store.svelte";
 </script>
 
 <a

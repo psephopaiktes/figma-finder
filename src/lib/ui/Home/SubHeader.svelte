@@ -1,19 +1,19 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { getFigUrl, store } from "@/lib/store.svelte";
-  import { isMac } from "@/lib/utility.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { getFigUrl, store } from "@/lib/store.svelte";
+import { isMac } from "@/lib/utility.svelte";
 
-  let header: HTMLHeadElement;
+let header: HTMLHeadElement;
 
-  function checkInView() {
-    if (window.scrollY < 28) {
-      header.classList.add("show");
-    } else {
-      header.classList.remove("show");
-    }
+function checkInView() {
+  if (window.scrollY < 28) {
+    header.classList.add("show");
+  } else {
+    header.classList.remove("show");
   }
+}
 
-  onMount(() => window.scroll(0, 56));
+onMount(() => window.scroll(0, 56));
 </script>
 
 <svelte:window onscroll={checkInView} />

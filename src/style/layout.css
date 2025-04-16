@@ -24,14 +24,14 @@
   overscroll-behavior: contain;
   margin: 0;
   border: 0;
-  translate: calc(-1 * var(--w)) 0;
+  translate: calc(-1 * var(--w));
   transition: translate 0.2s ease-in, overlay 0.2s ease-in allow-discrete,
     display 0.2s ease-in allow-discrete;
 
   &[open] {
-    translate: 0 0;
+    translate: 0;
     @starting-style {
-      translate: calc(-1 * var(--w)) 0;
+      translate: calc(-1 * var(--w));
     }
   }
 }
@@ -39,7 +39,6 @@
 .l-document {
   max-inline-size: 800px;
   padding-inline: var(--sp-l);
-  padding-block-end: var(--sp-2xl);
   margin-inline: auto;
 }
 

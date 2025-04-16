@@ -1,5 +1,12 @@
 import i18n from "@/lib/i18n.svelte";
 
+/**
+ * Opens the side panel in the browser
+ *
+ * Handles different browser environments:
+ * - Chrome: Uses the sidePanel API
+ * - Firefox: Uses the sidebarAction API
+ */
 export const openSidePanel = async () => {
   if (import.meta.env.CHROME) {
     const queryOptions = { active: true, currentWindow: true };
@@ -11,6 +18,12 @@ export const openSidePanel = async () => {
   }
 };
 
+/**
+ * Formats a date string into a human-readable "time ago" format
+ *
+ * @param isoDateStr - ISO format date string to format
+ * @returns Localized string describing when the edit occurred
+ */
 export const formatEditedDate = (isoDateStr: string): string => {
   const date = new Date(isoDateStr);
   const now = new Date();
@@ -82,10 +95,17 @@ export const formatEditedDate = (isoDateStr: string): string => {
   });
 };
 
+/**
+ * Determines if the current operating system is macOS
+ */
 export const isMac =
   "userAgentData" in navigator
     ? (navigator.userAgentData as NavigatorUAData).platform === "macOS"
     : navigator.userAgent.includes("Mac");
+
+/**
+ * Interface for Navigator User Agent Data API
+ */
 interface NavigatorUAData {
   platform: string;
   brands: { brand: string; version: string }[];

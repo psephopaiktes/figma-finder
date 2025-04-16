@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [".wxt/**", ".output/**", "build/**", ".vscode/**", ".github/**"]
+    "ignore": [
+      ".wxt/**",
+      ".output/**",
+      "build/**",
+      ".vscode/**",
+      ".github/**",
+      "**/*.svg"
+    ]
   },
   "formatter": {
     "enabled": true,

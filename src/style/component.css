@@ -8,16 +8,16 @@
     margin-block-start: var(--sp-m);
     opacity: 0.8;
   }
-  > hr {
+  hr {
     margin-block-start: var(--sp-xl);
     margin-block-end: var(--sp-xl);
     border: 0;
     border-top: 1px solid rgb(from var(--color-main) r g b / 0.1);
   }
-  > p {
+  p {
     margin-block-start: 0.6rem;
   }
-  > p a {
+  p a {
     color: var(--color-theme);
     text-decoration: none;
   }

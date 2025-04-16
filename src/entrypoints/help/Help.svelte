@@ -1,31 +1,33 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import { openSidePanel } from "@/lib/utility.svelte";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+  import Pin from "@/lib/ui/Help/Pin.svelte";
+  import Welcome from "@/lib/ui/Help/Welcome.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
 
-const showNav = location.search.includes("nav");
-const isWelcome = location.search.includes("welcome");
-let isPinned = $state(false);
+  const showNav = location.search.includes("nav");
+  const isWelcome = location.search.includes("welcome");
+  let isPinned = $state(false);
 
-onMount(async () => {
-  const settings = await chrome.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
-});
+  onMount(async () => {
+    const settings = await browser.action.getUserSettings();
+    isPinned = settings.isOnToolbar;
+  });
 
-const title = isWelcome
-  ? i18n.t({
-      en: "Welcome",
-      ja: "ようこそ",
-      "zh-cn": "欢迎",
-      es: "Bienvenido",
-    })
-  : i18n.t({
-      en: "Help",
-      ja: "ヘルプ",
-      "zh-cn": "帮助",
-      es: "Ayuda",
-    });
+  const title = isWelcome
+    ? i18n.t({
+        en: "Welcome",
+        ja: "ようこそ",
+        "zh-cn": "欢迎",
+        es: "Bienvenido",
+      })
+    : i18n.t({
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+        es: "Ayuda",
+      });
 </script>
 
 <Layout class="l-document c-document" {title}>
@@ -34,19 +36,11 @@ const title = isWelcome
   {/if}
 
   {#if isWelcome}
-    <h1>Welcome!</h1>
-    <button onclick={openSidePanel}>
-      {i18n.t({
-        en: "Run Figma Finder",
-        ja: "Figma Finderを実行する",
-        "zh-cn": "运行Figma Finder",
-        es: "Ejecutar Figma Finder",
-      })}
-    </button>
+    <Welcome />
   {/if}
 
   {#if !isPinned}
-    <p>ピンしてね！</p>
+    <Pin />
   {/if}
 
   <p>
@@ -57,6 +51,8 @@ const title = isWelcome
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
     non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
+
+  <DocumentFooter />
 </Layout>
 
 <style>
