@@ -2,8 +2,10 @@
 import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
 import { formatEditedDate } from "@/lib/utility.svelte";
 import type { Project } from "@/types";
+
 import { tick } from "svelte";
 import { slide } from "svelte/transition";
+
 import ContextMenu from "./TreeContextMenu.svelte";
 import drag from "./TreeDragHandler.svelte";
 import key from "./TreeKeyboardHandler.svelte";

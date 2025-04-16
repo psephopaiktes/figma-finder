@@ -1,10 +1,17 @@
 <script lang="ts">
   import Layout from "@/lib/Layout.svelte";
   import i18n from "@/lib/i18n.svelte";
+  import { marked } from "marked";
+
   import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
   import Pin from "@/lib/ui/Help/Pin.svelte";
   import Welcome from "@/lib/ui/Help/Welcome.svelte";
   import Nav from "@/lib/ui/Nav/Index.svelte";
+
+  import HelpEn from "@/lib/ui/Help/help.en.md?raw";
+  import HelpJa from "@/lib/ui/Help/help.ja.md?raw";
+
+  marked.use({ gfm: true });
 
   const showNav = location.search.includes("nav");
   const isWelcome = location.search.includes("welcome");
@@ -13,6 +20,15 @@
   onMount(async () => {
     const settings = await browser.action.getUserSettings();
     isPinned = settings.isOnToolbar;
+
+    // URLに#でIDを指定している場合、スクロールする
+    const hash = location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView();
+      }
+    }
   });
 
   const title = isWelcome
@@ -33,6 +49,9 @@
 <Layout class="l-document c-document" {title}>
   {#if showNav}
     <Nav {title} current="help" />
+  {:else if !isWelcome}
+    <h1>{title} - Figma Finder</h1>
+    <hr />
   {/if}
 
   {#if isWelcome}
@@ -43,17 +62,19 @@
     <Pin />
   {/if}
 
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </p>
+  {@html i18n.t({
+    en: marked(HelpEn) as string,
+    ja: marked(HelpJa) as string,
+    "zh-cn": marked(HelpJa) as string,
+    es: marked(HelpJa) as string,
+  })}
+  <!-- TODO -->
 
   <DocumentFooter />
 </Layout>
 
 <style>
+  h1 {
+    margin-block-start: var(--sp-2xl);
+  }
 </style>
