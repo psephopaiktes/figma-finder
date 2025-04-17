@@ -1,5 +1,5 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
+import i18n from "@/lib/i18n.svelte";
 </script>
 
 <footer>
@@ -10,6 +10,7 @@
         ja: "制作者を支援🙏",
         "zh-cn": "支持开发者🙏",
         es: "Apoyar al desarrollador🙏",
+        ko: "개발자 지원🙏",
       })}
     </h3>
     <ul>
@@ -46,6 +47,7 @@
             ja: "ストアページ",
             "zh-cn": "商店页面",
             es: "Página de la tienda",
+            ko: "스토어 페이지",
           })}
         </a>
       </li>
@@ -61,6 +63,7 @@
             ja: "制作者HP",
             "zh-cn": "作者网站",
             es: "Sitio web del autor",
+            ko: "제작자 홈페이지",
           })}
         </a>
       </li>

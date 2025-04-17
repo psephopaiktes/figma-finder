@@ -83,6 +83,7 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
           en: "User already logged in.",
           "zh-cn": "用户已登录。",
           es: "El usuario ya ha iniciado sesión.",
+          ko: "이미 로그인된 사용자입니다。",
         }),
       );
       throw new Error(`User already logged in: ${oauthData.user_id}`);
@@ -124,6 +125,7 @@ function logOut(): boolean {
         en: "Log out?",
         "zh-cn": "登出？",
         es: "¿Cerrar sesión?",
+        ko: "로그아웃하시겠습니까?",
       }),
     );
     if (!result) return false;

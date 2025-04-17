@@ -95,6 +95,7 @@ const openFirstFile = () => {
           ja: "オフラインです。",
           "zh-cn": "您处于离线状态。",
           es: "Estás desconectado.",
+          ko: "오프라인 상태입니다。",
         })}
       </p>
     </section>
@@ -106,6 +107,7 @@ const openFirstFile = () => {
           ja: "プロジェクトがありません。",
           "zh-cn": "没有找到项目。",
           es: "No se encontraron proyectos.",
+          ko: "프로젝트가 없습니다。",
         })}
       </p>
 
@@ -122,6 +124,7 @@ const openFirstFile = () => {
           ja: "再読み込み",
           "zh-cn": "重新加载",
           es: "Recargar",
+          ko: "새로고침",
         })}
       </button>
     </section>

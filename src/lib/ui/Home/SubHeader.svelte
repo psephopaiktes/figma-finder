@@ -36,6 +36,7 @@ onMount(() => window.scroll(0, 56));
         ja: "折りたたむ",
         "zh-cn": "折叠",
         es: "Colapsar",
+        ko: "접기",
       })}
     </span>
   </button>
@@ -53,6 +54,7 @@ onMount(() => window.scroll(0, 56));
         ja: "再読み込み",
         "zh-cn": "重新加载",
         es: "Recargar",
+        ko: "새로고침",
       })}
     </span>
   </button>

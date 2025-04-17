@@ -39,6 +39,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: `${diffMinutes}分前に編集済み`,
       "zh-cn": `编辑于${diffMinutes}分钟前`,
       es: `Editado hace ${diffMinutes} minutos`,
+      ko: `${diffMinutes}분 전에 편집됨`,
     });
   }
 
@@ -48,6 +49,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: `${diffHours}時間前に編集済み`,
       "zh-cn": `编辑于${diffHours}小时前`,
       es: `Editado hace ${diffHours} horas`,
+      ko: `${diffHours}시간 전에 편집됨`,
     });
   }
 
@@ -57,6 +59,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: "1日前に編集済み",
       "zh-cn": "昨天编辑",
       es: "Editado ayer",
+      ko: "어제 편집됨",
     });
   }
 
@@ -66,6 +69,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: "2日前に編集済み",
       "zh-cn": "前天编辑",
       es: "Editado hace 2 días",
+      ko: "2일 전에 편집됨",
     });
   }
 
@@ -75,6 +79,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: `${diffYears}年前に編集済み`,
       "zh-cn": `${diffYears}年前编辑`,
       es: `Editado hace ${diffYears} años`,
+      ko: `${diffYears}년 전에 편집됨`,
     });
   }
 
@@ -84,6 +89,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
       ja: "1年前に編集済み",
       "zh-cn": "1年前编辑",
       es: "Editado hace 1 año",
+      ko: "1년 전에 편집됨",
     });
   }
 
@@ -92,6 +98,7 @@ export const formatEditedDate = (isoDateStr: string): string => {
     ja: `${diffDays}日前に編集済み`,
     "zh-cn": `${diffDays}天前编辑`,
     es: `Editado hace ${diffDays} días`,
+    ko: `${diffDays}일 전에 편집됨`,
   });
 };
 

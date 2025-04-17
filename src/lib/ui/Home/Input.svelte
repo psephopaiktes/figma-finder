@@ -25,6 +25,7 @@ function autofocus(node: HTMLElement) {
       ja: "Figmaファイルを探す",
       "zh-cn": "查找Figma文件",
       es: "Encontrar archivos de Figma",
+      ko: "Figma 파일 찾기",
     })}
   />
 </form>

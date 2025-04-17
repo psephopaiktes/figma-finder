@@ -1,23 +1,24 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
-  import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
-  import Nav from "@/lib/ui/Nav/Index.svelte";
-  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
+import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
+import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-  const showNav = location.search.includes("nav");
-  const title = i18n.t({
-    en: "Options",
-    ja: "オプション",
-    "zh-cn": "选项",
-    es: "Opciones",
-  });
+const showNav = location.search.includes("nav");
+const title = i18n.t({
+  en: "Options",
+  ja: "オプション",
+  "zh-cn": "选项",
+  es: "Opciones",
+  ko: "옵션",
+});
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-    document.documentElement.dataset.theme = store.options.theme;
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+  document.documentElement.dataset.theme = store.options.theme;
+});
 </script>
 
 <Layout {title}>
@@ -32,12 +33,19 @@
         ja: "表示設定",
         "zh-cn": "显示设置",
         es: "Configuración de pantalla",
+        ko: "화면 설정",
       })}
     </h2>
 
     <label>
       <h3>
-        {i18n.t({ en: "Language", ja: "言語", "zh-cn": "语言", es: "Idioma" })}
+        {i18n.t({
+          en: "Language",
+          ja: "言語",
+          "zh-cn": "语言",
+          es: "Idioma",
+          ko: "언어",
+        })}
       </h3>
       <select bind:value={store.options.locale}>
         <option value={null}>
@@ -46,6 +54,7 @@
             ja: "システム",
             "zh-cn": "系统",
             es: "Sistema",
+            ko: "시스템",
           })}
         </option>
         {#each Object.keys(i18n.locales) as locale}
@@ -58,7 +67,13 @@
 
     <label>
       <h3>
-        {i18n.t({ en: "Theme", ja: "テーマ", "zh-cn": "主题", es: "Tema" })}
+        {i18n.t({
+          en: "Theme",
+          ja: "テーマ",
+          "zh-cn": "主题",
+          es: "Tema",
+          ko: "테마",
+        })}
       </h3>
 
       <select bind:value={store.options.theme}>
@@ -68,13 +83,26 @@
             ja: "システム",
             "zh-cn": "系统",
             es: "Sistema",
+            ko: "시스템",
           })}
         </option>
         <option value="light">
-          {i18n.t({ en: "Light", ja: "ライト", "zh-cn": "亮", es: "Luz" })}
+          {i18n.t({
+            en: "Light",
+            ja: "ライト",
+            "zh-cn": "亮",
+            es: "Luz",
+            ko: "라이트",
+          })}
         </option>
         <option value="dark">
-          {i18n.t({ en: "Dark", ja: "ダーク", "zh-cn": "暗", es: "Oscuro" })}
+          {i18n.t({
+            en: "Dark",
+            ja: "ダーク",
+            "zh-cn": "暗",
+            es: "Oscuro",
+            ko: "다크",
+          })}
         </option>
       </select>
     </label>
@@ -85,6 +113,7 @@
         ja: "ファイルの開き方",
         "zh-cn": "文件打开方式",
         es: "Método de apertura de archivos",
+        ko: "파일 열기 방식",
       })}
     </h3>
     <p>
@@ -99,6 +128,7 @@
           ja: "ブラウザで開く",
           "zh-cn": "在浏览器中打开",
           es: "Abrir en el navegador",
+          ko: "브라우저에서 열기",
         })}
       </label>
     </p>
@@ -110,6 +140,7 @@
           ja: "デスクトップアプリで開く",
           "zh-cn": "在桌面应用程序中打开",
           es: "Abrir en la aplicación de escritorio",
+          ko: "데스크톱 앱에서 열기",
         })}
       </label>
     </p>
@@ -123,6 +154,7 @@
           ja: "チームID",
           "zh-cn": "团队ID",
           es: "ID del equipo",
+          ko: "팀 ID",
         })}
       </h2>
       <TeamSetting />

@@ -4,7 +4,13 @@ import UserSelector from "./UserSelector.svelte";
 
 const pageList = [
   {
-    label: { en: "Home", ja: "ホーム", "zh-cn": "主页", es: "Inicio" },
+    label: {
+      en: "Home",
+      ja: "ホーム",
+      "zh-cn": "主页",
+      es: "Inicio",
+      ko: "홈",
+    },
     href: "/sidepanel.html",
     id: "home",
   },
@@ -14,12 +20,19 @@ const pageList = [
       ja: "オプション",
       "zh-cn": "选项",
       es: "Opciones",
+      ko: "옵션",
     },
     href: "/options.html?nav",
     id: "options",
   },
   {
-    label: { en: "Help", ja: "ヘルプ", "zh-cn": "帮助", es: "Ayuda" },
+    label: {
+      en: "Help",
+      ja: "ヘルプ",
+      "zh-cn": "帮助",
+      es: "Ayuda",
+      ko: "도움말",
+    },
     href: "/help.html?nav",
     id: "help",
   },
@@ -37,6 +50,7 @@ const extPageList = [
       ja: "制作者を支援",
       "zh-cn": "支持开发者",
       es: "Apoyar",
+      ko: "개발자 지원",
     },
     href: "https://github.com/sponsors/psephopaiktes",
     id: "love",
@@ -66,7 +80,13 @@ function backdropClick(event: MouseEvent) {
   <header class="l-navHeader">
     <button onclick={openDrawer}>
       <svg-icon src="/img/icon/menu.svg">
-        {i18n.t({ en: "Menu", ja: "メニュー", "zh-cn": "菜单", es: "Menú" })}
+        {i18n.t({
+          en: "Menu",
+          ja: "メニュー",
+          "zh-cn": "菜单",
+          es: "Menú",
+          ko: "메뉴",
+        })}
       </svg-icon>
     </button>
 
@@ -84,7 +104,13 @@ function backdropClick(event: MouseEvent) {
   <dialog bind:this={drawer} onclick={backdropClick} class="l-navDrawer">
     <button onclick={closeDrawer}>
       <svg-icon src="/img/icon/close.svg">
-        {i18n.t({ en: "Close", ja: "閉じる", "zh-cn": "关闭", es: "Cerrar" })}
+        {i18n.t({
+          en: "Close",
+          ja: "閉じる",
+          "zh-cn": "关闭",
+          es: "Cerrar",
+          ko: "닫기",
+        })}
       </svg-icon>
     </button>
 

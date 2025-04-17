@@ -1,5 +1,5 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
+import i18n from "@/lib/i18n.svelte";
 </script>
 
 <section>
@@ -10,6 +10,7 @@
       ja: "アクセスしやすいように、<br>Figma Finderを固定しましょう！",
       "zh-cn": "为了更方便地访问，<br>请固定 Figma Finder！",
       es: "¡Para un acceso más fácil, <br>fija Figma Finder!",
+      ko: "더 쉽게 접근할 수 있도록, <br>Figma Finder를 고정하세요!",
     })}
   </p>
   <img src="/img/pin-ss.webp" alt="how to pin screenshot" />

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { openSidePanel } from "@/lib/utility.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { openSidePanel } from "@/lib/utility.svelte";
 </script>
 
 <section>
@@ -17,6 +17,7 @@
       ja: "インストールしていただきありがとうございます。<br>このページはいつでもヘルプから確認できます。",
       "zh-cn": "感谢您的安装！<br>此页面可以随时从帮助中查看。",
       es: "¡Gracias por instalar!<br>Esta página se puede consultar desde la ayuda en cualquier momento.",
+      ko: "설치해 주셔서 감사합니다!<br>이 페이지는 언제든지 도움말에서 확인할 수 있습니다。",
     })}
   </p>
 
@@ -27,6 +28,7 @@
       ja: "Figma Finder を実行",
       "zh-cn": "运行Figma Finder",
       es: "Ejecutar Figma Finder",
+      ko: "Figma Finder 실행",
     })}
   </button>
 </section>

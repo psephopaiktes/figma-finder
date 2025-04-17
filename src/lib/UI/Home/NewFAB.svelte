@@ -12,6 +12,7 @@ import { getFigUrl } from "@/lib/store.svelte";
     ja: "新規ファイル",
     "zh-cn": "新文件",
     es: "Nuevo archivo",
+    ko: "새 파일",
   })}
   tabindex="-1"
 >

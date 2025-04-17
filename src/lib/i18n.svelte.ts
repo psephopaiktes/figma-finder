@@ -26,6 +26,9 @@ const locales: LocaleSetting = {
     label: "简体中文",
     lang: "zh-CN",
   },
+  ko: {
+    label: "한국어",
+  },
   es: {
     label: "Español",
   },

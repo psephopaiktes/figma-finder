@@ -1,44 +1,45 @@
 <script lang="ts">
-import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
-import { formatEditedDate } from "@/lib/utility.svelte";
-import type { Project } from "@/types";
+  import i18n from "@/lib/i18n.svelte";
+  import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
+  import { formatEditedDate } from "@/lib/utility.svelte";
+  import type { Project } from "@/types";
 
-import { tick } from "svelte";
-import { slide } from "svelte/transition";
+  import { tick } from "svelte";
+  import { slide } from "svelte/transition";
 
-import ContextMenu from "./TreeContextMenu.svelte";
-import drag from "./TreeDragHandler.svelte";
-import key from "./TreeKeyboardHandler.svelte";
+  import ContextMenu from "./TreeContextMenu.svelte";
+  import drag from "./TreeDragHandler.svelte";
+  import key from "./TreeKeyboardHandler.svelte";
 
-let {
-  projects,
-  isInputed = false,
-}: { projects: Record<string, Project>; isInputed: boolean } = $props();
+  let {
+    projects,
+    isInputed = false,
+  }: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
-let contextMenuEvent: MouseEvent | null = $state(null);
+  let contextMenuEvent: MouseEvent | null = $state(null);
 
-const handleClick = (e: MouseEvent) => {
-  if ((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) {
-    e.preventDefault();
-    open(getTargetUrl("browser"));
-  }
-  if (e.altKey) {
-    e.preventDefault();
-    open(getTargetUrl("app"));
-  }
-};
+  const handleClick = (e: MouseEvent) => {
+    if ((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) {
+      e.preventDefault();
+      open(getTargetUrl("browser"));
+    }
+    if (e.altKey) {
+      e.preventDefault();
+      open(getTargetUrl("app"));
+    }
+  };
 
-//  Objects in array updates cannot be tracked by $effect directly
-let watcher = $derived(JSON.stringify(store.localProjectState));
-$effect(() => {
-  watcher;
-  tick().then(() => {
-    storage.setItem<string>(
-      "local:localProjectState",
-      JSON.stringify(store.localProjectState), //WXT対策
-    );
+  //  Objects in array updates cannot be tracked by $effect directly
+  let watcher = $derived(JSON.stringify(store.localProjectState));
+  $effect(() => {
+    watcher;
+    tick().then(() => {
+      storage.setItem<string>(
+        "local:localProjectState",
+        JSON.stringify(store.localProjectState), //WXT対策
+      );
+    });
   });
-});
 </script>
 
 <svelte:window onkeydown={(e) => key.handleDocument(e)} />
@@ -76,7 +77,16 @@ $effect(() => {
           >
             <span>{project.team} /</span>
             {project.name}
-            <small>{fileCount}files</small>
+            <small>
+              {fileCount}
+              {i18n.t({
+                en: "files",
+                ja: "ファイル",
+                "zh-cn": "文件",
+                es: "archivos",
+                ko: "파일",
+              })}
+            </small>
             {#if !isInputed}
               <svg-icon src="/img/icon/drag.svg">draggable</svg-icon>
             {/if}

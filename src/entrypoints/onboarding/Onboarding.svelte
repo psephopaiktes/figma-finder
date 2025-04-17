@@ -1,18 +1,18 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import oauth from "@/lib/oauth.svelte";
-  import { user } from "@/lib/store.svelte";
-  import Loader from "@/lib/ui/Loader.svelte";
-  import Nav from "@/lib/ui/Nav/Index.svelte";
-  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n.svelte";
+import oauth from "@/lib/oauth.svelte";
+import { user } from "@/lib/store.svelte";
+import Loader from "@/lib/ui/Loader.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
+import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-  let loading = $state(false);
-  const logIn = async () => {
-    loading = true;
-    await oauth.logIn();
-    location.reload();
-  };
+let loading = $state(false);
+const logIn = async () => {
+  loading = true;
+  await oauth.logIn();
+  location.reload();
+};
 </script>
 
 <Layout>
@@ -27,6 +27,7 @@
           ja: "Figma アカウントでログインしてください。",
           "zh-cn": "使用 Figma 帐户登录。",
           es: "Inicia sesión con tu cuenta de Figma.",
+          ko: "Figma 계정으로 로그인하세요。",
         })}
       </p>
       <button onclick={logIn} class="c-button">
@@ -39,6 +40,7 @@
             ja: "ログイン",
             "zh-cn": "登录",
             es: "Iniciar sesión",
+            ko: "로그인",
           })}
         {/if}
       </button>
@@ -56,6 +58,7 @@
           ja: "開始する",
           "zh-cn": "开始",
           es: "Comenzar",
+          ko: "시작하기",
         })}
       </a>
     {/if}

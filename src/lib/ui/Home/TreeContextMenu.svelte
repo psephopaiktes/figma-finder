@@ -32,6 +32,7 @@ $effect(() => {
       ja: "ブラウザで開く",
       "zh-cn": "在浏览器中打开",
       es: "Abrir en el navegador",
+      ko: "브라우저에서 열기",
     })}
   </a>
   <a href={getTargetUrl("app")} target="_blank">
@@ -40,6 +41,7 @@ $effect(() => {
       ja: "デスクトップアプリで開く",
       "zh-cn": "在桌面应用程序中打开",
       es: "Abrir en la aplicación de escritorio",
+      ko: "데스크톱 앱에서 열기",
     })}
   </a>
   <hr />
@@ -51,6 +53,7 @@ $effect(() => {
       ja: "URLをコピー",
       "zh-cn": "复制链接",
       es: "Copiar URL",
+      ko: "URL 복사",
     })}
   </button>
 </dialog>

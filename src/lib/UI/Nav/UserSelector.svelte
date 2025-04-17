@@ -14,6 +14,7 @@ async function addAccount() {
         ja: "アカウントの追加はサイドパネル上から行う必要があります。サイドパネルを開きますか？",
         "zh-cn": "您需要从侧边栏添加帐户。要打开侧边栏吗？",
         es: "Necesita agregar una cuenta desde el panel lateral. ¿Quieres abrir el panel lateral?",
+        ko: "계정 추가는 사이드 패널에서 해야 합니다. 사이드 패널을 열겠습니까?",
       }),
     );
     if (!result) return;
@@ -65,6 +66,7 @@ async function addAccount() {
           ja: "アカウントの追加",
           "zh-cn": "添加账户",
           es: "Agregar cuenta",
+          ko: "계정 추가",
         })}
       </p>
     </button>
@@ -85,6 +87,7 @@ async function addAccount() {
           ja: "ログアウト",
           "zh-cn": "登出",
           es: "Cerrar sesión",
+          ko: "로그아웃",
         })}
       </p>
     </button>
