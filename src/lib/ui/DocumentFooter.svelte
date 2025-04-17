@@ -1,5 +1,5 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
+  import i18n from "@/lib/i18n.svelte";
 </script>
 
 <footer>
@@ -76,6 +76,7 @@ import i18n from "@/lib/i18n.svelte";
 
 <style>
   footer {
+    --bounce: -240px;
     position: sticky;
     top: 100vh;
     display: flex;
@@ -83,9 +84,22 @@ import i18n from "@/lib/i18n.svelte";
     align-items: start;
     gap: var(--sp-2xl);
     margin-inline: calc(50% - 50vw);
-    margin-block-start: var(--sp-2xl);
-    padding: var(--sp-xl) var(--sp-m) var(--sp-2xl);
-    background: rgb(from var(--color-main) r g b / 0.9);
+    margin-block-start: calc(var(--sp-2xl) + var(--bounce));
+    margin-block-end: var(--bounce);
+    padding: var(--sp-xl) var(--sp-m) calc(var(--sp-2xl) - var(--bounce));
+
+    background-color: var(--color-main);
+    background-image: linear-gradient(
+        0deg,
+        transparent 96%,
+        rgb(from var(--color-base) r g b / 0.08) 96%
+      ),
+      linear-gradient(
+        90deg,
+        transparent 96%,
+        rgb(from var(--color-base) r g b / 0.08) 96%
+      );
+    background-size: var(--sp-s) var(--sp-s);
     color: var(--color-base);
     border-top: 16px solid var(--color-theme);
   }
@@ -118,7 +132,7 @@ import i18n from "@/lib/i18n.svelte";
   }
   small {
     position: absolute;
-    bottom: var(--sp-m);
+    bottom: calc(var(--sp-m) - var(--bounce));
     opacity: 0.6;
   }
 </style>

@@ -1,60 +1,60 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { store, user } from "@/lib/store.svelte";
-import { slide } from "svelte/transition";
+  import i18n from "@/lib/i18n.svelte";
+  import { store, user } from "@/lib/store.svelte";
+  import { slide } from "svelte/transition";
 
-let inputtedTeamId = $state("");
+  let inputtedTeamId = $state("");
 
-async function addTeam(e: SubmitEvent) {
-  e.preventDefault();
-  const currentUser = user();
-  if (!currentUser) return;
+  async function addTeam(e: SubmitEvent) {
+    e.preventDefault();
+    const currentUser = user();
+    if (!currentUser) return;
 
-  if (currentUser.teams[inputtedTeamId]) {
-    alert(
-      i18n.t({
-        en: "This team is already registered.",
-        ja: "このチームはすでに登録されています。",
-        "zh-cn": "该团队已注册。",
-        es: "Este equipo ya está registrado.",
-      }),
-    );
-    inputtedTeamId = "";
-    return;
-  }
+    if (currentUser.teams[inputtedTeamId]) {
+      alert(
+        i18n.t({
+          en: "This team is already registered.",
+          ja: "このチームはすでに登録されています。",
+          "zh-cn": "该团队已注册。",
+          es: "Este equipo ya está registrado.",
+        }),
+      );
+      inputtedTeamId = "";
+      return;
+    }
 
-  const res = await fetch(
-    `https://api.figma.com/v1/teams/${inputtedTeamId}/projects`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${currentUser.access_token}`,
+    const res = await fetch(
+      `https://api.figma.com/v1/teams/${inputtedTeamId}/projects`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${currentUser.access_token}`,
+        },
       },
-    },
-  );
-  if (!res.ok) {
-    alert(
-      `${i18n.t({
-        en: "Failed to fetch the team.\nError code",
-        ja: "チームを取得できませんでした。\nエラーコード",
-        "zh-cn": "无法获取团队。\n错误代码",
-        es: "No se pudo obtener el equipo.\nCódigo de error",
-      })}: ${res.status}`,
     );
-    return;
+    if (!res.ok) {
+      alert(
+        `${i18n.t({
+          en: "Failed to fetch the team.\nError code",
+          ja: "チームを取得できませんでした。\nエラーコード",
+          "zh-cn": "无法获取团队。\n错误代码",
+          es: "No se pudo obtener el equipo.\nCódigo de error",
+        })}: ${res.status}`,
+      );
+      return;
+    }
+    const data = await res.json();
+
+    currentUser.teams[inputtedTeamId] = data.name;
+    storage.setItem("sync:options", store.options);
+    inputtedTeamId = "";
   }
-  const data = await res.json();
 
-  currentUser.teams[inputtedTeamId] = data.name;
-  storage.setItem("sync:options", store.options);
-  inputtedTeamId = "";
-}
-
-function removeTeam(id: string) {
-  const currentUser = user();
-  if (!currentUser) return;
-  delete currentUser.teams[id];
-}
+  function removeTeam(id: string) {
+    const currentUser = user();
+    if (!currentUser) return;
+    delete currentUser.teams[id];
+  }
 </script>
 
 <p>
@@ -155,6 +155,7 @@ function removeTeam(id: string) {
 
   .teamList {
     margin-block-start: var(--sp-s);
+    padding: 0;
     li {
       margin-block-start: var(--sp-xs);
       padding: 4px;

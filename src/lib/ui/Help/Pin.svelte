@@ -1,5 +1,5 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
+  import i18n from "@/lib/i18n.svelte";
 </script>
 
 <section>
@@ -17,7 +17,7 @@ import i18n from "@/lib/i18n.svelte";
 
 <style>
   section {
-    position: fixed;
+    position: absolute;
     top: 48px;
     right: 16px;
     width: 240px;
@@ -32,6 +32,7 @@ import i18n from "@/lib/i18n.svelte";
       margin: 0;
       color: #fff;
       position: relative;
+      text-wrap: balance;
       &::before,
       &::after {
         content: "";
@@ -63,7 +64,7 @@ import i18n from "@/lib/i18n.svelte";
       aspect-ratio: 3 / 2;
     }
 
-    @media (width < 1280px) {
+    @media (width < 960px) {
       position: relative;
       inset: 0;
       display: flex;

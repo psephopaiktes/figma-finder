@@ -21,13 +21,9 @@
     const settings = await browser.action.getUserSettings();
     isPinned = settings.isOnToolbar;
 
-    // URLに#でIDを指定している場合、スクロールする
-    const hash = location.hash;
-    if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView();
-      }
+    if (location.hash) {
+      const elm = document.querySelector(location.hash);
+      if (elm) elm.scrollIntoView();
     }
   });
 
@@ -46,7 +42,7 @@
       });
 </script>
 
-<Layout class="l-document c-document" {title}>
+<Layout {title}>
   {#if showNav}
     <Nav {title} current="help" />
   {:else if !isWelcome}
@@ -58,23 +54,32 @@
     <Welcome />
   {/if}
 
-  {#if !isPinned}
-    <Pin />
-  {/if}
+  <div class="c-document">
+    {#if !isPinned}
+      <Pin />
+    {/if}
 
-  {@html i18n.t({
-    en: marked(HelpEn) as string,
-    ja: marked(HelpJa) as string,
-    "zh-cn": marked(HelpJa) as string,
-    es: marked(HelpJa) as string,
-  })}
-  <!-- TODO -->
+    {@html i18n.t({
+      en: marked(HelpEn) as string,
+      ja: marked(HelpJa) as string,
+      "zh-cn": marked(HelpJa) as string,
+      es: marked(HelpJa) as string,
+    })}
+    <!-- TODO -->
+  </div>
 
   <DocumentFooter />
 </Layout>
 
 <style>
   h1 {
-    margin-block-start: var(--sp-2xl);
+    margin-block-start: var(--sp-xl);
+    text-align: center;
+  }
+  hr {
+    margin-block-start: var(--sp-xl);
+    margin-block-end: var(--sp-xl);
+    border: 0;
+    border-top: 1px solid rgb(from var(--color-main) r g b / 0.1);
   }
 </style>

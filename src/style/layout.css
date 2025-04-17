@@ -36,12 +36,6 @@
   }
 }
 
-.l-document {
-  max-inline-size: 800px;
-  padding-inline: var(--sp-l);
-  margin-inline: auto;
-}
-
 .l-centeringContainer {
   min-height: 60vh;
   padding: var(--sp-xl) var(--sp-m) var(--sp-2xl);

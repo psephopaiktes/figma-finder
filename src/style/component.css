@@ -1,11 +1,14 @@
 .c-document {
+  max-inline-size: 640px;
+  padding-inline: var(--sp-l);
+  margin-inline: auto;
   h2 {
     font-size: 1.6rem;
-    margin-block-start: var(--sp-l);
+    margin-block-start: var(--sp-xl);
     letter-spacing: .05em;
   }
   h3 {
-    margin-block-start: var(--sp-m);
+    margin-block-start: var(--sp-l);
     opacity: 0.8;
   }
   hr {
@@ -14,12 +17,64 @@
     border: 0;
     border-top: 1px solid rgb(from var(--color-main) r g b / 0.1);
   }
+  code {
+    padding: 0.2em 0.3em;
+    margin-inline: 0.1em;
+    border-radius: 4px;
+    background-color: rgb(from var(--color-main) r g b / 0.1);
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
   p {
     margin-block-start: 0.6rem;
   }
-  p a {
+  :where(p, li) a {
     color: var(--color-theme);
+    font-weight: 600;
     text-decoration: none;
+  }
+  img {
+    margin-block-start: 0.3rem;
+    background-color: rgb(from var(--color-main) r g b / 0.1);
+    border-radius: 4px;
+  }
+  ul,
+  ol {
+    margin-block-start: 0.6rem;
+    padding-inline-start: 1.4rem;
+    li {
+      margin-block-start: 0.3rem;
+    }
+  }
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
+  }
+  table {
+    margin-block-start: 0.6rem;
+    border: 1px solid rgb(from var(--color-main) r g b / 0.2);
+    border-collapse: separate;
+    /* border-spacing: 0; */
+    border-radius: 6px;
+    overflow: hidden;
+    tbody tr:nth-of-type(odd) {
+      background: rgb(from var(--color-main) r g b / 0.04);
+    }
+    th:nth-child(-n + 2) {
+      width: 28%;
+    }
+    td:nth-child(-n + 2) {
+      text-align: center;
+      line-height: 2;
+    }
+    th,
+    td {
+      padding: .8em;
+      line-height: 1.4;
+    }
   }
 }
 
