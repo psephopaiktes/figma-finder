@@ -6,8 +6,8 @@ import Header from "@/components/Header.astro";
 import LocaleHtmlHead from "@/components/i18n/LocaleHtmlHead.astro";
 import LocaleSuggest from "@/components/i18n/LocaleSuggest.astro";
 
-import { SITE_TITLE, SITE_DESCRIPTION, X_ACCOUNT } from "@/consts";
-import { useTranslations, LOCALES, getLocalePaths, type Lang } from "@/i18n";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import { LOCALES, type Lang, getLocalePaths, useTranslations } from "@/i18n";
 const t = useTranslations(Astro.currentLocale as Lang);
 import "@/styles/global.css";
 
@@ -17,10 +17,7 @@ interface Props {
   frontmatter?: undefined;
 }
 
-const {
-  title,
-  description,
-} = Astro.props.frontmatter || Astro.props;
+const { title, description } = Astro.props.frontmatter || Astro.props;
 
 const locale = Astro.currentLocale as Lang;
 const localeTitle = title ? `${title} - ${t(SITE_TITLE)}` : t(SITE_TITLE);
@@ -67,7 +64,6 @@ const localeDescription = description || t(SITE_DESCRIPTION);
     <meta property="og:url" content={Astro.url} />
     <meta property="og:locale" content={LOCALES[locale].lang || locale} />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content={t(X_ACCOUNT)} />
 
     <!-- External Resource -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
