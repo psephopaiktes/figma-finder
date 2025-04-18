@@ -12,8 +12,6 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 const locale = Astro.currentLocale as Lang;
 
-console.log("test", `${Astro.site?.origin + import.meta.env.BASE_URL}`);
-
 export const getStaticPaths = () =>
   Object.keys(LOCALES).map((lang) => ({
     params: { lang },
@@ -22,13 +20,15 @@ export const getStaticPaths = () =>
 
 <Layout>
   <h1>
-    {t({
-      en: "Welcome to Astro!",
-      ja: "Astroへようこそ！",
-      "zh-cn": "欢迎使用Astro！",
-      es: "¡Bienvenido a Astro!",
-      ko: "Astro에 오신 것을 환영합니다!",
-    })}
+    {
+      t({
+        en: "Welcome to Astro!",
+        ja: "Astroへようこそ！",
+        "zh-cn": "欢迎使用Astro！",
+        es: "¡Bienvenido a Astro!",
+        ko: "Astro에 오신 것을 환영합니다!",
+      })
+    }
   </h1>
 </Layout>
 

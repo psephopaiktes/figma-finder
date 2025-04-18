@@ -8,13 +8,12 @@ import { LOCALES, getLocalePaths } from "@/i18n";
   <span class="material-symbols-outlined">translate</span>
   <select data-languageSelect>
     {
-      getLocalePaths(Astro.url).map(({ path, lang }) => (
+      Object.keys(LOCALES).map((lang) => (
         <option
           label={LOCALES[lang].label}
-          value={path}
+          value={`${import.meta.env.BASE_URL}/${lang}/`}
           data-lang={lang}
           selected={lang === Astro.currentLocale}
-          dir={LOCALES[lang].dir || null}
         />
       ))
     }
@@ -27,8 +26,6 @@ import { LOCALES, getLocalePaths } from "@/i18n";
 
   selects.forEach((select) => {
     select.addEventListener("change", (event) => {
-      // used for 404 page
-      localStorage.selectedLang = event.target?.selectedOptions[0].dataset.lang;
       location.href = event.target?.value;
     });
   });

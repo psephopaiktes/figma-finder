@@ -2,26 +2,22 @@
 // Header & Navigation UI displayed on each page.
 
 import { Image } from "astro:assets";
-import { getRelativeLocaleUrl } from "astro:i18n";
 import LocaleSelect from "@/components/i18n/LocaleSelect.astro";
 import { type Lang, useTranslations } from "@/i18n";
 const t = useTranslations(Astro.currentLocale as Lang);
 
-import AstroImage from "@/assets/astro-logo.svg";
+import LogoSymbol from "@/assets/logo-symbol.svg";
+import LogoType from "@/assets/logo-type.svg";
 
 const locale = Astro.currentLocale as Lang;
 ---
 
 <header class="l-header">
-  <h1>
-    <a href={getRelativeLocaleUrl(locale, "/")}>
-      <Image src={AstroImage} alt="Astro" />
-      i18n Starter
-    </a>
-  </h1>
+  <Image src={LogoSymbol} alt="Figma Finder Logo Symbol" />
+
+  <h1><Image src={LogoType} alt="Figma Finder" /></h1>
 
   <LocaleSelect />
-
 </header>
 
 <style>
@@ -56,5 +52,4 @@ const locale = Astro.currentLocale as Lang;
       inset: 0.1em;
     }
   }
-
 </style>
