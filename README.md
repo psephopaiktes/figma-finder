@@ -4,6 +4,7 @@
 > This project is a work in progress and not yet complete.
 
 https://psephopaiktes.github.io/figma-finder/
+[![pages-build-deployment](https://github.com/psephopaiktes/figma-finder/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/psephopaiktes/figma-finder/actions/workflows/pages/pages-build-deployment)
 
 ![Hero Image](design/cover.png)
 
