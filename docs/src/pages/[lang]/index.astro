@@ -20,6 +20,14 @@ export const getStaticPaths = () =>
 
 <html>
   <body>
-    hello
+    <h1>
+      {t({
+        en: "Welcome to Astro!",
+        ja: "Astroへようこそ！",
+        "zh-cn": "欢迎使用Astro！",
+        es: "¡Bienvenido a Astro!",
+        ko: "Astro에 오신 것을 환영합니다!",
+      })}
+    </h1>
   </body>
 </html>
