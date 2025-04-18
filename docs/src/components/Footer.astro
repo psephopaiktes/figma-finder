@@ -1,21 +1,22 @@
 ---
 // Footer UI displayed on each page.
-import LocalesHomeList from "@/components/i18n/LocalesHomeList.astro";
+import LocaleSelect from "@/components/i18n/LocaleSelect.astro";
 ---
 
 <footer class="l-footer l-content">
+
+  <LocaleSelect />
+
   <a
-    href="https://github.com/psephopaiktes/astro-i18n-starter"
+    href="https://github.com/psephopaiktes/figma-finder"
     target="_blank"
     class="github"
   >
     GitHub
-    <span class="material-icons-sharp dir">open_in_new</span>
+    <span class="material-symbols-outlined">
+      open_in_new
+      </span>
   </a>
-
-  <ul>
-    <LocalesHomeList />
-  </ul>
 
   <a class="copy" href="https://hira.page/" target="_blank" dir="ltr">
     © Akira HIRATA {new Date().getFullYear()}.

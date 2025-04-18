@@ -1,4 +1,3 @@
-import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from './src/locales';
@@ -15,7 +14,6 @@ export default defineConfig({
     },
   },
   integrations: [
-    mdx(),
     sitemap({
       i18n: {
         defaultLocale: DEFAULT_LOCALE_SETTING,

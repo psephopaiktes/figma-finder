@@ -1,11 +1,11 @@
 ---
 // Select UI to switch between locales.
 
-import { getLocalePaths, LOCALES } from "@/i18n";
+import { LOCALES, getLocalePaths } from "@/i18n";
 ---
 
 <label>
-  <span class="material-icons-sharp">translate</span>
+  <span class="material-symbols-outlined">translate</span>
   <select data-languageSelect>
     {
       getLocalePaths(Astro.url).map(({ path, lang }) => (
@@ -19,7 +19,7 @@ import { getLocalePaths, LOCALES } from "@/i18n";
       ))
     }
   </select>
-  <span class="material-icons-sharp">expand_more</span>
+  <span class="material-symbols-outlined">expand_more</span>
 </label>
 
 <script is:inline>
@@ -40,7 +40,7 @@ import { getLocalePaths, LOCALES } from "@/i18n";
     display: inline-block;
     width: 240px;
     text-align-last: left;
-    .material-icons-sharp {
+    .material-symbols-outlined {
       pointer-events: none;
       position: absolute;
       color: var(--color-theme);

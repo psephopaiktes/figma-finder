@@ -4,7 +4,6 @@
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import LocaleHtmlHead from "@/components/i18n/LocaleHtmlHead.astro";
-import LocaleSuggest from "@/components/i18n/LocaleSuggest.astro";
 
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import { LOCALES, type Lang, getLocalePaths, useTranslations } from "@/i18n";
@@ -27,7 +26,7 @@ const localeDescription = description || t(SITE_DESCRIPTION);
 <!--
 
   Source Code:
-  https://github.com/psephopaiktes/astro-i18n-starter
+  https://github.com/psephopaiktes/figma-finder/
 
 -->
 <html lang={LOCALES[locale].lang || locale} dir={LOCALES[locale].dir || null}>
@@ -50,9 +49,6 @@ const localeDescription = description || t(SITE_DESCRIPTION);
 
     <!-- icon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon alternate" sizes="64x64" type="image/png" href="/favicon.png">
-    <link rel="icon" sizes="192x192" href="/android-chrome.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="color-scheme" content="light dark" />
 
     <!-- OGP -->
@@ -68,18 +64,13 @@ const localeDescription = description || t(SITE_DESCRIPTION);
     <!-- External Resource -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <link rel="preload" as="style" fetchpriority="high" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;800&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;800&display=swap" media="print" onload={`this.media='all'`} />
-
-    <link rel="preload" as="style" fetchpriority="high" href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp&display=swap" media="print" onload={`this.media='all'`} />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
 
     <LocaleHtmlHead />
   </head>
 
   <body>
-    <LocaleSuggest />
     <Header />
 
     <main class="l-main l-content">

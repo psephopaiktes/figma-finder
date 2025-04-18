@@ -1,6 +1,6 @@
 ---
 import { LOCALES, type Lang, useTranslations } from "@/i18n";
-// import Layout from "@/layouts/Base.astro";
+import Layout from "@/layouts/Base.astro";
 const t = useTranslations(Astro.currentLocale as Lang);
 // import { getRelativeLocaleUrl } from "astro:i18n";
 
@@ -20,16 +20,16 @@ export const getStaticPaths = () =>
   }));
 ---
 
-<html>
-  <body>
-    <h1>
-      {t({
-        en: "Welcome to Astro!",
-        ja: "Astroへようこそ！",
-        "zh-cn": "欢迎使用Astro！",
-        es: "¡Bienvenido a Astro!",
-        ko: "Astro에 오신 것을 환영합니다!",
-      })}
-    </h1>
-  </body>
-</html>
+<Layout>
+  <h1>
+    {t({
+      en: "Welcome to Astro!",
+      ja: "Astroへようこそ！",
+      "zh-cn": "欢迎使用Astro！",
+      es: "¡Bienvenido a Astro!",
+      ko: "Astro에 오신 것을 환영합니다!",
+    })}
+  </h1>
+</Layout>
+
+<style></style>
