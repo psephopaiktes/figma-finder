@@ -4,13 +4,12 @@
 > This project is a work in progress and not yet complete.
 
 https://psephopaiktes.github.io/figma-finder/
-[![pages-build-deployment](https://github.com/psephopaiktes/figma-finder/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/psephopaiktes/figma-finder/actions/workflows/pages/pages-build-deployment)
 
 ![Hero Image](design/cover.png)
 
 ## Get the Extension
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/klifomaejfaibpkbigbpljdmelbkehbe)
-* [Add-ons for Firefox](TODO)
+<!-- * [Add-ons for Firefox](TODO) -->
 <!-- * [Edge Add-ons](TODO) -->
 
 ## Development

@@ -1,79 +1,86 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import UserSelector from "./UserSelector.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import type { Snippet } from "svelte";
+  import UserSelector from "./UserSelector.svelte";
 
-const pageList = [
-  {
-    label: {
-      en: "Home",
-      ja: "ホーム",
-      "zh-cn": "主页",
-      es: "Inicio",
-      ko: "홈",
+  const pageList = [
+    {
+      label: {
+        en: "Home",
+        ja: "ホーム",
+        "zh-cn": "主页",
+        es: "Inicio",
+        ko: "홈",
+      },
+      href: "/sidepanel.html",
+      id: "home",
     },
-    href: "/sidepanel.html",
-    id: "home",
-  },
-  {
-    label: {
-      en: "Options",
-      ja: "オプション",
-      "zh-cn": "选项",
-      es: "Opciones",
-      ko: "옵션",
+    {
+      label: {
+        en: "Options",
+        ja: "オプション",
+        "zh-cn": "选项",
+        es: "Opciones",
+        ko: "옵션",
+      },
+      href: "/options.html?nav",
+      id: "options",
     },
-    href: "/options.html?nav",
-    id: "options",
-  },
-  {
-    label: {
-      en: "Help",
-      ja: "ヘルプ",
-      "zh-cn": "帮助",
-      es: "Ayuda",
-      ko: "도움말",
+    {
+      label: {
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+        es: "Ayuda",
+        ko: "도움말",
+      },
+      href: "/help.html?nav",
+      id: "help",
     },
-    href: "/help.html?nav",
-    id: "help",
-  },
-];
+  ];
 
-const extPageList = [
-  {
-    label: { en: "GitHub" },
-    href: "https://github.com/psephopaiktes/figma-finder",
-    id: "github",
-  },
-  {
-    label: {
-      en: "Support",
-      ja: "制作者を支援",
-      "zh-cn": "支持开发者",
-      es: "Apoyar",
-      ko: "개발자 지원",
+  const extPageList = [
+    {
+      label: { en: "GitHub" },
+      href: "https://github.com/psephopaiktes/figma-finder",
+      id: "github",
     },
-    href: "https://github.com/sponsors/psephopaiktes",
-    id: "love",
-  },
-];
+    {
+      label: {
+        en: "Support",
+        ja: "制作者を支援",
+        "zh-cn": "支持开发者",
+        es: "Apoyar",
+        ko: "개발자 지원",
+      },
+      href: "https://github.com/sponsors/psephopaiktes",
+      id: "love",
+    },
+  ];
 
-let { title = null, current = null, children = null } = $props();
-let drawer: HTMLDialogElement;
+  type Props = {
+    title?: string | null | Record<string, string>;
+    current?: string;
+    children?: Snippet;
+  };
+  let { title = null, current, children }: Props = $props();
 
-function openDrawer() {
-  drawer.showModal();
-}
+  let drawer: HTMLDialogElement;
 
-function closeDrawer() {
-  drawer.close();
-}
-
-function backdropClick(event: MouseEvent) {
-  const target = event.target as HTMLElement;
-  if (target === drawer) {
-    closeDrawer();
+  function openDrawer() {
+    drawer.showModal();
   }
-}
+
+  function closeDrawer() {
+    drawer.close();
+  }
+
+  function backdropClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target === drawer) {
+      closeDrawer();
+    }
+  }
 </script>
 
 <nav class="l-nav">
@@ -94,7 +101,7 @@ function backdropClick(event: MouseEvent) {
       {#if children}
         {@render children?.()}
       {:else if title}
-        <h1>{title}</h1>
+        <h1>{typeof title === "object" ? i18n.t(title) : title}</h1>
       {/if}
     </div>
 

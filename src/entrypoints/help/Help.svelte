@@ -1,47 +1,47 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
-import i18n from "@/lib/i18n.svelte";
-import { marked } from "marked";
+  import Layout from "@/lib/Layout.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { marked } from "marked";
 
-import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
-import Pin from "@/lib/ui/Help/Pin.svelte";
-import Welcome from "@/lib/ui/Help/Welcome.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
+  import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+  import Pin from "@/lib/ui/Help/Pin.svelte";
+  import Welcome from "@/lib/ui/Help/Welcome.svelte";
+  import Nav from "@/lib/ui/Nav/Index.svelte";
 
-import HelpEn from "@/lib/ui/Help/help.en.md?raw";
-import HelpJa from "@/lib/ui/Help/help.ja.md?raw";
+  import HelpEn from "@/lib/ui/Help/help.en.md?raw";
+  import HelpJa from "@/lib/ui/Help/help.ja.md?raw";
 
-marked.use({ gfm: true });
+  marked.use({ gfm: true });
 
-const showNav = location.search.includes("nav");
-const isWelcome = location.search.includes("welcome");
-let isPinned = $state(false);
+  const showNav = location.search.includes("nav");
+  const isWelcome = location.search.includes("welcome");
+  let isPinned = $state(false);
 
-onMount(async () => {
-  const settings = await browser.action.getUserSettings();
-  isPinned = settings.isOnToolbar;
+  onMount(async () => {
+    const settings = await browser.action.getUserSettings();
+    isPinned = settings.isOnToolbar;
 
-  if (location.hash) {
-    const elm = document.querySelector(location.hash);
-    if (elm) elm.scrollIntoView();
-  }
-});
+    if (location.hash) {
+      const elm = document.querySelector(location.hash);
+      if (elm) elm.scrollIntoView();
+    }
+  });
 
-const title = isWelcome
-  ? i18n.t({
-      en: "Welcome",
-      ja: "ようこそ",
-      "zh-cn": "欢迎",
-      es: "Bienvenido",
-      ko: "환영합니다",
-    })
-  : i18n.t({
-      en: "Help",
-      ja: "ヘルプ",
-      "zh-cn": "帮助",
-      es: "Ayuda",
-      ko: "도움말",
-    });
+  const title = isWelcome
+    ? {
+        en: "Welcome",
+        ja: "ようこそ",
+        "zh-cn": "欢迎",
+        es: "Bienvenido",
+        ko: "환영합니다",
+      }
+    : {
+        en: "Help",
+        ja: "ヘルプ",
+        "zh-cn": "帮助",
+        es: "Ayuda",
+        ko: "도움말",
+      };
 </script>
 
 <Layout {title}>
