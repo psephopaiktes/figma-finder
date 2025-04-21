@@ -2,7 +2,7 @@
 
 ### ポップアップ
 
-![ポップアップを使用する様子のアニメーション](.gif)
+<video src="/video/popup.mp4" controls width="1280" height="720" autoplay loop muted></video>
 
 `⌥F` (Alt + F) を実行することでポップアップが開きます。そのままファイル名を入力して検索し、Enterを押すと一番上のファイルが開きます。特定のファイルを最速で開きたいときに便利です。
 
@@ -12,7 +12,7 @@
 
 ### サイドパネル
 
-![サイドパネルを使用する様子のアニメーション](.gif)
+<video src="/video/sidepanel.mp4" controls width="1280" height="720" autoplay loop muted></video>
 
 アイコンをクリックすることでサイドパネルが開きます。連続で複数のFigmaファイルを開きたいときに便利です。
 
@@ -27,6 +27,9 @@
 
 
 ## ショートカット一覧
+
+Figma Finder のほとんどの機能はキーボードだけで操作できます。
+
 | Mac | Windows | 説明 |
 | --- | --- | --- |
 | `⌥F` | `Alt + F` | Figma Finder をポップアップで開く (変更可能) |
@@ -48,7 +51,7 @@
 
 ログイン後、対象にするチームをIDで指定する必要があります。
 
-1. ブラウザで[Figma](https://figma.com)を開き、ログインします
+1. ブラウザで<a href="https://figma.com" target="_blank">Figma</a>を開き、ログインします
 2. サイドメニューから対象にしたいチームアカウント(組織アカウント)を選択します
   ![チームアカウントを選択する様子](/img/team-id-1.webp)
 3. URLを確認します。`team/`が含まれている場合はその次に続く数字IDをダブルクリックで選択し、コピーします。

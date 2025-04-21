@@ -57,6 +57,7 @@
             ko: "시스템",
           })}
         </option>
+        <hr />
         {#each Object.keys(i18n.locales) as locale}
           <option value={locale}>
             {i18n.locales[locale as keyof typeof i18n.locales].label}
@@ -86,6 +87,7 @@
             ko: "시스템",
           })}
         </option>
+        <hr />
         <option value="light">
           {i18n.t({
             en: "Light",

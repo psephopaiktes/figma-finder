@@ -1,9 +1,35 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { openSidePanel } from "@/lib/utility.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { store } from "@/lib/store.svelte";
+  import { openSidePanel } from "@/lib/utility.svelte";
+
+  $effect(() => {
+    storage.setItem("sync:options", store.options);
+  });
 </script>
 
 <section>
+  <label class="language">
+    <svg-icon src="/img/icon/translate.svg"></svg-icon>
+    <select bind:value={store.options.locale}>
+      <option value={null}>
+        {i18n.t({
+          en: "Language",
+          ja: "言語",
+          "zh-cn": "语言",
+          es: "Idioma",
+          ko: "언어",
+        })}
+      </option>
+      <hr />
+      {#each Object.keys(i18n.locales) as locale}
+        <option value={locale}>
+          {i18n.locales[locale as keyof typeof i18n.locales].label}
+        </option>
+      {/each}
+    </select>
+  </label>
+
   <h1>Welcome 🎉</h1>
 
   <div class="logo">
@@ -54,6 +80,24 @@ import { openSidePanel } from "@/lib/utility.svelte";
       cover,
       var(--sp-s) var(--sp-s),
       var(--sp-s) var(--sp-s);
+  }
+
+  .language {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    svg-icon {
+      position: absolute;
+      width: 1.5rem;
+      inset: 0.25rem;
+      opacity: 0.4;
+    }
+    select {
+      padding: 0.2em 0.4em;
+      padding-left: 1.6rem;
+      border: 2px solid rgb(from var(--color-main) r g b / 0.2);
+      border-radius: 4px;
+    }
   }
 
   .logo {

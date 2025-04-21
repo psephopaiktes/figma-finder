@@ -27,24 +27,30 @@
     white-space: nowrap;
   }
   p {
-    margin-block-start: 0.6rem;
+    margin-block-start: var(--sp-m);
   }
   :where(p, li) a {
     color: var(--color-theme);
     font-weight: 600;
     text-decoration: none;
   }
-  img {
+  img,
+  video {
     margin-block-start: 0.3rem;
     background-color: rgb(from var(--color-main) r g b / 0.1);
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid rgb(from var(--color-main) r g b / 0.1);
   }
   ul,
   ol {
-    margin-block-start: 0.6rem;
+    margin-block-start: var(--sp-m);
     padding-inline-start: 1.4rem;
     li {
-      margin-block-start: 0.3rem;
+      margin-block-start: var(--sp-m);
+      &::marker {
+        color: var(--color-theme);
+        font-weight: 800;
+      }
     }
   }
   ul {
@@ -54,10 +60,10 @@
     list-style: decimal;
   }
   table {
-    margin-block-start: 0.6rem;
+    margin-block-start: var(--sp-m);
     border: 1px solid rgb(from var(--color-main) r g b / 0.2);
     border-collapse: separate;
-    /* border-spacing: 0; */
+    border-spacing: 2px 0;
     border-radius: 6px;
     overflow: hidden;
     tbody tr:nth-of-type(odd) {
