@@ -1,24 +1,24 @@
 <script lang="ts">
-  import Layout from "@/lib/Layout.svelte";
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
-  import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
-  import Nav from "@/lib/ui/Nav/Index.svelte";
-  import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import Layout from "@/lib/Layout.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
+import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
+import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
-  const showNav = location.search.includes("nav");
-  const title = {
-    en: "Options",
-    ja: "オプション",
-    "zh-cn": "选项",
-    es: "Opciones",
-    ko: "옵션",
-  };
+const showNav = location.search.includes("nav");
+const title = {
+  en: "Options",
+  ja: "オプション",
+  "zh-cn": "选项",
+  es: "Opciones",
+  ko: "옵션",
+};
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-    document.documentElement.dataset.theme = store.options.theme;
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+  document.documentElement.dataset.theme = store.options.theme;
+});
 </script>
 
 <Layout {title}>

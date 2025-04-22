@@ -11,6 +11,7 @@
       ".wxt/**",
       ".output/**",
       "build/**",
+      "docs/**",
       ".vscode/**",
       ".github/**",
       "**/*.svg"

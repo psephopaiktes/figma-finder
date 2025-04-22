@@ -4,17 +4,17 @@
 }
 
 .l-main {
-	margin-block-start: var(--sp-l);
+  margin-block-start: var(--sp-l);
 }
 
 .l-content {
-	max-inline-size: 800px;
-	padding-inline: var(--sp-m);
-	margin-inline: auto;
+  max-inline-size: 800px;
+  padding-inline: var(--sp-m);
+  margin-inline: auto;
 }
 
 .l-footer {
-	position: sticky;
-	top: 100vh;
-	margin-block-start: calc(var(--sp-l) * 2);
+  position: sticky;
+  top: 100vh;
+  margin-block-start: calc(var(--sp-l) * 2);
 }

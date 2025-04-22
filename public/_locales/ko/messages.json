@@ -1,0 +1,17 @@
+{
+  "locale": {
+    "message": "ko"
+  },
+  "extName": {
+    "message": "Figma Finder"
+  },
+  "extDescription": {
+    "message": "빠르게 Figma 파일을 찾고 열 수 있습니다."
+  },
+  "iconTitle": {
+    "message": "사이드 패널 열기"
+  },
+  "keyboardAction": {
+    "message": "팝업 열기"
+  }
+}

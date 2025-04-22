@@ -1,11 +1,11 @@
 <script lang="ts">
-  import i18n from "@/lib/i18n.svelte";
-  import { store } from "@/lib/store.svelte";
-  import { openSidePanel } from "@/lib/utility.svelte";
+import i18n from "@/lib/i18n.svelte";
+import { store } from "@/lib/store.svelte";
+import { openSidePanel } from "@/lib/utility.svelte";
 
-  $effect(() => {
-    storage.setItem("sync:options", store.options);
-  });
+$effect(() => {
+  storage.setItem("sync:options", store.options);
+});
 </script>
 
 <section>

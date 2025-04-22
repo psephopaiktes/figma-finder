@@ -1,7 +1,7 @@
 {
   "name": "figma-finder",
   "author": "Akira HIRATA",
-  "version": "1.0.0",
+  "version": "0.9.1",
   "license": "MIT",
   "engines": {
     "node": ">=20"
