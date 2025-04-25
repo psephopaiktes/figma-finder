@@ -1,3 +1,4 @@
+import i18n from "@/lib/i18n.svelte";
 import type { LocalProjectState, Project, Store } from "@/types";
 import type {
   GetProjectFilesResponse,
@@ -84,16 +85,61 @@ const req = async <T>(path: string) => {
   if (!authToken) {
     throw new Error("No access token available");
   }
+
   const res = await fetch(`https://api.figma.com/v1${path}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
   });
+
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Error: ${res.status} ${res.statusText} - ${errorText}`);
+
+    switch (res.status) {
+      case 403:
+        alert(
+          i18n.t({
+            en: "You don't have permission. Please log out or change the team ID.",
+            ja: "権限がありません。ログアウトするか、チームIDを変更してください。",
+            "zh-cn": "您没有权限。请注销或更改团队 ID。",
+            es: "No tienes permiso. Por favor, cierra sesión o cambia el ID del equipo.",
+            ko: "권한이 없습니다. 로그아웃하거나 팀 ID를 변경하세요。",
+          }),
+        );
+        break;
+
+      case 429:
+        alert(
+          i18n.t({
+            en: "Too many requests. Please try again later.",
+            ja: "リクエストが多すぎます。時間を置いてもう一度お試しください。",
+            "zh-cn": "请求过多。请稍后再试。",
+            es: "Demasiadas solicitudes. Por favor, inténtelo de nuevo más tarde.",
+            ko: "요청이 너무 많습니다. 나중에 다시 시도하세요.",
+          }),
+        );
+        break;
+
+      case 500:
+        alert(
+          i18n.t({
+            en: "A server-side error occurred. Please try again later.",
+            ja: "サーバー側のエラーが発生しました。時間を置いてもう一度お試しください。",
+            "zh-cn": "发生了服务器端错误。请稍后再试。",
+            es: "Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.",
+            ko: "서버 측 오류가 발생했습니다. 나중에 다시 시도하세요.",
+          }),
+        );
+        break;
+
+      default:
+        throw new Error(
+          `Unexpected Error: ${res.status} - ${res.statusText} - ${errorText}`,
+        );
+    }
   }
+
   return res.json() as Promise<T>;
 };
 

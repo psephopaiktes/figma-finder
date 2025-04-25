@@ -1,6 +1,6 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { getFigUrl } from "@/lib/store.svelte";
+  import i18n from "@/lib/i18n.svelte";
+  import { getFigUrl } from "@/lib/store.svelte";
 </script>
 
 <a
@@ -22,8 +22,8 @@ import { getFigUrl } from "@/lib/store.svelte";
 <style>
   a {
     position: fixed;
-    bottom: 16px;
-    right: 16px;
+    bottom: 8px;
+    right: 8px;
     width: 40px;
     aspect-ratio: 1;
     display: grid;
