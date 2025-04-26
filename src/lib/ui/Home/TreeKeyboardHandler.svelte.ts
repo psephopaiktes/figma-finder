@@ -1,4 +1,3 @@
-import i18n from "@/lib/i18n.svelte";
 import { getTargetUrl, store } from "@/lib/store.svelte";
 
 const focusableSelector = `
@@ -128,6 +127,7 @@ const handleChild = (e: KeyboardEvent) => {
   // ⌥L to close all projects and focus parent
   if (e.altKey && e.code === "KeyL") {
     e.preventDefault();
+    e.stopPropagation();
     summary?.focus();
     for (const project of store.localProjectState) {
       project.open = false;
@@ -172,11 +172,17 @@ const handleDocument = (e: KeyboardEvent) => {
     }
   }
 
-  // ⌥L to close all projects
+  // ⌥L to close or open all projects
   if (e.altKey && e.code === "KeyL") {
     e.preventDefault();
-    for (const project of store.localProjectState) {
-      project.open = false;
+    if (store.localProjectState.some((project) => project.open)) {
+      for (const project of store.localProjectState) {
+        project.open = false;
+      }
+    } else {
+      for (const project of store.localProjectState) {
+        project.open = true;
+      }
     }
   }
 

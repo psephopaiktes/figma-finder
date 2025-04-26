@@ -1,45 +1,45 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
-import { formatEditedDate } from "@/lib/utility.svelte";
-import type { Project } from "@/types";
+  import i18n from "@/lib/i18n.svelte";
+  import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
+  import { formatEditedDate } from "@/lib/utility.svelte";
+  import type { Project } from "@/types";
 
-import { tick } from "svelte";
-import { slide } from "svelte/transition";
+  import { tick } from "svelte";
+  import { slide } from "svelte/transition";
 
-import ContextMenu from "./TreeContextMenu.svelte";
-import drag from "./TreeDragHandler.svelte";
-import key from "./TreeKeyboardHandler.svelte";
+  import ContextMenu from "./TreeContextMenu.svelte";
+  import drag from "./TreeDragHandler.svelte";
+  import key from "./TreeKeyboardHandler.svelte";
 
-let {
-  projects,
-  isInputed = false,
-}: { projects: Record<string, Project>; isInputed: boolean } = $props();
+  let {
+    projects,
+    isInputed = false,
+  }: { projects: Record<string, Project>; isInputed: boolean } = $props();
 
-let contextMenuEvent: MouseEvent | null = $state(null);
+  let contextMenuEvent: MouseEvent | null = $state(null);
 
-const handleClick = (e: MouseEvent) => {
-  if ((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) {
-    e.preventDefault();
-    open(getTargetUrl("browser"));
-  }
-  if (e.altKey) {
-    e.preventDefault();
-    open(getTargetUrl("app"));
-  }
-};
+  const handleClick = (e: MouseEvent) => {
+    if ((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) {
+      e.preventDefault();
+      open(getTargetUrl("browser"));
+    }
+    if (e.altKey) {
+      e.preventDefault();
+      open(getTargetUrl("app"));
+    }
+  };
 
-//  Objects in array updates cannot be tracked by $effect directly
-let watcher = $derived(JSON.stringify(store.localProjectState));
-$effect(() => {
-  watcher;
-  tick().then(() => {
-    storage.setItem<string>(
-      "local:localProjectState",
-      JSON.stringify(store.localProjectState), //WXT対策
-    );
+  //  Objects in array updates cannot be tracked by $effect directly
+  let watcher = $derived(JSON.stringify(store.localProjectState));
+  $effect(() => {
+    watcher;
+    tick().then(() => {
+      storage.setItem<string>(
+        "local:localProjectState",
+        JSON.stringify(store.localProjectState), //WXT対策
+      );
+    });
   });
-});
 </script>
 
 <svelte:window onkeydown={(e) => key.handleDocument(e)} />
@@ -75,8 +75,9 @@ $effect(() => {
               key.handleParent(e);
             }}
           >
-            <span>{project.team} /</span>
-            {project.name}
+            <span>{project.team}</span>
+            <span>/</span>
+            <h2 title={project.name}>{project.name}</h2>
             <small>
               {fileCount}
               {i18n.t({
@@ -166,15 +167,29 @@ $effect(() => {
       display: flex;
       height: 32px;
       padding-inline: 6px;
-      gap: 4px;
+      gap: 0.5em;
       justify-content: start;
       align-items: center;
       border-radius: 4px;
+
       &::marker {
         content: "";
       }
+      > * {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.3;
+      }
       span {
         opacity: 0.4;
+        &:nth-of-type(2) {
+          flex-shrink: 0;
+        }
+      }
+      h2 {
+        font-size: 1em;
+        font-weight: 500;
       }
       small {
         flex: 1;
@@ -187,13 +202,28 @@ $effect(() => {
         margin: 2px;
         opacity: 0.6;
         cursor: move;
+        flex-shrink: 0;
       }
     }
+
+    &[open] summary {
+      span,
+      h2 {
+        white-space: initial;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
+    }
+
     & summary::before {
       content: "";
       display: inline-block;
       width: 20px;
       aspect-ratio: 1;
+      flex-shrink: 0;
       background: var(--color-main);
       mask-image: url(/img/icon/folder.svg);
       mask-size: 100%;
@@ -246,6 +276,9 @@ $effect(() => {
     }
   }
 
+  :global(.projects > li:first-of-type details:not([open]) summary) {
+    background: rgb(from var(--color-theme) r g b / 0.1);
+  }
   :global(.projects > li:first-of-type li:first-of-type a) {
     background: rgb(from var(--color-theme) r g b / 0.1);
     &::after {

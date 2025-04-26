@@ -153,7 +153,6 @@ const req = async <T>(path: string) => {
  * 4. Updates local state and storage
  */
 export const loadFiles = async () => {
-  console.log("OK");
   // 1. いったんlocalをstoreに反映
   const localProjects = await storage.getItem("local:projects");
   if (localProjects && JSON.stringify(localProjects) !== "{}") {
