@@ -98,16 +98,7 @@ const req = async <T>(path: string) => {
 
     switch (res.status) {
       case 403:
-        alert(
-          i18n.t({
-            en: "You don't have permission. Please log out or change the team ID.",
-            ja: "権限がありません。ログアウトするか、チームIDを変更してください。",
-            "zh-cn": "您没有权限。请注销或更改团队 ID。",
-            es: "No tienes permiso. Por favor, cierra sesión o cambia el ID del equipo.",
-            ko: "권한이 없습니다. 로그아웃하거나 팀 ID를 변경하세요。",
-          }),
-        );
-        break;
+        throw new Error(`403 Error: - ${res.statusText} - ${errorText}`);
 
       case 429:
         alert(
@@ -119,7 +110,7 @@ const req = async <T>(path: string) => {
             ko: "요청이 너무 많습니다. 나중에 다시 시도하세요.",
           }),
         );
-        break;
+        throw new Error(`429 Error: - ${res.statusText} - ${errorText}`);
 
       case 500:
         alert(
@@ -131,7 +122,7 @@ const req = async <T>(path: string) => {
             ko: "서버 측 오류가 발생했습니다. 나중에 다시 시도하세요.",
           }),
         );
-        break;
+        throw new Error(`500 Error: - ${res.statusText} - ${errorText}`);
 
       default:
         throw new Error(
