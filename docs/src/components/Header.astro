@@ -8,48 +8,86 @@ const t = useTranslations(Astro.currentLocale as Lang);
 
 import LogoSymbol from "@/assets/logo-symbol.svg";
 import LogoType from "@/assets/logo-type.svg";
+import ChromeLogo from "@/assets/chrome.svg";
 
 const locale = Astro.currentLocale as Lang;
 ---
 
 <header class="l-header">
-  <Image src={LogoSymbol} alt="Figma Finder Logo Symbol" />
+  <h1>
+    <Image src={LogoSymbol} alt="Logo Symbol" />
+    <Image src={LogoType} alt="Figma Finder" />
+  </h1>
 
-  <h1><Image src={LogoType} alt="Figma Finder" /></h1>
+  <a href="http://" target="_blank" class="button">
+    <Image src={ChromeLogo} alt="Chrome Store Logo" />
+    {
+      t({
+        en: "Get Chroem Extension",
+        ja: "Chrome拡張機能を入手",
+        "zh-cn": "获取 Chrome 扩展",
+        es: "Obtener la extensión de Chrome",
+        ko: "크롬 확장 프로그램 받기",
+      })
+    }
+  </a>
 
   <LocaleSelect />
 </header>
 
 <style>
-  * {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
   header {
     display: grid;
+    place-content: center;
     place-items: center;
-    gap: var(--sp-s);
+    gap: var(--sp-m);
+    margin-inline: calc(50% - 50vw);
+    padding-block: var(--sp-xl);
+
+    --bg: color-mix(in srgb, var(--color-base), var(--color-main) 3%);
+    background-image: radial-gradient(
+        circle farthest-side at top center,
+        var(--bg) 60%,
+        rgb(from var(--bg) r g b / 0.9)
+      ),
+      linear-gradient(transparent 96%, var(--color-main) 96%),
+      linear-gradient(90deg, transparent 96%, var(--color-main) 96%);
+    background-size:
+      cover,
+      var(--sp-s) var(--sp-s),
+      var(--sp-s) var(--sp-s);
   }
 
   h1 {
-    margin-block-start: var(--sp-l);
-    margin-inline-start: -0.5em;
-    font-size: 40px;
-    font-family: var(--english-font);
-    font-weight: 900;
-    @media (width < 480px) {
-      font-size: 28px;
-    }
-
-    a {
-      display: flex;
-      align-items: center;
-    }
+    margin-block-start: var(--sp-m);
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.4;
     img {
-      width: 6em;
-      position: relative;
-      inset: 0.1em;
+      height: 48px;
+      width: auto;
+    }
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+    position: relative;
+    height: 48px;
+    padding-inline: 1.5em;
+
+    background: var(--color-main);
+    color: var(--color-base);
+    border-radius: 100vmax;
+    img {
+      width: 24px;
+      aspect-ratio: 1;
+    }
+    &:hover {
+      scale: 1.02;
     }
   }
 </style>

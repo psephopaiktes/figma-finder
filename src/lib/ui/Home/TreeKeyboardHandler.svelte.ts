@@ -1,7 +1,7 @@
 import { getTargetUrl, store } from "@/lib/store.svelte";
 
 const focusableSelector = `
-  a[href],
+  a[href]:not([tabindex="-1"]),
   button:not([tabindex="-1"]),
   input,
   summary

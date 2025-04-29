@@ -18,7 +18,6 @@ import { LOCALES, getLocalePaths } from "@/i18n";
       ))
     }
   </select>
-  <span class="material-symbols-outlined">expand_more</span>
 </label>
 
 <script is:inline>
@@ -33,35 +32,22 @@ import { LOCALES, getLocalePaths } from "@/i18n";
 
 <style>
   label {
-    position: relative;
-    display: inline-block;
-    width: 240px;
-    text-align-last: left;
-    .material-symbols-outlined {
-      pointer-events: none;
+    position: absolute;
+    top: var(--sp-m);
+    left: var(--sp-m);
+    span {
       position: absolute;
-      color: var(--color-theme);
-      &:first-child {
-        font-size: 24px;
-        inset: 8px auto 8px 8px;
-        opacity: 0.4;
-      }
-      &:last-child {
-        font-size: 28px;
-        inset: 6px 6px 6px auto;
-      }
+      font-size: 1.2em;
+      inset: 0.2em;
+      opacity: 0.4;
+      pointer-events: none;
     }
-  }
-  select {
-    width: 100%;
-    height: 40px;
-    padding-inline: 38px;
-    cursor: pointer;
-    appearance: none;
-    border-radius: 6px;
-    font-family: "Noto Sans";
-    color: var(--color-main);
-    background-color: var(--color-base);
-    border: 2px solid var(--color-theme);
+    select {
+      font-size: 14px;
+      height: 2em;
+      padding-left: 1.8em;
+      border: 2px solid rgb(from var(--color-main) r g b / 0.2);
+      border-radius: 4px;
+    }
   }
 </style>

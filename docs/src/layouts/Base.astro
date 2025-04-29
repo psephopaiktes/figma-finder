@@ -1,7 +1,6 @@
 ---
 // Basic Layout for All Pages
 
-import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import LocaleHtmlHead from "@/components/i18n/LocaleHtmlHead.astro";
 
@@ -80,8 +79,6 @@ const localeDescription = description || t(SITE_DESCRIPTION);
     <main class="l-main l-content">
       <slot />
     </main>
-
-    <Footer />
 
     { import.meta.env.DEV && <style>:root { scroll-behavior: auto }</style> }
   </body>
