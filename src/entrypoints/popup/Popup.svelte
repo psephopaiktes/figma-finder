@@ -59,4 +59,7 @@ $effect(() => {
   button {
     width: fit-content;
   }
+  :global(#app) {
+    width: 360px;
+  }
 </style>
