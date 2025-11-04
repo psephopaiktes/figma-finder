@@ -1,6 +1,6 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
 import type { Snippet } from "svelte";
+import i18n from "@/lib/i18n.svelte";
 import UserSelector from "./UserSelector.svelte";
 
 const pageList = [

@@ -1,9 +1,9 @@
-import i18n from "@/lib/i18n.svelte";
-import type { LocalProjectState, Project, Store } from "@/types";
 import type {
   GetProjectFilesResponse,
   GetTeamProjectsResponse,
 } from "@figma/rest-api-spec";
+import i18n from "@/lib/i18n.svelte";
+import type { LocalProjectState, Project, Store } from "@/types";
 
 /**
  * Global state store for the application

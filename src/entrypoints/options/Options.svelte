@@ -1,6 +1,6 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
 import i18n from "@/lib/i18n.svelte";
+import Layout from "@/lib/Layout.svelte";
 import { store } from "@/lib/store.svelte";
 import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";

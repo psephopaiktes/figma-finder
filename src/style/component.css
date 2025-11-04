@@ -5,7 +5,7 @@
   h2 {
     font-size: 1.6rem;
     margin-block-start: var(--sp-xl);
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
   }
   h3 {
     margin-block-start: var(--sp-l);
@@ -78,7 +78,7 @@
     }
     th,
     td {
-      padding: .8em;
+      padding: 0.8em;
       line-height: 1.4;
     }
   }
@@ -190,7 +190,7 @@
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    transition: .2s ease;
+    transition: 0.2s ease;
     pointer-events: none;
     z-index: var(--z-tooltip);
     content: attr(title);
@@ -201,7 +201,7 @@
     text-align: center;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
     white-space: nowrap;
     background: var(--color-main);
     color: rgb(from var(--color-base) r g b / 0.8);

@@ -1,5 +1,6 @@
 import i18n from "@/lib/i18n.svelte";
 import { store } from "@/lib/store.svelte";
+
 const client_id = import.meta.env.WXT_FIGMA_ID;
 const client_secret = import.meta.env.WXT_FIGMA_SECRET;
 

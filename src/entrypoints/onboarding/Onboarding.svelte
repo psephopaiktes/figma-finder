@@ -1,6 +1,6 @@
 <script lang="ts">
-import Layout from "@/lib/Layout.svelte";
 import i18n from "@/lib/i18n.svelte";
+import Layout from "@/lib/Layout.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { user } from "@/lib/store.svelte";
 import Loader from "@/lib/ui/Loader.svelte";

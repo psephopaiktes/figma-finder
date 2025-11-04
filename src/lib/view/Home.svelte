@@ -1,13 +1,9 @@
 <script lang="ts">
-import i18n from "@/lib/i18n.svelte";
-import { loadFiles } from "@/lib/store.svelte";
-import { store } from "@/lib/store.svelte";
-import type { File, Project } from "@/types";
 import Fuse from "fuse.js";
-import { onMount } from "svelte";
-import { tick } from "svelte";
-
+import { onMount, tick } from "svelte";
+import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
+import { loadFiles, store } from "@/lib/store.svelte";
 import ErrorView from "@/lib/ui/Home/ErrorView.svelte";
 import Input from "@/lib/ui/Home/Input.svelte";
 import NewFAB from "@/lib/ui/Home/NewFAB.svelte";
@@ -15,6 +11,7 @@ import SubHeader from "@/lib/ui/Home/SubHeader.svelte";
 import Tree from "@/lib/ui/Home/Tree.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
+import type { File, Project } from "@/types";
 
 let loading = $state(true);
 let query = $state("");

@@ -15,7 +15,7 @@ export default defineBackground(() => {
       .catch((error) => console.error(error));
   } else {
     browser.browserAction.onClicked.addListener(() => {
-      // @ts-ignore
+      // @ts-expect-error
       browser.sidebarAction.open();
     });
   }

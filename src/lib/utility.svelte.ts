@@ -13,7 +13,7 @@ export const openSidePanel = async () => {
     const [tab] = await browser.tabs.query(queryOptions);
     chrome.sidePanel.open({ windowId: tab.windowId });
   } else {
-    // @ts-ignore
+    // @ts-expect-error
     browser.sidebarAction.open();
   }
 };

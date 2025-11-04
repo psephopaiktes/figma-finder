@@ -1,11 +1,11 @@
 <script lang="ts">
 import "@/style/index.css";
 import "svg-mask-icon";
+import type { Snippet } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { loadOptions, store } from "@/lib/store.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
-import type { Snippet } from "svelte";
 
 type Props = {
   title?: string | null | Record<string, string>;

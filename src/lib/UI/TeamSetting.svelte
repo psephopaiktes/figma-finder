@@ -1,7 +1,7 @@
 <script lang="ts">
+import { slide } from "svelte/transition";
 import i18n from "@/lib/i18n.svelte";
 import { store, user } from "@/lib/store.svelte";
-import { slide } from "svelte/transition";
 
 let inputtedTeamId = $state("");
 
