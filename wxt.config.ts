@@ -40,7 +40,7 @@ export default defineConfig({
   webExt: {
     startUrls: [
       "https://figma.com/",
-      "chrome-extension://klifomaejfaibpkbigbpljdmelbkehbe/options.html?nav",
+      // "chrome-extension://klifomaejfaibpkbigbpljdmelbkehbe/options.html?nav",
     ],
     chromiumArgs: ["--user-data-dir=./.wxt/chrome-data"],
   },
