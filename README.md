@@ -26,6 +26,8 @@ npm i
 npm start
 ```
 
+To test the API locally, you need a `.env` file.
+
 
 <!-- <br /><br />
 
