@@ -14,7 +14,7 @@ export default {
  * Initiates the OAuth 2.0 authorization flow for logging in a user via Figma's API.
  * @async
  * @throws {Error} If the OAuth login process fails or if any required data is missing.
- * @see https://www.figma.com/developers/api#oauth2
+ * @see https://developers.figma.com/docs/rest-api/authentication/
  * @param options - Additional options for the login process.
  * @returns Whether the user has successfully logged in.
  */
@@ -23,7 +23,8 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
   const params = new URLSearchParams({
     client_id,
     redirect_uri,
-    scope: "files:read",
+    scope:
+      "file_content:read file_metadata:read projects:read current_user:read",
     state: "null",
     response_type: "code",
   }).toString();
