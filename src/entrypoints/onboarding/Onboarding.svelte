@@ -3,9 +3,9 @@ import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { user } from "@/lib/store.svelte";
-import Loader from "@/lib/ui/Loader.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import Loader from "@/lib/UI/Loader.svelte";
+import Nav from "@/lib/UI/Nav/Index.svelte";
+import TeamSetting from "@/lib/UI/TeamSetting.svelte";
 
 let loading = $state(false);
 const logIn = async () => {

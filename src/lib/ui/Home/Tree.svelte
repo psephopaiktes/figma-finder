@@ -48,7 +48,7 @@ $effect(() => {
 <ul class="projects">
   {#each store.localProjectState as localProject, index}
     {#if projects[localProject.id]}
-      {@const project = projects[localProject.id]}
+      {@const project = projects[localProject.id]!}
       {@const fileCount = Object.keys(project.files).length}
       <li
         transition:slide

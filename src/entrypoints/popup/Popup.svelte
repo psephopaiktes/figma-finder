@@ -59,7 +59,15 @@ $effect(() => {
   button {
     width: fit-content;
   }
-  :global(#app) {
+  /* Chrome popup サイズ制御:
+     popup の幅は body の幅で決まるため html/body も含めて制限する。
+     min-height: 100vh はポップアップでクラッシュを引き起こすため 0 に上書き */
+  :global(html),
+  :global(body),
+  :global(#app),
+  :global(main) {
     width: 360px;
+    min-height: 0;
+    height: auto;
   }
 </style>

@@ -55,7 +55,9 @@ const ondrop = (index: number, event: DragEvent) => {
   (event.currentTarget as HTMLElement).classList.remove("dragover");
   if (index === currentIndex) return;
 
-  const moveProject = { ...store.localProjectState[currentIndex] };
+  const project = store.localProjectState[currentIndex];
+  if (!project) return;
+  const moveProject = { ...project };
   store.localProjectState.splice(currentIndex, 1);
 
   if (currentIndex < index) {

@@ -5,7 +5,7 @@ import type { Snippet } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
 import { loadOptions, store } from "@/lib/store.svelte";
-import Loader from "@/lib/ui/Loader.svelte";
+import Loader from "@/lib/UI/Loader.svelte";
 
 type Props = {
   title?: string | null | Record<string, string>;
@@ -53,7 +53,8 @@ onMount(async () => {
 
   if (
     store.options.currentUser &&
-    store.options.users[store.options.currentUser].expires_at <= Date.now()
+    (store.options.users[store.options.currentUser]?.expires_at ?? 0) <=
+      Date.now()
   ) {
     const success = await oauth.refreshTokens();
     if (!success) {

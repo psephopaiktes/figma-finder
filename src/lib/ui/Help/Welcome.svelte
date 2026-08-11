@@ -22,9 +22,9 @@ $effect(() => {
         })}
       </option>
       <hr />
-      {#each Object.keys(i18n.locales) as locale}
+      {#each Object.entries(i18n.locales) as [locale, localeData]}
         <option value={locale}>
-          {i18n.locales[locale as keyof typeof i18n.locales].label}
+          {localeData.label}
         </option>
       {/each}
     </select>

@@ -27,17 +27,17 @@ async function addAccount() {
 }
 </script>
 
-{#if !store.options.currentUser}
+{#if !store.options.currentUser || !users[store.options.currentUser]}
   <a href="http://figma.com" target="_blank" class="figmaLink">
     <img src="/img/figma.svg" alt="Figma" />
   </a>
 {:else}
   <button popovertarget="userSelector" class="selectorButton" tabindex="-1">
-    <img src={users[store.options.currentUser].img_url} alt="User Selector" />
+    <img src={users[store.options.currentUser]?.img_url} alt="User Selector" />
   </button>
 
   <dialog popover id="userSelector" class="c-popover">
-    {#each Object.keys(users) as id}
+    {#each Object.entries(users) as [id, user]}
       <button
         onclick={() => {
           store.options.currentUser = id;
@@ -47,10 +47,10 @@ async function addAccount() {
         }}
         inert={store.options.currentUser == id}
       >
-        <img src={users[id].img_url} alt="Profile Icon" />
+        <img src={user.img_url} alt="Profile Icon" />
         <p>
-          {users[id].handle}
-          <small>{users[id].email}</small>
+          {user.handle}
+          <small>{user.email}</small>
         </p>
         {#if store.options.currentUser == id}
           <svg-icon src="/img/icon/check.svg"></svg-icon>
