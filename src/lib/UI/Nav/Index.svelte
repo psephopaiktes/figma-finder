@@ -41,7 +41,13 @@ const pageList = [
 
 const extPageList = [
   {
-    label: { en: "GitHub" },
+    label: {
+      en: "GitHub",
+      ja: "GitHub",
+      "zh-cn": "GitHub",
+      es: "GitHub",
+      ko: "GitHub",
+    },
     href: "https://github.com/psephopaiktes/figma-finder",
     id: "github",
   },

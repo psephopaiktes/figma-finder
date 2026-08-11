@@ -191,12 +191,15 @@ export const loadFiles = async () => {
     const data = await req<GetProjectFilesResponse>(
       `/projects/${projectId}/files`,
     );
-    for (const file of data.files) {
-      projects[projectId].files[file.key] = {
-        name: file.name,
-        last_modified: file.last_modified,
-        thumbnail_url: file.thumbnail_url || "",
-      };
+    const targetProject = projects[projectId];
+    if (targetProject) {
+      for (const file of data.files) {
+        targetProject.files[file.key] = {
+          name: file.name,
+          last_modified: file.last_modified,
+          thumbnail_url: file.thumbnail_url || "",
+        };
+      }
     }
   });
   await Promise.all(fileRequests);

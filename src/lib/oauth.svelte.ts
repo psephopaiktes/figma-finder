@@ -134,7 +134,8 @@ function logOut(): boolean {
 
     delete store.options.users[store.options.currentUser];
     const userIds = Object.keys(store.options.users);
-    store.options.currentUser = userIds.length > 0 ? userIds[0] : null;
+    store.options.currentUser =
+      userIds.length > 0 && userIds[0] ? userIds[0] : null;
     storage.setItem("sync:options", store.options);
     storage.removeItem("local:projects");
     return true;
@@ -155,7 +156,7 @@ async function refreshTokens(): Promise<boolean> {
   }
 
   const user = store.options.users[store.options.currentUser];
-  if (!user || !user.refresh_token) {
+  if (!user?.refresh_token) {
     console.warn("No refresh token available.");
     return false;
   }

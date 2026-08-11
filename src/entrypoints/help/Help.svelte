@@ -4,15 +4,15 @@ import { tick } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
 
-import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
-import HelpCn from "@/lib/ui/Help/help.cn.md?raw";
-import HelpEn from "@/lib/ui/Help/help.en.md?raw";
-import HelpEs from "@/lib/ui/Help/help.es.md?raw";
-import HelpJa from "@/lib/ui/Help/help.ja.md?raw";
-import HelpKo from "@/lib/ui/Help/help.ko.md?raw";
-import Pin from "@/lib/ui/Help/Pin.svelte";
-import Welcome from "@/lib/ui/Help/Welcome.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
+import DocumentFooter from "@/lib/UI/DocumentFooter.svelte";
+import HelpCn from "@/lib/UI/Help/help.cn.md?raw";
+import HelpEn from "@/lib/UI/Help/help.en.md?raw";
+import HelpEs from "@/lib/UI/Help/help.es.md?raw";
+import HelpJa from "@/lib/UI/Help/help.ja.md?raw";
+import HelpKo from "@/lib/UI/Help/help.ko.md?raw";
+import Pin from "@/lib/UI/Help/Pin.svelte";
+import Welcome from "@/lib/UI/Help/Welcome.svelte";
+import Nav from "@/lib/UI/Nav/Index.svelte";
 
 marked.use({ gfm: true });
 

@@ -2,9 +2,9 @@
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
 import { store } from "@/lib/store.svelte";
-import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
-import Nav from "@/lib/ui/Nav/Index.svelte";
-import TeamSetting from "@/lib/ui/TeamSetting.svelte";
+import DocumentFooter from "@/lib/UI/DocumentFooter.svelte";
+import Nav from "@/lib/UI/Nav/Index.svelte";
+import TeamSetting from "@/lib/UI/TeamSetting.svelte";
 
 const showNav = location.search.includes("nav");
 const title = {
@@ -58,9 +58,9 @@ $effect(() => {
           })}
         </option>
         <hr />
-        {#each Object.keys(i18n.locales) as locale}
+        {#each Object.entries(i18n.locales) as [locale, localeData]}
           <option value={locale}>
-            {i18n.locales[locale as keyof typeof i18n.locales].label}
+            {localeData.label}
           </option>
         {/each}
       </select>

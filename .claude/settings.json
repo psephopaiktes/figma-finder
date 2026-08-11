@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:developer.chrome.com)",
+      "Bash(npm run *)",
+      "Bash(echo \"exit code: $?\")",
+      "Bash(npx biome *)"
+    ]
+  }
+}
