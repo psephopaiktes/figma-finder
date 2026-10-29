@@ -27,6 +27,10 @@ const manifest = {
   browser_specific_settings: {
     gecko: {
       id: "figma-finder@hira.page",
+      strict_min_version: "140.0",
+      data_collection_permissions: {
+        required: ["authenticationInfo", "personallyIdentifyingInfo"],
+      },
     },
   },
   host_permissions: ["https://www.figma.com/*", "https://api.figma.com/*"],
@@ -43,6 +47,21 @@ export default defineConfig({
       // "chrome-extension://klifomaejfaibpkbigbpljdmelbkehbe/options.html?nav",
     ],
     chromiumArgs: ["--user-data-dir=./.wxt/chrome-data"],
+  },
+  zip: {
+    includeSources: [
+      "src/**",
+      "public/**",
+      "package.json",
+      "package-lock.json",
+      "wxt.config.ts",
+      "wxt-env.d.ts",
+      "tsconfig.json",
+      "AGENTS.md",
+      "LICENSE",
+    ],
+    excludeSources: ["**/.env*", "**/*.pem", "**/*.key", "web-ext.config.ts"],
+    exclude: ["**/.env*", "**/*.pem", "**/*.key", "**/*.map"],
   },
   manifest,
 });

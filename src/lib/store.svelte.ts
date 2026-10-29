@@ -27,12 +27,9 @@ export const store: Store = $state({
  * @returns Current user data or null if not logged in
  */
 export const user = () => {
-  const user = $derived(
-    store.options.currentUser
-      ? store.options.users[store.options.currentUser]
-      : null,
-  );
-  return user;
+  return store.options.currentUser
+    ? (store.options.users[store.options.currentUser] ?? null)
+    : null;
 };
 
 /**
@@ -171,7 +168,7 @@ export const loadFiles = async () => {
         }));
       } catch (error) {
         console.warn(`Failed to fetch projects for team id: ${teamId}:`, error);
-        return []; // スキップする
+        throw error; // Preserve the cached projects when a team request fails.
       }
     },
   );

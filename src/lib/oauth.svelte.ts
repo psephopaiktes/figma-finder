@@ -20,12 +20,13 @@ export default {
  */
 async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
   const redirect_uri = browser.identity.getRedirectURL();
+  const state = crypto.randomUUID();
   const params = new URLSearchParams({
     client_id,
     redirect_uri,
     scope:
       "file_content:read file_metadata:read projects:read current_user:read",
-    state: "null",
+    state,
     response_type: "code",
   }).toString();
 
@@ -42,7 +43,16 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
       throw new Error("Failed to get response URL");
     }
 
-    const code = new URL(responseUrl).searchParams.get("code");
+    const callback = new URL(responseUrl);
+    if (
+      callback.origin !== new URL(redirect_uri).origin ||
+      callback.pathname !== new URL(redirect_uri).pathname ||
+      callback.searchParams.get("state") !== state ||
+      callback.searchParams.has("error")
+    ) {
+      throw new Error("Invalid OAuth callback");
+    }
+    const code = callback.searchParams.get("code");
     if (!code) {
       throw new Error("Authorization code not found");
     }
@@ -184,6 +194,7 @@ async function refreshTokens(): Promise<boolean> {
 
     // Save data to the Svelte store and browser.storage
     user.access_token = oauthData.access_token;
+    user.refresh_token = oauthData.refresh_token ?? user.refresh_token;
     user.expires_at = Date.now() + oauthData.expires_in * 1000;
     storage.setItem("sync:options", store.options);
 

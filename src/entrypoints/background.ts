@@ -14,17 +14,21 @@ export default defineBackground(() => {
       .setPanelBehavior({ openPanelOnActionClick: true })
       .catch((error) => console.error(error));
   } else {
-    browser.browserAction.onClicked.addListener(() => {
-      // @ts-expect-error
+    browser.action.onClicked.addListener(() => {
+      // @ts-expect-error WXT omits the Firefox-only sidebarAction API.
       browser.sidebarAction.open();
     });
   }
 
   // ショートカットでのみポップアップを開く
-  browser.commands.onCommand.addListener((command) => {
+  browser.commands.onCommand.addListener(async (command) => {
     if (command === "open-popup") {
-      browser.action.setPopup({ popup: "popup.html" });
-      browser.action.openPopup();
+      await browser.action.setPopup({ popup: "popup.html" });
+      try {
+        await browser.action.openPopup();
+      } finally {
+        await browser.action.setPopup({ popup: "" });
+      }
     }
   });
 });

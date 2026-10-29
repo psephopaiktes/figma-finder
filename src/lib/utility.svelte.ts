@@ -12,11 +12,11 @@ export const openSidePanel = async () => {
     const queryOptions = { active: true, currentWindow: true };
     const [tab] = await browser.tabs.query(queryOptions);
     if (tab?.windowId !== undefined) {
-      chrome.sidePanel.open({ windowId: tab.windowId });
+      await chrome.sidePanel.open({ windowId: tab.windowId });
     }
   } else {
-    // @ts-expect-error
-    browser.sidebarAction.open();
+    // @ts-expect-error WXT omits the Firefox-only sidebarAction API.
+    await browser.sidebarAction.open();
   }
 };
 
