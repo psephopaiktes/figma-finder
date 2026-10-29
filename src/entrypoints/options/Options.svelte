@@ -2,9 +2,9 @@
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
 import { store } from "@/lib/store.svelte";
-import DocumentFooter from "@/lib/UI/DocumentFooter.svelte";
-import Nav from "@/lib/UI/Nav/Index.svelte";
-import TeamSetting from "@/lib/UI/TeamSetting.svelte";
+import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
+import Nav from "@/lib/ui/Nav/Index.svelte";
+import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
 const showNav = location.search.includes("nav");
 const title = {
@@ -16,6 +16,7 @@ const title = {
 };
 
 $effect(() => {
+  if (store.loading) return;
   storage.setItem("sync:options", store.options);
   document.documentElement.dataset.theme = store.options.theme;
 });
