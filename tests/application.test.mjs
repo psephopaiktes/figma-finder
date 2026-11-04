@@ -194,6 +194,84 @@ test("Successful file refresh keeps existing order, appends new projects and rem
   assert.equal(mod.user(), null);
 });
 
+test("Welcome page opens on installation without reading tab information", () => {
+  for (const chrome of [true, false]) {
+    let onInstalled;
+    const created = [];
+    load(
+      "src/entrypoints/background.ts",
+      {
+        defineBackground: (callback) => callback(),
+        chrome: { sidePanel: { setPanelBehavior: async () => {} } },
+        browser: {
+          runtime: {
+            getURL: (path) => `chrome-extension://test${path}`,
+            onInstalled: {
+              addListener: (callback) => {
+                onInstalled = callback;
+              },
+            },
+          },
+          tabs: {
+            create: (options) => {
+              created.push(options.url);
+            },
+          },
+          action: { onClicked: { addListener() {} } },
+          commands: { onCommand: { addListener() {} } },
+        },
+      },
+      {},
+      chrome,
+    );
+    onInstalled({ reason: "update" });
+    assert.deepEqual(created, []);
+    onInstalled({ reason: "install" });
+    assert.deepEqual(created, ["chrome-extension://test/help.html?welcome"]);
+  }
+});
+
+test("Sidebar opens using only non-sensitive tab window information", async () => {
+  for (const chrome of [true, false]) {
+    const calls = [];
+    const tab = { windowId: 42 };
+    for (const property of ["url", "pendingUrl", "title", "favIconUrl"]) {
+      Object.defineProperty(tab, property, {
+        get() {
+          throw new Error(`Sensitive tab property accessed: ${property}`);
+        },
+      });
+    }
+    const { openSidePanel } = load(
+      "src/lib/utility.svelte.ts",
+      {
+        navigator: { userAgent: "test" },
+        browser: {
+          tabs: {
+            query: async (options) => {
+              assert.equal(options.active, true);
+              assert.equal(options.currentWindow, true);
+              return [tab];
+            },
+          },
+          sidebarAction: {
+            open: async () => calls.push("sidebar"),
+          },
+        },
+        chrome: {
+          sidePanel: {
+            open: async ({ windowId }) => calls.push(windowId),
+          },
+        },
+      },
+      { "@/lib/i18n.svelte": i18n },
+      chrome,
+    );
+    await openSidePanel();
+    assert.deepEqual(calls, chrome ? [42] : ["sidebar"]);
+  }
+});
+
 test("Chrome and Firefox shortcut await popup setup and restore toolbar sidebar behavior", async () => {
   for (const chrome of [true, false]) {
     let command;
