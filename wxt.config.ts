@@ -5,7 +5,7 @@ const manifest = {
   description: "__MSG_extDescription__",
   default_locale: "en",
   homepage_url: "https://github.com/psephopaiktes/figma-finder",
-  permissions: ["tabs", "storage", "activeTab", "identity"],
+  permissions: ["storage", "identity"],
   minimum_chrome_version: "126",
   commands: {
     "open-popup": {
@@ -33,7 +33,7 @@ const manifest = {
       },
     },
   },
-  host_permissions: ["https://www.figma.com/*", "https://api.figma.com/*"],
+  host_permissions: ["https://api.figma.com/*"],
   key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAry7JIpqk5zlJTeh0p+SGQr0Rmyx+iYP0pu/7/QxKCb5bPZNCzm1xvGsUrU/NmAjIPg1FUePat9MfpjiGXCKbSLlNBCIAiI+/qN+sVyB0DmlLb2/zDBvRn2oxdKdWT3ySYXznvxQujCIS+7YKgApxc+jOQwrrhScTcCjplw3ad/YPVWi+9dh8A3SIFa+lot1U475V4IJdVOPPZhlA8qDLa7jMAJDUPw3xnA13xWlpvgmoFaYTSmF4wyenUH9EP31TyelspX9+Fq31/JF7z7ZI1WZbGB0j8syNCxEp3a4zm07a1jNr6pX8YHCgO/19k0sxHpRWb6j6tn9P28YRr6lDCwIDAQAB",
 };
 
