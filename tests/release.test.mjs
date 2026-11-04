@@ -25,17 +25,23 @@ test("Store versions require numeric increasing versions with bounded components
   assert.throws(() => versionChanged("1.0.2", "1.0.3"), /increase/);
 });
 
-test("Each store is submitted separately and dry-run cannot upload", () => {
-  const chrome = submissionArgs("chrome", "1.0.4", true);
-  assert.ok(chrome.includes("--dry-run"));
-  assert.ok(chrome.includes("--chrome-zip"));
-  assert.ok(!chrome.includes("--firefox-zip"));
-  const firefox = submissionArgs("firefox", "1.0.4", false);
-  assert.ok(!firefox.includes("--dry-run"));
-  assert.ok(firefox.includes("--firefox-sources-zip"));
-  assert.ok(!firefox.includes("--chrome-zip"));
-  assert.throws(() => submissionArgs("both", "1.0.4", false));
-  assert.throws(() => submissionArgs("chrome", "1.0.4", "false"));
+test("Only Chrome can be submitted and dry-run cannot upload", () => {
+  const dryRun = submissionArgs("chrome", "1.0.5", true);
+  assert.deepEqual(dryRun, [
+    "--no-install",
+    "wxt",
+    "submit",
+    "--dry-run",
+    "--chrome-zip",
+    "build/figma-finder-1.0.5-chrome.zip",
+  ]);
+  const real = submissionArgs("chrome", "1.0.5", false);
+  assert.ok(!real.includes("--dry-run"));
+  assert.ok(real.includes("--chrome-zip"));
+  for (const store of ["firefox", "both", "unknown"]) {
+    assert.throws(() => submissionArgs(store, "1.0.5", false), /Only Chrome/);
+  }
+  assert.throws(() => submissionArgs("chrome", "1.0.5", "false"));
 });
 
 test("Archives reject hidden/local configuration, keys, traversal and unexpected sources", () => {
