@@ -1,0 +1,116 @@
+name: Extension checks and store submission
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      store:
+        description: Store to check or submit to
+        type: choice
+        options: [both, chrome, firefox]
+        default: both
+      dry_run:
+        description: Validate store authentication without uploading or submitting
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      changed: ${{ steps.version.outputs.changed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Validate versions against the previous main or PR base
+        id: version
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            test "$GITHUB_REF" = refs/heads/main
+            BASE_SHA=$(git rev-parse HEAD^)
+          fi
+          node .github/scripts/release.mjs version "$BASE_SHA"
+      - run: npm run check
+      - run: npm run lint
+      - run: npm test
+      - run: npm audit --audit-level=moderate
+      - name: Build Chrome and Firefox archives
+        env:
+          REQUIRE_FIGMA_CONFIG: ${{ (github.event_name == 'push' && steps.version.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
+          WXT_FIGMA_ID: ${{ vars.WXT_FIGMA_ID }}
+          WXT_FIGMA_SECRET: ${{ secrets.WXT_FIGMA_SECRET }}
+        run: |
+          if [ "$REQUIRE_FIGMA_CONFIG" = true ]; then
+            test -n "$WXT_FIGMA_ID" || { echo 'Set repository variable WXT_FIGMA_ID before real submission'; exit 1; }
+            test -n "$WXT_FIGMA_SECRET" || { echo 'Set repository secret WXT_FIGMA_SECRET before real submission'; exit 1; }
+          fi
+          npm run build
+          npm run build:firefox
+          node .github/scripts/release.mjs archives
+          npx --no-install web-ext lint --source-dir build/firefox-mv2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: extension-archives
+          path: build/*.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  submit:
+    needs: checks
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'push' && needs.checks.outputs.changed == 'true'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        store: [chrome, firefox]
+    concurrency:
+      group: store-submission-${{ matrix.store }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: extension-archives
+          path: build
+      - name: Check authentication or submit this store
+        if: github.event_name == 'push' || inputs.store == 'both' || inputs.store == matrix.store
+        env:
+          TARGET_STORE: ${{ matrix.store }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+          CHROME_API_VERSION: v2
+          CHROME_EXTENSION_ID: klifomaejfaibpkbigbpljdmelbkehbe
+          CHROME_PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ vars.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ matrix.store == 'chrome' && secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY || '' }}
+          CHROME_PUBLISH_TYPE: STAGED_PUBLISH
+          FIREFOX_CHANNEL: listed
+          FIREFOX_EXTENSION_ID: figma-finder@hira.page
+          FIREFOX_JWT_ISSUER: ${{ matrix.store == 'firefox' && secrets.FIREFOX_JWT_ISSUER || '' }}
+          FIREFOX_JWT_SECRET: ${{ matrix.store == 'firefox' && secrets.FIREFOX_JWT_SECRET || '' }}
+        run: node .github/scripts/release.mjs submit "$TARGET_STORE" "$DRY_RUN"

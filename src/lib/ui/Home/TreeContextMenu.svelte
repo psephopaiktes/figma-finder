@@ -15,13 +15,13 @@ $effect(() => {
   }
 
   const maxX = window.innerWidth - 200;
-  contextMenu.style.left = `${Math.min(event.pageX, maxX)}px`;
+  contextMenu.style.left = `${Math.max(0, Math.min(event.clientX, maxX))}px`;
   contextMenu.style.top = `${event.pageY - scrollY}px`;
   contextMenu.showPopover();
 
-  document.addEventListener("click", () => contextMenu.hidePopover());
-  return () =>
-    document.removeEventListener("click", () => contextMenu.hidePopover());
+  const hide = () => contextMenu.hidePopover();
+  document.addEventListener("click", hide);
+  return () => document.removeEventListener("click", hide);
 });
 </script>
 
