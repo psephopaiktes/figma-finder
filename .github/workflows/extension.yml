@@ -1,4 +1,4 @@
-name: Extension checks and store submission
+name: Extension checks and Chrome Web Store submission
 
 on:
   pull_request:
@@ -6,11 +6,6 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      store:
-        description: Store to check or submit to
-        type: choice
-        options: [both, chrome, firefox]
-        default: both
       dry_run:
         description: Validate store authentication without uploading or submitting
         type: boolean
@@ -48,8 +43,9 @@ jobs:
       - run: npm run check
       - run: npm run lint
       - run: npm test
-      - run: npm audit --audit-level=moderate
-      - name: Build Chrome and Firefox archives
+      - name: Audit shipped dependencies
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Build Chrome archive
         env:
           REQUIRE_FIGMA_CONFIG: ${{ (github.event_name == 'push' && steps.version.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
           WXT_FIGMA_ID: ${{ vars.WXT_FIGMA_ID }}
@@ -60,13 +56,11 @@ jobs:
             test -n "$WXT_FIGMA_SECRET" || { echo 'Set repository secret WXT_FIGMA_SECRET before real submission'; exit 1; }
           fi
           npm run build
-          npm run build:firefox
-          node .github/scripts/release.mjs archives
-          npx --no-install web-ext lint --source-dir build/firefox-mv2
+          node .github/scripts/release.mjs archives chrome
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: extension-archives
-          path: build/*.zip
+          name: chrome-archive
+          path: build/figma-finder-*-chrome.zip
           if-no-files-found: error
           retention-days: 14
 
@@ -78,12 +72,8 @@ jobs:
        (github.event_name == 'push' && needs.checks.outputs.changed == 'true'))
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        store: [chrome, firefox]
     concurrency:
-      group: store-submission-${{ matrix.store }}
+      group: store-submission-chrome
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -96,21 +86,42 @@ jobs:
       - run: npm ci
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: extension-archives
+          name: chrome-archive
           path: build
-      - name: Check authentication or submit this store
-        if: github.event_name == 'push' || inputs.store == 'both' || inputs.store == matrix.store
+      - name: Check authentication or submit to Chrome Web Store
         env:
-          TARGET_STORE: ${{ matrix.store }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
           CHROME_API_VERSION: v2
           CHROME_EXTENSION_ID: klifomaejfaibpkbigbpljdmelbkehbe
           CHROME_PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
           CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ vars.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
-          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ matrix.store == 'chrome' && secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY || '' }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
           CHROME_PUBLISH_TYPE: STAGED_PUBLISH
-          FIREFOX_CHANNEL: listed
-          FIREFOX_EXTENSION_ID: figma-finder@hira.page
-          FIREFOX_JWT_ISSUER: ${{ matrix.store == 'firefox' && secrets.FIREFOX_JWT_ISSUER || '' }}
-          FIREFOX_JWT_SECRET: ${{ matrix.store == 'firefox' && secrets.FIREFOX_JWT_SECRET || '' }}
-        run: node .github/scripts/release.mjs submit "$TARGET_STORE" "$DRY_RUN"
+        run: |
+          for name in CHROME_PUBLISHER_ID CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL CHROME_SERVICE_ACCOUNT_PRIVATE_KEY; do
+            test -n "${!name}" || { echo "::error::Set repository Actions setting $name before submission"; exit 1; }
+          done
+          node .github/scripts/release.mjs submit chrome "$DRY_RUN"
+
+  audit-development:
+    name: Audit development tools (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Report all dependency advisories
+        id: audit
+        continue-on-error: true
+        run: npm audit --audit-level=moderate
+      - name: Explain development audit failure
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo '::warning::Dependency audit failed; inspect the audit output. Shipped dependencies are checked separately in the required checks job.'
+          echo '### Development dependency audit needs attention' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Inspect the audit output above. This advisory job does not block Chrome submission; the required checks job still audits shipped dependencies.' >> "$GITHUB_STEP_SUMMARY"

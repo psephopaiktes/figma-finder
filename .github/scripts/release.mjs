@@ -31,16 +31,12 @@ export const versionChanged = (current, previous) => {
 
 export const submissionArgs = (store, version, dryRun) => {
   parseVersion(version);
-  if (!["chrome", "firefox"].includes(store)) throw new Error("Unknown store");
+  if (store !== "chrome")
+    throw new Error("Only Chrome submission is supported");
   if (typeof dryRun !== "boolean") throw new Error("dryRun must be a boolean");
   const args = ["--no-install", "wxt", "submit"];
   if (dryRun) args.push("--dry-run");
   args.push(`--${store}-zip`, `build/figma-finder-${version}-${store}.zip`);
-  if (store === "firefox")
-    args.push(
-      "--firefox-sources-zip",
-      `build/figma-finder-${version}-sources.zip`,
-    );
   return args;
 };
 
@@ -108,7 +104,10 @@ const main = () => {
       appendFileSync(process.env.GITHUB_OUTPUT, output);
     process.stdout.write(output);
   } else if (command === "archives") {
-    const names = ["chrome", "firefox", "sources"].map(
+    const kinds = args.length ? args : ["chrome", "firefox", "sources"];
+    if (kinds.some((kind) => !["chrome", "firefox", "sources"].includes(kind)))
+      throw new Error("Unknown archive kind");
+    const names = kinds.map(
       (kind) => `figma-finder-${pkg.version}-${kind}.zip`,
     );
     for (const name of names) {
