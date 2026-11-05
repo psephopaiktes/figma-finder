@@ -48,6 +48,8 @@ function readTokens(
 }
 
 async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
+  let stage = "configuration";
+  let status: number | undefined;
   try {
     if (!clientId) throw new Error("Figma Client ID is not configured");
     const redirectUri = browser.identity.getRedirectURL();
@@ -63,10 +65,12 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     const endpoint = options.add
       ? `https://www.figma.com/switch_user?cont=/oauth?${encodeURIComponent(params)}`
       : `https://www.figma.com/oauth?${params}`;
+    stage = "authorization";
     const responseUrl = await browser.identity.launchWebAuthFlow({
       interactive: true,
       url: endpoint,
     });
+    stage = "callback";
     if (!responseUrl) throw new Error("Missing OAuth response");
     const callback = new URL(responseUrl);
     const redirect = new URL(redirectUri);
@@ -79,10 +83,12 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
       throw new Error("Invalid OAuth callback");
     const code = callback.searchParams.get("code");
     if (!code) throw new Error("Missing authorization code");
+    stage = "exchange";
     const response = await authRequest("/oauth/exchange", {
       code,
       redirect_uri: redirectUri,
     });
+    status = response.status;
     if (!response.ok) throw new Error("OAuth exchange failed");
     const data = await response.json();
     if (
@@ -93,6 +99,8 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
       throw new Error("Missing account ID");
     }
     const credentials = readTokens(data);
+    stage = "profile";
+    status = undefined;
     const profileResponse = await fetch("https://api.figma.com/v1/me", {
       headers: { Authorization: `Bearer ${credentials.access_token}` },
       credentials: "omit",
@@ -100,8 +108,11 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
       redirect: "error",
       signal: AbortSignal.timeout(15_000),
     });
+    status = profileResponse.status;
     if (!profileResponse.ok) throw new Error("Profile request failed");
     const profile = await profileResponse.json();
+    stage = "storage";
+    status = undefined;
     const { state: accounts, result } = await mutateAccounts((accounts) => {
       const duplicate = Boolean(
         accounts.auth[data.user_id] && accounts.options.users[data.user_id],
@@ -133,7 +144,18 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     return true;
   } catch {
     // Never log authorization codes, tokens, callback URLs, or response bodies.
-    console.warn("OAuth login failed.");
+    const code = `${stage}${status ? `:${status}` : ""}`;
+    console.warn(`OAuth login failed (${code}).`);
+    alert(
+      `${i18n.t({
+        ja: "ログインを完了できませんでした。もう一度お試しください。解決しない場合は、このコードを添えてお問い合わせください。",
+        en: "Could not complete login. Please try again. If the problem continues, include this code when contacting support.",
+        "zh-cn":
+          "无法完成登录。请重试。如果问题仍然存在，请在联系支持时提供此代码。",
+        es: "No se pudo completar el inicio de sesión. Inténtalo de nuevo. Si el problema continúa, incluye este código al contactar con soporte.",
+        ko: "로그인을 완료하지 못했습니다. 다시 시도해 주세요. 문제가 계속되면 이 코드를 포함하여 문의해 주세요.",
+      })} (${code})`,
+    );
     return false;
   }
 }

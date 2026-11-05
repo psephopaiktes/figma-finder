@@ -75,6 +75,7 @@ const auth = (
 ) => {
   const store = { auth: {}, options: { currentUser: null, users: {} } };
   const requests = [];
+  const messages = [];
   const api = load(
     "src/lib/oauth.svelte.ts",
     {
@@ -112,7 +113,8 @@ const auth = (
         };
       },
       storage: fixture.storage,
-      alert() {},
+      alert: (message) => messages.push(message),
+      console: { warn: (message) => messages.push(message) },
       confirm: () => true,
     },
     {
@@ -128,7 +130,7 @@ const auth = (
       "@/lib/i18n.svelte": i18n,
     },
   ).default;
-  return { api, store, requests, ...fixture };
+  return { api, store, requests, messages, ...fixture };
 };
 
 test("OAuth rejects mismatched state, foreign redirect, error, and missing code before token exchange", async () => {
@@ -169,6 +171,47 @@ test("Worker login keeps credentials local and rotated refresh tokens are persis
       if (key === "sync:options")
         assert.ok(!JSON.stringify(value).includes("new-refresh"));
     }
+  }
+});
+
+test("login failures report a safe stage and status without leaking credentials or exception text", async () => {
+  const sensitive = "private-code-token-or-url";
+  for (const failure of ["exchange", "profile", "storage", "authorization"]) {
+    const fixture = makeAccounts();
+    fixture.respond = (url) => {
+      if (
+        (failure === "exchange" && url.endsWith("/oauth/exchange")) ||
+        (failure === "profile" && url.endsWith("/me"))
+      )
+        return {
+          ok: false,
+          status: 502,
+          json: async () => ({ error: sensitive }),
+        };
+    };
+    if (failure === "storage")
+      fixture.storage.setItem = async () => {
+        throw new Error(sensitive);
+      };
+    const client = auth(
+      failure === "authorization"
+        ? () => {
+            throw new Error(sensitive);
+          }
+        : undefined,
+      fixture,
+    );
+    assert.equal(await client.api.logIn(), false);
+    assert.equal(client.store.options.currentUser, null);
+    assert.equal(client.messages.length, 2);
+    for (const message of client.messages) {
+      assert.ok(message.includes(failure));
+      assert.ok(!message.includes(sensitive));
+      assert.ok(!message.includes("new-access"));
+      assert.ok(!message.includes("new-refresh"));
+    }
+    if (["exchange", "profile"].includes(failure))
+      assert.ok(client.messages.at(-1).includes("502"));
   }
 });
 

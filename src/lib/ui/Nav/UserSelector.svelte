@@ -9,8 +9,10 @@ let users = $derived(
     Object.entries(store.options.users).filter(([id]) => store.auth[id]),
   ),
 );
+let loggingIn = $state(false);
 
 async function addAccount() {
+  if (loggingIn) return;
   if (window.location.pathname.includes("popup")) {
     const result = confirm(
       i18n.t({
@@ -26,8 +28,12 @@ async function addAccount() {
     window.close();
     return;
   }
-  await oauth.logIn({ add: true });
-  location.reload();
+  loggingIn = true;
+  try {
+    if (await oauth.logIn({ add: true })) location.reload();
+  } finally {
+    loggingIn = false;
+  }
 }
 </script>
 
@@ -62,7 +68,7 @@ async function addAccount() {
       </button>
     {/each}
 
-    <button onclick={addAccount}>
+    <button onclick={addAccount} disabled={loggingIn}>
       <svg-icon src="/img/icon/add.svg"></svg-icon>
       <p>
         {i18n.t({
