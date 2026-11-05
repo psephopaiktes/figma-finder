@@ -7,10 +7,7 @@
   padding: 0;
 }
 
-/* View Transitions API */
-@view-transition {
-  navigation: auto;
-}
+/* Use normal page navigation: embedded extension pages can abort view transitions. */
 
 /* Document & Root Element Styles */
 :root,
