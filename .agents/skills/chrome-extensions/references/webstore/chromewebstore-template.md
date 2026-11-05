@@ -1,6 +1,7 @@
-# CHROMEWEBSTORE.md Template
+# Chrome Web Store Checklist Template
 
-Copy this template into the project root as `CHROMEWEBSTORE.md` and fill in each section.
+Use the applicable fields to update the existing `AGENTS.md` store notes; do not create
+a separate project-root file. Keep release history in GitHub Releases.
 Fields marked `[REQUIRED]` must be completed before submission. Fields marked `[RECOMMENDED]`
 are optional but improve listing quality and approval odds.
 
@@ -148,16 +149,11 @@ are optional but improve listing quality and approval odds.
 **Homepage URL** [RECOMMENDED]
 
 
-## Version History
+## Release
 
-<!-- Add an entry for every version submitted to the Chrome Web Store.
-     Most recent first. -->
-
-| Version | Date | Changes | Status |
-|---------|------|---------|--------|
-| | | | Draft |
-
-<!-- Status options: Draft | Submitted | In Review | Published | Rejected -->
+<!-- Create the version tag and GitHub Release at the release commit.
+     Use concise English notes. Keep release history in GitHub Releases;
+     do not copy a version-history table into AGENTS.md. -->
 
 
 ## Review Notes
