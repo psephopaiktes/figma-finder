@@ -45,15 +45,23 @@ jobs:
       - run: npm test
       - name: Audit shipped dependencies
         run: npm audit --omit=dev --audit-level=moderate
+      - name: Verify Client secret cannot enter distribution archives
+        env:
+          WXT_FIGMA_ID: ci-public-client
+          WXT_FIGMA_SECRET: ci-only-secret-marker-7bf39a+/=
+          LEAK_TEST_SECRET: ci-only-secret-marker-7bf39a+/=
+        run: |
+          npm run build
+          npm run build:firefox
+          node .github/scripts/release.mjs check-secrets
       - name: Build Chrome archive
         env:
           REQUIRE_FIGMA_CONFIG: ${{ (github.event_name == 'push' && steps.version.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}
           WXT_FIGMA_ID: ${{ vars.WXT_FIGMA_ID }}
-          WXT_FIGMA_SECRET: ${{ secrets.WXT_FIGMA_SECRET }}
+          WXT_AUTH_BASE_URL: ${{ vars.WXT_AUTH_BASE_URL }}
         run: |
           if [ "$REQUIRE_FIGMA_CONFIG" = true ]; then
             test -n "$WXT_FIGMA_ID" || { echo 'Set repository variable WXT_FIGMA_ID before real submission'; exit 1; }
-            test -n "$WXT_FIGMA_SECRET" || { echo 'Set repository secret WXT_FIGMA_SECRET before real submission'; exit 1; }
           fi
           npm run build
           node .github/scripts/release.mjs archives chrome

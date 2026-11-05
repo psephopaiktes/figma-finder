@@ -1,7 +1,7 @@
 <script lang="ts">
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
-import { store } from "@/lib/store.svelte";
+import { saveOptions, store } from "@/lib/store.svelte";
 import DocumentFooter from "@/lib/ui/DocumentFooter.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
 import TeamSetting from "@/lib/ui/TeamSetting.svelte";
@@ -17,7 +17,7 @@ const title = {
 
 $effect(() => {
   if (store.loading) return;
-  storage.setItem("sync:options", store.options);
+  saveOptions();
   document.documentElement.dataset.theme = store.options.theme;
 });
 </script>

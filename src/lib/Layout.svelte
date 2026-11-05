@@ -4,8 +4,9 @@ import "svg-mask-icon";
 import type { Snippet } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
-import { loadOptions, store } from "@/lib/store.svelte";
+import { loadOptions, store, tokens } from "@/lib/store.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
+import type { AuthTokens } from "@/types";
 
 type Props = {
   title?: string | null | Record<string, string>;
@@ -48,29 +49,36 @@ const reload = (e: KeyboardEvent) => {
   }
 };
 
-onMount(async () => {
-  await loadOptions();
-
-  if (
-    store.options.currentUser &&
-    (store.options.users[store.options.currentUser]?.expires_at ?? 0) <=
-      Date.now()
-  ) {
-    const success = await oauth.refreshTokens();
-    if (!success) {
-      console.warn("Token refresh failed.");
-    }
-  }
-
-  document.documentElement.dataset.theme = store.options.theme;
-  document.documentElement.lang = store.options.locale || i18n.default_locale;
-
-  console.log(
-    "This site's code: \n%chttps://github.com/psephopaiktes/figma-finder",
-    "padding: 16px 24px; margin: 8px 0px; border: 2px solid #fb0; border-radius: 16px; letter-spacing: .1em; font-size: large; font-weight: bold;",
+onMount(() => {
+  const unwatch = storage.watch<Record<string, AuthTokens>>(
+    "local:auth",
+    (value) => {
+      store.auth = value ?? {};
+    },
   );
-
-  store.loading = false;
+  void (async () => {
+    try {
+      await loadOptions();
+      if (
+        store.options.currentUser &&
+        (tokens()?.expires_at ?? 0) <= Date.now() + 30_000
+      ) {
+        await oauth.refreshTokens();
+      }
+      document.documentElement.dataset.theme = store.options.theme;
+      document.documentElement.lang =
+        store.options.locale || i18n.default_locale;
+      console.log(
+        "This site's code: \n%chttps://github.com/psephopaiktes/figma-finder",
+        "padding: 16px 24px; margin: 8px 0px; border: 2px solid #fb0; border-radius: 16px; letter-spacing: .1em; font-size: large; font-weight: bold;",
+      );
+    } catch {
+      console.warn("Account settings could not be loaded.");
+    } finally {
+      store.loading = false;
+    }
+  })();
+  return unwatch;
 });
 </script>
 

@@ -1,6 +1,6 @@
 # Figma OAuth Client secret を Cloudflare Workers に移す計画
 
-作成日・更新日: 2026-11-05。Worker 単体は `workers/figma-auth` に実装済み。Cloudflare への本番配置は確認待ちで、拡張の接続・ビルドからの秘密値の除去・保存先移行・鍵更新は未実施。本書には実装済みの構成と残りの移行計画を記載する。
+作成日・更新日: 2026-11-05。Worker 単体は `workers/figma-auth` に実装済み。Cloudflare への本番配置・readiness 確認は完了。拡張の接続・ビルドからの秘密値の除去・保存先移行・CI の漏洩検査は実装済み。実ユーザーでの OAuth 検証、旧鍵の更新、ストア側の開示反映は残作業。本書には実装済みの構成と残りの移行計画を記載する。
 
 ## 推奨する最小構成
 
@@ -48,7 +48,7 @@ Worker 側の設定は非秘密の `FIGMA_CLIENT_ID` と、Worker Secret の `FI
 
 ## 実装の順序
 
-### 1. Worker の準備（単体実装済み、配置は確認待ち）
+### 1. Worker の準備（単体実装・配置・readiness 確認済み）
 
 `workers/figma-auth/` に TypeScript の Worker、Wrangler 設定、単体テスト、独立 CI を追加済み。配置手順は [SETUP.md](../workers/figma-auth/SETUP.md) を参照する。公開するのはソースコードだけで、秘密情報は Cloudflare ダッシュボードまたは Wrangler の Secret 機能で登録する。ローカルの `.dev.vars*` は必ず Git と配布 ZIP の対象外にする。
 

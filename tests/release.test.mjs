@@ -2,10 +2,32 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   checkEntryNames,
+  checkNoSecret,
   parseVersion,
   submissionArgs,
   versionChanged,
 } from "../.github/scripts/release.mjs";
+
+test("Credential scans catch raw and encoded sentinels without printing them", () => {
+  const secret = "test-only-sensitive-marker+/=";
+  for (const value of [
+    secret,
+    encodeURIComponent(secret),
+    Buffer.from(secret).toString("base64"),
+    Buffer.from(`client:${secret}`).toString("base64"),
+  ]) {
+    assert.throws(
+      () =>
+        checkNoSecret(Buffer.from(`prefix ${value} suffix`), secret, "client"),
+      (error) => {
+        assert.ok(!error.message.includes(secret));
+        return /sentinel/.test(error.message);
+      },
+    );
+  }
+  checkNoSecret(Buffer.from("safe compiled code"), secret, "client");
+  assert.throws(() => checkNoSecret(Buffer.from("anything"), ""));
+});
 
 test("Store versions require numeric increasing versions with bounded components", () => {
   for (const version of [

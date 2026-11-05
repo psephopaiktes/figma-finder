@@ -1,94 +1,123 @@
+import { mutateAccounts } from "@/lib/account-storage";
+import { getAuthBaseUrl } from "@/lib/auth-config";
 import i18n from "@/lib/i18n.svelte";
-import { store } from "@/lib/store.svelte";
+import { applyAccounts, store } from "@/lib/store.svelte";
+import type { AuthTokens } from "@/types";
 
-const client_id = import.meta.env.WXT_FIGMA_ID;
-const client_secret = import.meta.env.WXT_FIGMA_SECRET;
+const clientId = import.meta.env.WXT_FIGMA_ID;
+const authBaseUrl = getAuthBaseUrl(import.meta.env.WXT_AUTH_BASE_URL);
 
-export default {
-  logIn,
-  logOut,
-  refreshTokens,
-};
+export default { logIn, logOut, refreshTokens };
 
-/**
- * Initiates the OAuth 2.0 authorization flow for logging in a user via Figma's API.
- * @async
- * @throws {Error} If the OAuth login process fails or if any required data is missing.
- * @see https://developers.figma.com/docs/rest-api/authentication/
- * @param options - Additional options for the login process.
- * @returns Whether the user has successfully logged in.
- */
+async function authRequest(path: string, body: Record<string, string>) {
+  return fetch(`${authBaseUrl}${path}`, {
+    method: "POST",
+    credentials: "omit",
+    cache: "no-store",
+    redirect: "error",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(15_000),
+  });
+}
+
+function readTokens(
+  data: Record<string, unknown>,
+  previousRefresh = "",
+): AuthTokens {
+  if (
+    typeof data.access_token !== "string" ||
+    !data.access_token ||
+    typeof data.expires_in !== "number" ||
+    !Number.isFinite(data.expires_in) ||
+    data.expires_in <= 0 ||
+    (data.refresh_token !== undefined &&
+      (typeof data.refresh_token !== "string" || !data.refresh_token))
+  )
+    throw new Error("Invalid token response");
+  const refresh =
+    typeof data.refresh_token === "string"
+      ? data.refresh_token
+      : previousRefresh;
+  if (!refresh) throw new Error("Missing refresh token");
+  return {
+    access_token: data.access_token,
+    refresh_token: refresh,
+    expires_at: Date.now() + data.expires_in * 1000,
+  };
+}
+
 async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
-  const redirect_uri = browser.identity.getRedirectURL();
-  const state = crypto.randomUUID();
-  const params = new URLSearchParams({
-    client_id,
-    redirect_uri,
-    scope:
-      "file_content:read file_metadata:read projects:read current_user:read",
-    state,
-    response_type: "code",
-  }).toString();
-
-  const endpoint = options.add
-    ? `https://www.figma.com/switch_user?cont=/oauth?${encodeURIComponent(params)}`
-    : `https://www.figma.com/oauth?${params}`;
-
   try {
+    if (!clientId) throw new Error("Figma Client ID is not configured");
+    const redirectUri = browser.identity.getRedirectURL();
+    const state = crypto.randomUUID();
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      scope:
+        "file_content:read file_metadata:read projects:read current_user:read",
+      state,
+      response_type: "code",
+    }).toString();
+    const endpoint = options.add
+      ? `https://www.figma.com/switch_user?cont=/oauth?${encodeURIComponent(params)}`
+      : `https://www.figma.com/oauth?${params}`;
     const responseUrl = await browser.identity.launchWebAuthFlow({
       interactive: true,
       url: endpoint,
     });
-    if (!responseUrl) {
-      throw new Error("Failed to get response URL");
-    }
-
+    if (!responseUrl) throw new Error("Missing OAuth response");
     const callback = new URL(responseUrl);
+    const redirect = new URL(redirectUri);
     if (
-      callback.origin !== new URL(redirect_uri).origin ||
-      callback.pathname !== new URL(redirect_uri).pathname ||
+      callback.origin !== redirect.origin ||
+      callback.pathname !== redirect.pathname ||
       callback.searchParams.get("state") !== state ||
       callback.searchParams.has("error")
-    ) {
+    )
       throw new Error("Invalid OAuth callback");
-    }
     const code = callback.searchParams.get("code");
-    if (!code) {
-      throw new Error("Authorization code not found");
-    }
-
-    // Get token
-    const tokenResponse = await fetch("https://api.figma.com/v1/oauth/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${btoa(`${client_id}:${client_secret}`)}`,
-      },
-      body: new URLSearchParams({
-        redirect_uri,
-        grant_type: "authorization_code",
-        code,
-      }).toString(),
+    if (!code) throw new Error("Missing authorization code");
+    const response = await authRequest("/oauth/exchange", {
+      code,
+      redirect_uri: redirectUri,
     });
-    if (!tokenResponse.ok) {
-      throw new Error(`Failed to fetch access token: ${tokenResponse.status}`);
+    if (!response.ok) throw new Error("OAuth exchange failed");
+    const data = await response.json();
+    if (
+      typeof data.user_id !== "string" ||
+      !data.user_id ||
+      ["__proto__", "constructor", "prototype"].includes(data.user_id)
+    ) {
+      throw new Error("Missing account ID");
     }
-    const oauthData = await tokenResponse.json();
-
-    // Get user profile
-    const userResponse = await fetch("https://api.figma.com/v1/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${oauthData.access_token}`,
-      },
+    const credentials = readTokens(data);
+    const profileResponse = await fetch("https://api.figma.com/v1/me", {
+      headers: { Authorization: `Bearer ${credentials.access_token}` },
+      credentials: "omit",
+      cache: "no-store",
+      redirect: "error",
+      signal: AbortSignal.timeout(15_000),
     });
-    if (!userResponse.ok) {
-      throw new Error(`Failed to fetch user data: ${userResponse.status}`);
-    }
-    const userData = await userResponse.json();
-
-    // Handle the case where the user already exists
-    if (store.options.users[oauthData.user_id]) {
+    if (!profileResponse.ok) throw new Error("Profile request failed");
+    const profile = await profileResponse.json();
+    const { state: accounts, result } = await mutateAccounts((accounts) => {
+      const duplicate = Boolean(
+        accounts.auth[data.user_id] && accounts.options.users[data.user_id],
+      );
+      accounts.auth[data.user_id] = credentials;
+      accounts.options.users[data.user_id] = {
+        email: profile.email,
+        handle: profile.handle,
+        img_url: profile.img_url,
+        teams: accounts.options.users[data.user_id]?.teams ?? {},
+      };
+      if (!duplicate) accounts.options.currentUser = data.user_id;
+      return !duplicate;
+    });
+    applyAccounts(accounts);
+    if (!result) {
       alert(
         i18n.t({
           ja: "すでにログイン済みのユーザーです。",
@@ -98,40 +127,22 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
           ko: "이미 로그인된 사용자입니다。",
         }),
       );
-      throw new Error(`User already logged in: ${oauthData.user_id}`);
+      return false;
     }
-
-    // Save data to the Svelte store and browser.storage
-    store.options.users[oauthData.user_id] = {
-      access_token: oauthData.access_token,
-      expires_at: Date.now() + oauthData.expires_in * 1000,
-      refresh_token: oauthData.refresh_token,
-      email: userData.email,
-      handle: userData.handle,
-      img_url: userData.img_url,
-      teams: {},
-    };
-    store.options.currentUser = oauthData.user_id;
-    storage.setItem("sync:options", store.options);
-    storage.removeItem("local:projects");
-
+    await storage.removeItem("local:projects");
     return true;
-  } catch (error) {
-    console.error("OAuth login failed:", error);
+  } catch {
+    // Never log authorization codes, tokens, callback URLs, or response bodies.
+    console.warn("OAuth login failed.");
     return false;
   }
 }
 
-/**
- * Signs out the current user by clearing stored authentication data.
- * @returns Whether the log-out was successful.
- */
-function logOut(): boolean {
+async function logOut(): Promise<boolean> {
+  const id = store.options.currentUser;
+  if (!id) return false;
   if (
-    store.options.currentUser &&
-    store.options.users[store.options.currentUser]
-  ) {
-    const result = confirm(
+    !confirm(
       i18n.t({
         ja: "ログアウトしますか？",
         en: "Log out?",
@@ -139,69 +150,56 @@ function logOut(): boolean {
         es: "¿Cerrar sesión?",
         ko: "로그아웃하시겠습니까?",
       }),
-    );
-    if (!result) return false;
-
-    delete store.options.users[store.options.currentUser];
-    const userIds = Object.keys(store.options.users);
-    store.options.currentUser =
-      userIds.length > 0 && userIds[0] ? userIds[0] : null;
-    storage.setItem("sync:options", store.options);
-    storage.removeItem("local:projects");
+    )
+  )
+    return false;
+  try {
+    const { state } = await mutateAccounts((accounts) => {
+      delete accounts.auth[id];
+      delete accounts.options.users[id];
+      if (accounts.options.currentUser === id) {
+        accounts.options.currentUser =
+          Object.keys(accounts.options.users).find(
+            (key) => accounts.auth[key],
+          ) ?? null;
+      }
+    });
+    applyAccounts(state);
+    await storage.removeItem("local:projects");
     return true;
+  } catch {
+    console.warn("Account could not be removed.");
+    return false;
   }
-  console.warn("No user logged in.");
-  return false;
 }
 
-/**
- * Refreshes the OAuth access token using the stored refresh token.
- * @async
- * @returns {Promise<boolean>} Whether the token refresh was successful.
- */
 async function refreshTokens(): Promise<boolean> {
-  if (!store.options.currentUser) {
-    console.warn("No current user logged in.");
-    return false;
-  }
-
-  const user = store.options.users[store.options.currentUser];
-  if (!user?.refresh_token) {
-    console.warn("No refresh token available.");
-    return false;
-  }
-
+  const id = store.options.currentUser;
+  if (!id) return false;
   try {
-    const tokenResponse = await fetch(
-      "https://api.figma.com/v1/oauth/refresh",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Basic ${btoa(`${client_id}:${client_secret}`)}`,
-        },
-        body: new URLSearchParams({
-          refresh_token: user.refresh_token,
-        }).toString(),
-      },
-    );
-    if (!tokenResponse.ok) {
-      throw new Error(
-        `Failed to refresh access token: ${tokenResponse.status}`,
+    const { state, result } = await mutateAccounts(async (accounts) => {
+      const current = accounts.auth[id];
+      if (!current?.refresh_token || !accounts.options.users[id]) return false;
+      // Re-read under the cross-page lock; another page may already have refreshed.
+      if (current.expires_at > Date.now() + 30_000) return true;
+      const response = await authRequest("/oauth/refresh", {
+        refresh_token: current.refresh_token,
+      });
+      if (response.status === 400) {
+        delete accounts.auth[id];
+        return false;
+      }
+      if (!response.ok) throw new Error("Token refresh failed");
+      accounts.auth[id] = readTokens(
+        await response.json(),
+        current.refresh_token,
       );
-    }
-    const oauthData = await tokenResponse.json();
-
-    // Save data to the Svelte store and browser.storage
-    user.access_token = oauthData.access_token;
-    user.refresh_token = oauthData.refresh_token ?? user.refresh_token;
-    user.expires_at = Date.now() + oauthData.expires_in * 1000;
-    storage.setItem("sync:options", store.options);
-
-    return true;
-  } catch (error) {
-    console.error("Token refresh failed:", error);
-
+      return true;
+    });
+    applyAccounts(state);
+    return result;
+  } catch {
+    console.warn("Token refresh failed.");
     return false;
   }
 }

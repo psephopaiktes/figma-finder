@@ -1,8 +1,8 @@
 # Figma 認証 Worker の配置
 
 Cloudflare Workers Free、標準の workers.dev ドメイン、DB なしの構成。
-この段階では Worker 単体を用意する。拡張はまだ接続先を変更していないため、
-配布 JS に含まれる旧 Client secret の問題は後続の拡張移行と鍵更新で解消する。
+Worker の稼働後、拡張はこの Worker を使って認証する。新版のビルドから共通 secret は
+除去済みだが、過去の配布物に含まれる旧 secret は新版実動作確認後の鍵更新で無効化する。
 
 ## Cloudflare ダッシュボードで行うこと
 

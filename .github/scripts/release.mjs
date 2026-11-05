@@ -71,6 +71,19 @@ export const checkEntryNames = (entries, sources) => {
   }
 };
 
+export const checkNoSecret = (contents, secret, clientId = "") => {
+  if (!secret) throw new Error("A test secret sentinel is required");
+  const patterns = [
+    secret,
+    encodeURIComponent(secret),
+    Buffer.from(secret).toString("base64"),
+    Buffer.from(`${clientId}:${secret}`).toString("base64"),
+  ];
+  if (patterns.some((value) => contents.includes(Buffer.from(value)))) {
+    throw new Error("Credential sentinel found in archive");
+  }
+};
+
 const json = (path) => JSON.parse(readFileSync(path, "utf8"));
 const gitJson = (ref, file) =>
   JSON.parse(
@@ -103,7 +116,7 @@ const main = () => {
     if (process.env.GITHUB_OUTPUT)
       appendFileSync(process.env.GITHUB_OUTPUT, output);
     process.stdout.write(output);
-  } else if (command === "archives") {
+  } else if (command === "archives" || command === "check-secrets") {
     const kinds = args.length ? args : ["chrome", "firefox", "sources"];
     if (kinds.some((kind) => !["chrome", "firefox", "sources"].includes(kind)))
       throw new Error("Unknown archive kind");
@@ -119,9 +132,17 @@ const main = () => {
         .split("\n");
       const sources = name.endsWith("-sources.zip");
       checkEntryNames(entries, sources);
-      const contents = execFileSync("unzip", ["-p", path], {
+      const bytes = execFileSync("unzip", ["-p", path], {
         maxBuffer: 32 * 1024 * 1024,
-      }).toString("utf8");
+      });
+      if (command === "check-secrets") {
+        checkNoSecret(
+          bytes,
+          process.env.LEAK_TEST_SECRET,
+          process.env.WXT_FIGMA_ID,
+        );
+      }
+      const contents = bytes.toString("utf8");
       if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/.test(contents))
         throw new Error("Private key found in archive");
       if (!sources) {
@@ -159,7 +180,7 @@ const main = () => {
     if (result.error) throw result.error;
     process.exitCode = result.status ?? 1;
   } else {
-    throw new Error("Expected version, archives, or submit");
+    throw new Error("Expected version, archives, check-secrets, or submit");
   }
 };
 
