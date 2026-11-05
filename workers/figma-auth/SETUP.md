@@ -86,6 +86,8 @@ npm run dev
 `build` は `wrangler deploy --dry-run` なので Cloudflare に配置しない。
 `dev` はローカルの 127.0.0.1:8787 で起動する。設定なしの `/health` は
 503 と `{"ok":false}` を返す。テストはダミー値と上流モックだけを使う。
+`npm test` は Miniflare/workerd 上でも実際の Worker ハンドラーを実行し、
+コード交換・更新と、上流のリダイレクトを追跡しないことを確認する。
 
 実際の鍵でローカル検証する必要がある場合は、無視対象の `.dev.vars` に保存する。
 共有端末には残さず、デバッグログにも出さない。Cloudflare ダッシュボードでの
@@ -116,3 +118,12 @@ Cloudflare 側の配置・実際の Figma 認証・CPU 実測は、ユーザー�
 
 Worker の TypeScript 設定は `wrangler.jsonc` の `tsconfig` で明示している。
 そのため、拡張用の `.wxt/tsconfig.json` を生成する作業は Worker の配置には不要。
+
+## 認証後に拡張のログイン画面へ戻る場合
+
+`/health` の 200 は設定の存在確認であり、Figma とのコード交換の成功を意味しない。
+旧実装の `redirect: "error"` は workerd ではサポートされず、上流リクエストの
+構築時に例外となり、`/oauth/exchange` と `/oauth/refresh` が 502 を返す。
+`redirect: "manual"` と非 2xx 応答の拒否へ修正した最新 main を配置する。
+資格情報はリダイレクト先に転送しない。Worker だけの修正なので、同じバージョンの
+main 更新では Chrome ストアへの再申請は走らず、テスト中の拡張もそのまま再試行できる。

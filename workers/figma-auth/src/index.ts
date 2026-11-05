@@ -240,7 +240,9 @@ export async function handleRequest(
           : "https://api.figma.com/v1/oauth/refresh",
         {
           method: "POST",
-          redirect: "error",
+          // workerd supports follow/manual only. Reject every non-2xx below;
+          // never forward OAuth credentials to a redirect destination.
+          redirect: "manual",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Basic ${btoa(`${env.FIGMA_CLIENT_ID}:${env.FIGMA_CLIENT_SECRET}`)}`,

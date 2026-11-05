@@ -35,7 +35,7 @@ test("code exchange uses fixed upstream, secret only in Basic auth, and filtered
     calls++;
     assert.equal(url, "https://api.figma.com/v1/oauth/token");
     assert.equal(init.method, "POST");
-    assert.equal(init.redirect, "error");
+    assert.equal(init.redirect, "manual");
     assert.equal(
       init.headers.Authorization,
       `Basic ${btoa(`test-client:${fakeSecret}`)}`,
