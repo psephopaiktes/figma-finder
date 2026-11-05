@@ -15,7 +15,7 @@ Cloudflare Workers Free、標準の workers.dev ドメイン、DB なしの構�
 
 | 設定 | 値 |
 | --- | --- |
-| Worker 名 | `figma-finder-auth`（wrangler.jsonc と同じ名前） |
+| Worker 名 | `figma-finder`（wrangler.jsonc と同じ名前） |
 | Production branch | `main` |
 | Root directory | `workers/figma-auth` |
 | Build command | `npm run check && npm test` |
@@ -40,7 +40,7 @@ Secret はソース、GitHub の PR、ビルド変数、チャットに貼らな
 の無効化は拡張の切り替えに合わせて行う。今すぐ鍵だけを更新すると旧版の
 ログイン・トークン更新が止まる可能性がある。
 
-6. 表示された `https://figma-finder-auth.<アカウントのサブドメイン>.workers.dev/health`
+6. 表示された `https://figma-finder.<アカウントのサブドメイン>.workers.dev/health`
    をブラウザで開く。**HTTP 200 と `{"ok":true}`** が準備完了の条件。
    `{"ok":false}` / HTTP 503 の場合は設定不足か `AUTH_ENABLED` が未設定。
    この確認は Figma を呼ばないため、Client ID/secret の正しさまでは検証しない。
