@@ -28,3 +28,9 @@ web-ext.config.ts
 *.sw?
 .env
 .env.*
+
+# Local Worker credentials and generated output
+.dev.vars
+.dev.vars.*
+.wrangler
+workers/figma-auth/dist

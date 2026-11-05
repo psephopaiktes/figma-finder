@@ -10,6 +10,8 @@
     "includes": [
       "**",
       "!**/.wxt",
+      "!**/.wrangler",
+      "!**/workers/figma-auth/dist",
       "!**/.output",
       "!**/build",
       "!**/docs",
