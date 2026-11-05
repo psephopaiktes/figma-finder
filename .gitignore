@@ -20,6 +20,8 @@ web-ext.config.ts
 !.vscode/extensions.json
 !.vscode/settings.sample.json
 .idea
+.claude/
+.caluede/
 .DS_Store
 *.suo
 *.ntvs*

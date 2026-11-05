@@ -2,7 +2,8 @@
 
 対象: 1.0.7。共通 Client secret は配布ビルドから除去し、利用者のトークンは
 `local:auth` に保存する実装済み。Worker は配置・設定確認済み。
-実ユーザーでの OAuth と旧 secret のローテーションは別途確認する。
+ストア公開後、ユーザーからログイン・アカウント切り替え・検索・トークン更新の
+動作確認の報告あり。旧 secret の失効状況・実施方針は `AGENTS.md` を参照する。
 
 ## PR の成果物を Chrome で確認
 
@@ -64,19 +65,13 @@ Cloudflare では例外になり、認証後にログイン画面へ戻ってし
   認証情報・Cloudflare での処理に関する開示を合わせる。
   main にまだファイルがない初回は、PR の `PRIVACY.md` のコミット SHA 付き固定リンクを
   登録すれば、マージ前からポリシーを公開できる。PR 本文に固定リンクを記載する。
-- Worker ドメインのホスト権限の理由は [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) にある。
+- Worker ドメインのホスト権限の理由は [AGENTS.md](../AGENTS.md#ストア申請メモ) にある。
 - この PR はバージョンを 1.0.7 に上げるため、main へのマージで Chrome へ申請される。
   承認後は `DEFAULT_PUBLISH` により自動公開される。
 - Firefox は ZIP をビルドして秘密値の混入を検査するが、Worker の許可 redirect は
   現在 Chrome ID のみ。Firefox の実 OAuth を確認したとは扱わない。
 
-## 公開済みの旧 secret を無効にする
+## 過去の配布物に含まれる secret
 
-新版のログイン・更新が実際に動くことを確認し、配布切り替えに合わせて Figma の
-Client secret を更新して旧値を無効化する。新しい値は Cloudflare の
-`FIGMA_CLIENT_SECRET` だけへ登録して反映する。Client ID は変更しない。
-GitHub の旧 `WXT_FIGMA_SECRET` はこのバージョンのビルドでは不要なので削除する。
-
-旧版のログイン・更新が停止する可能性があるため、他の端末も更新して再ログインする。
-古いダウンロード済み ZIP は回収できない。鍵更新後に新版で再度ログイン・更新を
-確認し、漏れた旧キーを復活させるロールバックは行わない。
+旧 Client secret の失効状況とユーザーの実施方針は [AGENTS.md](../AGENTS.md) に集約する。
+GitHub Secret の削除を Figma 側のキー失効と同一視しない。

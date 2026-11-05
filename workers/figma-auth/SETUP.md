@@ -2,7 +2,8 @@
 
 Cloudflare Workers Free、標準の workers.dev ドメイン、DB なしの構成。
 Worker の稼働後、拡張はこの Worker を使って認証する。新版のビルドから共通 secret は
-除去済みだが、過去の配布物に含まれる旧 secret は新版実動作確認後の鍵更新で無効化する。
+除去済み。過去の配布物に含まれる旧 secret の失効状況・実施方針は
+[AGENTS.md](../../AGENTS.md) に集約する。
 
 ## Cloudflare ダッシュボードで行うこと
 

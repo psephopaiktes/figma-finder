@@ -9,12 +9,12 @@ corresponds to a common rejection reason or publishing failure.
 - [ ] **Version bumped** — CWS rejects uploads with a version ≤ the currently published
       version. Use semver: bump patch for fixes, minor for features, major for breaking
       changes.
-- [ ] **Name matches CHROMEWEBSTORE.md** — The `name` field in manifest.json must exactly
+- [ ] **Name matches AGENTS.md store notes** — The `name` field in manifest.json must exactly
       match what you put in the store listing.
 - [ ] **Description in manifest ≤ 132 chars** — This is the short description shown in
       chrome://extensions. It should match or be close to your CWS short description.
 - [ ] **No unnecessary files in ZIP** — Exclude: `.git/`, `node_modules/`, `.env`,
-      `*.map`, test files, build configs, `CHROMEWEBSTORE.md` itself, `README.md`,
+      `*.map`, test files, build configs, agent instructions, `README.md`,
       `.DS_Store`, `thumbs.db`. Use a build script or `.cws-ignore`-style exclusion.
 - [ ] **ZIP under 2GB** — Maximum package size. Most extensions should be under 10MB.
 - [ ] **No absolute file paths** — All paths in manifest.json must be relative.
@@ -24,7 +24,7 @@ corresponds to a common rejection reason or publishing failure.
 - [ ] **Minimum permissions** — Only request what you need. `<all_urls>` is a red flag.
       Use specific host_permissions like `*://*.example.com/*` when possible.
 - [ ] **Every permission justified** — Check the Permissions Justification section in
-      CHROMEWEBSTORE.md. The CWS dashboard has a field for each permission — you'll need
+      AGENTS.md store notes. The CWS dashboard has a field for each permission — you'll need
       to fill these in during submission.
 - [ ] **activeTab preferred over tabs + <all_urls>** — If you only need access to the
       current tab when the user clicks your icon, `activeTab` is the right permission.
@@ -89,8 +89,8 @@ corresponds to a common rejection reason or publishing failure.
 
 ## Updates (for existing extensions)
 
-- [ ] **CHROMEWEBSTORE.md version history updated** — New entry with version, date, and
-      summary of changes.
+- [ ] **Version tag and GitHub Release created** — Use the release commit and concise
+      English notes, following AGENTS.md. Do not duplicate release history in agent instructions.
 - [ ] **Last Updated date bumped** — If any user-facing changes were made.
 - [ ] **Feature list in descriptions updated** — If new features were added.
 - [ ] **Permissions justification updated** — If manifest.json permissions changed.
@@ -130,7 +130,7 @@ zip -r "$OUTPUT" . \
   -x "webpack.config.*" \
   -x "vite.config.*" \
   -x "rollup.config.*" \
-  -x "CHROMEWEBSTORE.md" \
+  -x "AGENTS.md" \
   -x "README.md" \
   -x "CHANGELOG.md" \
   -x ".DS_Store" \

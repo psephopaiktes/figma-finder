@@ -186,7 +186,7 @@ is not accessible."
 When an extension is rejected:
 
 1. Read the rejection email carefully — it specifies which policy was violated
-2. Update CHROMEWEBSTORE.md with the rejection reason and fix
+2. Update the AGENTS.md store notes with the rejection reason and fix
 3. Make the required changes to the extension code or listing
 4. Re-verify against the pre-publish checklist
 5. Resubmit through the developer dashboard

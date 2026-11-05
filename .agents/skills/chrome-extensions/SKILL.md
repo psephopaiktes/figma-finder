@@ -379,42 +379,42 @@ Never generate Manifest V2 code.
 
 ## Part 2 — Publishing to the Chrome Web Store
 
-Manage `CHROMEWEBSTORE.md` — the single source of truth for all Chrome Web Store listing
-metadata, permissions justifications, privacy disclosures, version history, and publishing
-readiness for a Chrome extension project.
+Keep this repository's publishing instructions, permissions justifications, and dashboard
+reference text in the existing `AGENTS.md` store section. Reusable templates and checklists
+belong under `.agents/`. Release history belongs in GitHub Releases.
 
 ### Core Workflow
 
 Every time you touch a Chrome extension project in a way that affects its store presence,
-update (or create) `CHROMEWEBSTORE.md` in the project root. The file tracks everything the
-developer needs to fill out in the Chrome Developer Dashboard, so they can copy-paste from
-a single doc instead of scrambling at publish time.
+update the relevant notes in `AGENTS.md`. Do not create a separate project-root store
+document or agent-specific configuration file. The user's repository conventions take
+precedence over this skill's generic templates.
 
-#### When to create CHROMEWEBSTORE.md
+#### When to review store notes
 
-Create it the moment any of these happen:
+Review the existing notes when any of these happen:
 - The user says they want to publish an extension
 - The user asks to "prepare for the store" or "get ready to publish"
 - You're building a new extension that will clearly end up on the store
 - The user asks about store listing requirements
 
-Use the template in `references/webstore/chromewebstore-template.md` as your starting point. Read it
-before generating the file.
+Use `references/webstore/chromewebstore-template.md` as a checklist when updating the
+existing notes. Do not copy it into a new project-root file.
 
-#### When to update CHROMEWEBSTORE.md
+#### When to update store notes
 
 Update it whenever:
 - **User-facing changes**: Bump the "Last Updated" date, update the feature list in
-  descriptions, and add an entry to Version History
+  descriptions, and record release changes in GitHub Releases
 - **manifest.json changes**: If permissions, host_permissions, or content_scripts changed,
   update the Permissions Justification section — every permission needs a plain-English
   reason the review team can understand
-- **New release**: Add a Version History entry with version number, date, and summary
+- **New release**: Create the version tag and a concise English GitHub Release, following `AGENTS.md`
 - **Privacy-relevant changes**: If data collection, storage, or transmission changed,
   update the Privacy & Data Use section and the privacy policy
 - **Asset changes**: If icons or UI changed, note which screenshots need refreshing
 - **Rejection response**: If the user reports a CWS rejection, update the file with the
-  fix and add a note to Version History
+  fix and update the relevant store notes
 
 ### How to fill it out
 
@@ -440,9 +440,9 @@ how it was built. Strip any mention of APIs, libraries, frameworks, or code patt
 | "Leverages the chrome.storage.sync API" | "Your settings sync across all your devices" |
 | "Implements declarativeNetRequest for filtering" | "Blocks ads and trackers without reading your page content" |
 
-### CHROMEWEBSTORE.md Sections
+### Store notes to maintain
 
-Read `references/webstore/chromewebstore-template.md` before generating the file — it defines
+Read `references/webstore/chromewebstore-template.md` when updating store notes — it defines
 what each section covers and how to fill it out. The highest-risk section is Permissions
 Justification: write a specific plain-English reason per permission and per host_permission.
 "Needed for the extension to work" will be rejected. Read `references/webstore/privacy-policy.md`
@@ -455,7 +455,7 @@ first-submission failures:
 - Every permission and host_permission must have a specific justification (not "needed to work")
 - Privacy policy URL must be live and match the data use disclosure form
 - At least 1 screenshot at 1280×800 or 640×400
-- ZIP must exclude `.git/`, `node_modules/`, `.env`, `CHROMEWEBSTORE.md`
+- Runtime ZIP must exclude `.git/`, `node_modules/`, `.env`, and agent instructions
 
 ### Store Listing Copy Guidelines
 
@@ -490,7 +490,7 @@ For detailed API patterns and publishing guidance, read the relevant file BEFORE
 | User scripts | `references/extensions/user-scripts.md` |
 | Message passing | `references/extensions/message-passing.md` |
 | Icons | `references/extensions/icons.md` |
-| CHROMEWEBSTORE.md template | `references/webstore/chromewebstore-template.md` |
+| Store checklist template | `references/webstore/chromewebstore-template.md` |
 | Privacy policy guidance | `references/webstore/privacy-policy.md` |
 | Pre-publish review checklist | `references/webstore/review-checklist.md` |
 | Store listing tips & rejections | `references/webstore/store-listing.md` |
