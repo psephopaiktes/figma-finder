@@ -13,8 +13,10 @@ submission because the store requires a newer version for each upload.
 Pull requests never submit. Firefox submission has been removed; local Firefox
 development and builds remain available.
 
-The submission uses API v2 and `STAGED_PUBLISH`: approval does not automatically
-release the extension to users. Release an approved version from the dashboard.
+The submission uses API v2 and `DEFAULT_PUBLISH`: new submissions are released
+automatically after review approval. This setting applies to future submissions;
+a revision already approved under staged publishing must be released from the
+dashboard. Manual dry-runs still do not upload or publish.
 
 Configure these in GitHub repository **Settings → Secrets and variables → Actions**:
 
@@ -83,13 +85,16 @@ sync storage; cached projects are stored locally. Figma receives authentication
 and API requests. Verify dashboard disclosures and the live privacy policy against
 this behavior; do not claim that the extension processes no user data.
 The existing OAuth client secret is embedded in built JavaScript; this workflow
-change does not fix that application design limitation.
+change does not fix that application design limitation. The remaining migration
+is documented in [the OAuth Worker plan](docs/oauth-worker-plan.md). The Worker
+backend has been implemented; extension integration and secret rotation remain
+pending.
 
 ## Version history
 
 | Version | Date | Change | Status |
 | --- | --- | --- | --- |
-| 1.0.6 | 2026-11-04 | Remove unused tabs, activeTab and Figma login-page host permissions | Prepared for resubmission |
+| 1.0.6 | 2026-11-04 | Remove unused tabs, activeTab and Figma login-page host permissions | Review approved; ready to publish in the supplied dashboard screenshot |
 | 1.0.5 | 2026-11-04 | Chrome-only automated submission; separate development audit reporting | Rejected: unused tabs permission (Purple Potassium) |
 
 ## Rejection response: Purple Potassium
@@ -97,9 +102,9 @@ change does not fix that application design limitation.
 The supplied review email identified the unused `tabs` permission in item
 `klifomaejfaibpkbigbpljdmelbkehbe` (routing ID FZSL). Version 1.0.6 removes that
 permission and the unused `activeTab` and `www.figma.com` host permissions.
-The install-time welcome page and sidebar window lookup are retained. Review
-approval and general release remain pending. Merging this version bump into main
-triggers the existing Chrome-only resubmission workflow.
+The install-time welcome page and sidebar window lookup are retained. The user
+subsequently supplied a dashboard screenshot showing the revision ready for
+publication (review approved); live release status has not been verified.
 
 ## OAuth Worker preparation
 
