@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "figma-finder-auth",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-05",
+  "workers_dev": true,
+  "preview_urls": false,
+  "keep_vars": true,
+  "limits": {
+    "cpu_ms": 10
+  },
+  "observability": {
+    "enabled": false
+  },
+  "ratelimits": [
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "namespace_id": "946582216",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    }
+  ]
+}

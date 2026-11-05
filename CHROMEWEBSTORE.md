@@ -1,6 +1,6 @@
 # Chrome Web Store — Figma Finder
 
-Last updated: 2026-11-04. These are repository facts and setup instructions;
+Last updated: 2026-11-05. These are repository facts and setup instructions;
 dashboard settings have not been independently verified. Version 1.0.5 was
 submitted automatically and rejected according to the supplied review email.
 
@@ -100,3 +100,12 @@ permission and the unused `activeTab` and `www.figma.com` host permissions.
 The install-time welcome page and sidebar window lookup are retained. Review
 approval and general release remain pending. Merging this version bump into main
 triggers the existing Chrome-only resubmission workflow.
+
+## OAuth Worker preparation
+
+A standalone token broker is implemented in `workers/figma-auth`; deployment
+instructions are in [SETUP.md](workers/figma-auth/SETUP.md). The browser extension
+is not connected to it yet. Its current embedded Client secret and sync-stored
+tokens remain unchanged until the follow-up migration; do not claim those issues
+are resolved. Preparing this Worker does not change the extension version,
+permissions, or the current store release.
