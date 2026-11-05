@@ -1,7 +1,7 @@
 <script lang="ts">
 import { slide } from "svelte/transition";
 import i18n from "@/lib/i18n.svelte";
-import { store, user } from "@/lib/store.svelte";
+import { saveOptions, tokens, user } from "@/lib/store.svelte";
 
 let inputtedTeamId = $state("");
 
@@ -29,7 +29,7 @@ async function addTeam(e: SubmitEvent) {
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${currentUser.access_token}`,
+        Authorization: `Bearer ${tokens()?.access_token}`,
       },
     },
   );
@@ -48,7 +48,7 @@ async function addTeam(e: SubmitEvent) {
   const data = await res.json();
 
   currentUser.teams[inputtedTeamId] = data.name;
-  storage.setItem("sync:options", store.options);
+  saveOptions();
   inputtedTeamId = "";
 }
 
@@ -56,7 +56,7 @@ function removeTeam(id: string) {
   const currentUser = user();
   if (!currentUser) return;
   delete currentUser.teams[id];
-  storage.setItem("sync:options", store.options);
+  saveOptions();
 }
 </script>
 

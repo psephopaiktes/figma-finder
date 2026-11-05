@@ -9,9 +9,13 @@ import TeamSetting from "@/lib/ui/TeamSetting.svelte";
 
 let loading = $state(false);
 const logIn = async () => {
+  if (loading) return;
   loading = true;
-  await oauth.logIn();
-  location.reload();
+  try {
+    if (await oauth.logIn()) location.reload();
+  } finally {
+    loading = false;
+  }
 };
 </script>
 
@@ -30,7 +34,7 @@ const logIn = async () => {
           ko: "Figma 계정으로 로그인하세요。",
         })}
       </p>
-      <button onclick={logIn} class="c-button">
+      <button onclick={logIn} class="c-button" disabled={loading}>
         {#if loading}
           <Loader size="24px" />
         {:else}

@@ -1,6 +1,6 @@
 <script lang="ts">
 import Fuse from "fuse.js";
-import { onMount, tick } from "svelte";
+import { tick, untrack } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
 import { loadFiles, store } from "@/lib/store.svelte";
@@ -20,21 +20,26 @@ let isInputed: boolean = $derived.by(() => {
   return query.trim().length > 0;
 });
 
-onMount(async () => {
+$effect(() => {
+  // Layout loads accounts and refreshes credentials before publishing readiness.
+  if (store.loading) return;
   const timeoutId = setTimeout(() => {
     isTimeout = true;
     loading = false;
   }, 10000);
 
-  try {
-    await loadFiles();
-  } catch (error) {
-    console.error("Failed to load files:", error);
-    isTimeout = true;
-  } finally {
-    loading = false;
-    clearTimeout(timeoutId);
-  }
+  void untrack(async () => {
+    try {
+      await loadFiles();
+    } catch (error) {
+      console.error("Failed to load files:", error);
+      isTimeout = true;
+    } finally {
+      loading = false;
+      clearTimeout(timeoutId);
+    }
+  });
+  return () => clearTimeout(timeoutId);
 });
 
 let filterdProjects: Record<string, Project> = $derived.by(() => {

@@ -2,13 +2,15 @@ import type {
   GetProjectFilesResponse,
   GetTeamProjectsResponse,
 } from "@figma/rest-api-spec";
+import { loadAccounts, persistOptions } from "@/lib/account-storage";
 import i18n from "@/lib/i18n.svelte";
-import type { LocalProjectState, Project, Store } from "@/types";
+import type { Accounts, LocalProjectState, Project, Store } from "@/types";
 
 /**
  * Global state store for the application
  */
 export const store: Store = $state({
+  auth: {},
   projects: {},
   localProjectState: [],
   loading: true,
@@ -27,10 +29,23 @@ export const store: Store = $state({
  * @returns Current user data or null if not logged in
  */
 export const user = () => {
-  return store.options.currentUser
+  return store.options.currentUser && store.auth[store.options.currentUser]
     ? (store.options.users[store.options.currentUser] ?? null)
     : null;
 };
+
+export const tokens = () =>
+  store.options.currentUser ? store.auth[store.options.currentUser] : undefined;
+
+export const applyAccounts = (state: Accounts) => {
+  store.auth = state.auth;
+  store.options = state.options;
+};
+
+export const saveOptions = (selectCurrent = false) =>
+  persistOptions(store.options, selectCurrent).catch(() => {
+    console.warn("Settings could not be saved.");
+  });
 
 /**
  * Constructs a Figma URL based on path and environment
@@ -65,10 +80,7 @@ export const getTargetUrl = (env?: "browser" | "app") => {
  * Loads user options from storage
  */
 export const loadOptions = async () => {
-  const options = await storage.getItem("sync:options");
-  if (options) {
-    Object.assign(store.options, options);
-  }
+  applyAccounts(await loadAccounts());
 };
 
 /**
@@ -78,7 +90,7 @@ export const loadOptions = async () => {
  * @throws Error if authentication fails or request is unsuccessful
  */
 const req = async <T>(path: string) => {
-  const authToken = user()?.access_token;
+  const authToken = tokens()?.access_token;
   if (!authToken) {
     throw new Error("No access token available");
   }

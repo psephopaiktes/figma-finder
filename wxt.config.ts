@@ -1,4 +1,5 @@
 import { defineConfig } from "wxt";
+import { getAuthBaseUrl } from "./src/lib/auth-config";
 
 const manifest = {
   name: "__MSG_extName__",
@@ -33,13 +34,17 @@ const manifest = {
       },
     },
   },
-  host_permissions: ["https://api.figma.com/*"],
+  host_permissions: [
+    "https://api.figma.com/*",
+    `${getAuthBaseUrl(process.env.WXT_AUTH_BASE_URL)}/*`,
+  ],
   key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAry7JIpqk5zlJTeh0p+SGQr0Rmyx+iYP0pu/7/QxKCb5bPZNCzm1xvGsUrU/NmAjIPg1FUePat9MfpjiGXCKbSLlNBCIAiI+/qN+sVyB0DmlLb2/zDBvRn2oxdKdWT3ySYXznvxQujCIS+7YKgApxc+jOQwrrhScTcCjplw3ad/YPVWi+9dh8A3SIFa+lot1U475V4IJdVOPPZhlA8qDLa7jMAJDUPw3xnA13xWlpvgmoFaYTSmF4wyenUH9EP31TyelspX9+Fq31/JF7z7ZI1WZbGB0j8syNCxEp3a4zm07a1jNr6pX8YHCgO/19k0sxHpRWb6j6tn9P28YRr6lDCwIDAQAB",
 };
 
 export default defineConfig({
   srcDir: "src",
   outDir: "build",
+  vite: () => ({ envPrefix: ["WXT_FIGMA_ID", "WXT_AUTH_BASE_URL"] }),
   modules: ["@wxt-dev/module-svelte", "@wxt-dev/auto-icons"],
   webExt: {
     startUrls: [

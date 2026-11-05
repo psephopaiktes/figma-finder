@@ -1,12 +1,18 @@
 <script lang="ts">
 import i18n from "@/lib/i18n.svelte";
 import oauth from "@/lib/oauth.svelte";
-import { store } from "@/lib/store.svelte";
+import { saveOptions, store } from "@/lib/store.svelte";
 import { openSidePanel } from "@/lib/utility.svelte";
 
-let users = $derived(store.options.users);
+let users = $derived(
+  Object.fromEntries(
+    Object.entries(store.options.users).filter(([id]) => store.auth[id]),
+  ),
+);
+let loggingIn = $state(false);
 
 async function addAccount() {
+  if (loggingIn) return;
   if (window.location.pathname.includes("popup")) {
     const result = confirm(
       i18n.t({
@@ -22,8 +28,12 @@ async function addAccount() {
     window.close();
     return;
   }
-  await oauth.logIn({ add: true });
-  location.reload();
+  loggingIn = true;
+  try {
+    if (await oauth.logIn({ add: true })) location.reload();
+  } finally {
+    loggingIn = false;
+  }
 }
 </script>
 
@@ -39,10 +49,10 @@ async function addAccount() {
   <dialog popover id="userSelector" class="c-popover">
     {#each Object.entries(users) as [id, user]}
       <button
-        onclick={() => {
+        onclick={async () => {
           store.options.currentUser = id;
-          storage.setItem("sync:options", store.options);
-          storage.removeItem("local:projects");
+          await saveOptions(true);
+          await storage.removeItem("local:projects");
           location.reload();
         }}
         inert={store.options.currentUser == id}
@@ -58,7 +68,7 @@ async function addAccount() {
       </button>
     {/each}
 
-    <button onclick={addAccount}>
+    <button onclick={addAccount} disabled={loggingIn}>
       <svg-icon src="/img/icon/add.svg"></svg-icon>
       <p>
         {i18n.t({
@@ -74,9 +84,8 @@ async function addAccount() {
     <hr />
 
     <button
-      onclick={() => {
-        oauth.logOut();
-        location.reload();
+      onclick={async () => {
+        if (await oauth.logOut()) location.reload();
       }}
       class="simple"
     >
