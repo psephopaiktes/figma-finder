@@ -94,7 +94,8 @@ npm run dev
 ## 無料枠と制約
 
 確認時点で Workers Free はアカウント全体で 100,000 リクエスト/日、CPU 10ms/呼び出し。
-設定も CPU 10ms にしてある。超過時はログイン・更新が失敗するため、ダッシュボードの
+CPU 上限は Free プラン標準に任せる。`limits.cpu_ms` の明示指定は有料プラン専用なので追加しない。
+超過時はログイン・更新が失敗するため、ダッシュボードの
 利用量を確認する。Figma 自体の API 制限も別途適用される。
 Git 連携のビルドにも Cloudflare の無料枠があり、アカウント側の表示を確認する。
 
@@ -105,3 +106,13 @@ Cloudflare 側の配置・実際の Figma 認証・CPU 実測は、ユーザー�
 [ビルド設定](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)、
 [レート制限](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)、
 [Secrets](https://developers.cloudflare.com/workers/configuration/secrets/)。
+
+## Free プランで配置に失敗した場合
+
+`CPU limits are not supported for the Free plan`（code 100328）は、
+`limits.cpu_ms` を指定したときに発生する。有料への変更は不要。
+この指定を削除した main のコードで、Cloudflare のビルドを再実行する。
+過去のコミットをそのまま再試行せず、最新 main のビルドであることを確認する。
+
+Worker の TypeScript 設定は `wrangler.jsonc` の `tsconfig` で明示している。
+そのため、拡張用の `.wxt/tsconfig.json` を生成する作業は Worker の配置には不要。
