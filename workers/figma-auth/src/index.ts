@@ -47,6 +47,7 @@ function jsonResponse(
 async function readObject(
   stream: ReadableStream<Uint8Array> | null,
   maxBytes: number,
+  preserveAccountId = false,
 ): Promise<Record<string, unknown>> {
   if (!stream) throw new HttpError(400, "invalid_request");
   const reader = stream.getReader();
@@ -75,6 +76,7 @@ async function readObject(
   try {
     const value: unknown = JSON.parse(
       new TextDecoder("utf-8", { fatal: true }).decode(bytes),
+      preserveAccountId ? keepAccountId : undefined,
     );
     if (!value || typeof value !== "object" || Array.isArray(value)) {
       throw new Error("not_object");
@@ -83,6 +85,22 @@ async function readObject(
   } catch {
     throw new HttpError(400, "invalid_json");
   }
+}
+
+function keepAccountId(
+  key: string,
+  value: unknown,
+  context?: { source?: string },
+): unknown {
+  // OAuth may encode Figma IDs as integers larger than Number.MAX_SAFE_INTEGER.
+  // Use the original JSON digits; String(value) would keep the rounded ID.
+  return key === "user_id" &&
+    typeof value === "number" &&
+    !Number.isSafeInteger(value) &&
+    context?.source &&
+    /^\d+$/u.test(context.source)
+    ? context.source
+    : value;
 }
 
 function isCredential(value: unknown): value is string {
@@ -113,15 +131,18 @@ function tokenPayload(
     !Number.isFinite(value.expires_in) ||
     value.expires_in <= 0 ||
     (exchange && !isCredential(value.refresh_token)) ||
-    (value.refresh_token !== undefined && !isCredential(value.refresh_token)) ||
-    (exchange &&
-      !(
-        (typeof value.user_id === "string" && value.user_id.length > 0) ||
-        (typeof value.user_id === "number" &&
-          Number.isSafeInteger(value.user_id))
-      ))
+    (value.refresh_token !== undefined && !isCredential(value.refresh_token))
   ) {
-    throw new HttpError(502, "upstream_error");
+    throw new HttpError(502, "invalid_token_response");
+  }
+  if (
+    exchange &&
+    !(
+      (typeof value.user_id === "string" && value.user_id.length > 0) ||
+      (typeof value.user_id === "number" && Number.isSafeInteger(value.user_id))
+    )
+  ) {
+    throw new HttpError(502, "invalid_account_id");
   }
   const payload: Record<string, unknown> = {
     access_token: value.access_token,
@@ -276,16 +297,13 @@ export async function handleRequest(
       }
       throw new HttpError(502, "upstream_error");
     }
-    let tokens: Record<string, unknown>;
+    let data: Record<string, unknown>;
     try {
-      tokens = tokenPayload(
-        await readObject(upstream.body, MAX_RESPONSE_BYTES),
-        exchange,
-      );
+      data = await readObject(upstream.body, MAX_RESPONSE_BYTES, true);
     } catch {
-      throw new HttpError(502, "upstream_error");
+      throw new HttpError(502, "invalid_token_response");
     }
-    return jsonResponse(200, tokens, origin);
+    return jsonResponse(200, tokenPayload(data, exchange), origin);
   } catch (error) {
     // Never include input, upstream bodies, credentials, or exception text.
     return jsonResponse(

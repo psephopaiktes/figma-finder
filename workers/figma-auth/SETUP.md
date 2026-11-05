@@ -127,3 +127,17 @@ Worker の TypeScript 設定は `wrangler.jsonc` の `tsconfig` で明示して�
 `redirect: "manual"` と非 2xx 応答の拒否へ修正した最新 main を配置する。
 資格情報はリダイレクト先に転送しない。Worker だけの修正なので、同じバージョンの
 main 更新では Chrome ストアへの再申請は走らず、テスト中の拡張もそのまま再試行できる。
+
+### 大きな数値のアカウント ID
+
+Figma のトークン応答の `user_id` が安全な整数範囲を超える数値の場合、
+通常の `JSON.parse` は ID を丸め、旧バリデーションはその応答を 502 として拒否する。
+応答のパース時に JSON reviver の `context.source` から元の整数の桁を文字列として
+保持する。丸めた数値を後から文字列に変換する方法は使わない。
+この修正は Worker だけで互換性を保つため、拡張 ZIP の交換は不要。
+
+502 の応答は固定コードで切り分ける。`upstream_unavailable` は上流への通信失敗、
+`upstream_error` は上流 HTTP エラー、`invalid_token_response` はトークン応答の
+形式不正、`invalid_account_id` はアカウント ID の形式不正を表す。
+応答には実際の ID、コード、トークン、上流本文、例外文を含めない。
+有効でないダミーコードが 400 になる確認だけでは、実際のログイン成功は保証できない。

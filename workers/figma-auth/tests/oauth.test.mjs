@@ -70,6 +70,25 @@ test("production handler ignores the runtime ExecutionContext as a fetch depende
   }
 });
 
+test("numeric account IDs beyond Number's safe range retain their exact JSON digits", async () => {
+  for (const [literal, expected] of [
+    ['"test-user"', "test-user"],
+    ["42", "42"],
+    ['"123456789012345678"', "123456789012345678"],
+    ["123456789012345678", "123456789012345678"],
+    ["9007199254740993", "9007199254740993"],
+  ]) {
+    const body = JSON.stringify(tokens).replace('"test-user"', literal);
+    const response = await handleRequest(
+      request(),
+      env(),
+      async () => new Response(body),
+    );
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).user_id, expected);
+  }
+});
+
 test("refresh supports rotated tokens and responses without a replacement refresh token", async () => {
   for (const rotated of [true, false]) {
     const response = await handleRequest(
@@ -342,13 +361,24 @@ test("invalid, oversized or incomplete upstream responses never become successfu
     () => Response.json({ ...tokens, expires_in: -1 }),
     () => Response.json({ ...tokens, refresh_token: undefined }),
     () => Response.json({ ...tokens, access_token: "" }),
-    () => Response.json({ ...tokens, user_id: undefined }),
   ]) {
     const response = await handleRequest(request(), env(), async () =>
       upstream(),
     );
     assert.equal(response.status, 502);
-    assert.deepEqual(await response.json(), { error: "upstream_error" });
+    assert.deepEqual(await response.json(), {
+      error: "invalid_token_response",
+    });
+  }
+});
+
+test("invalid account IDs have a fixed diagnosis without reflecting their value", async () => {
+  for (const id of [undefined, null, {}, [], "", 1.5, -1e20, 1e100]) {
+    const response = await handleRequest(request(), env(), async () =>
+      Response.json({ ...tokens, user_id: id }),
+    );
+    assert.equal(response.status, 502);
+    assert.deepEqual(await response.json(), { error: "invalid_account_id" });
   }
 });
 

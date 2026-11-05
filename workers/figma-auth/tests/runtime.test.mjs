@@ -11,7 +11,7 @@ test("workerd exchanges and refreshes tokens without following upstream redirect
   const calls = [];
   let upstreamStatus = 200;
   const tokens = {
-    user_id: "test-user",
+    user_id: "123456789012345678",
     access_token: "test-access",
     refresh_token: "test-refresh",
     expires_in: 3600,
@@ -42,7 +42,13 @@ test("workerd exchanges and refreshes tokens without following upstream redirect
           body: Object.fromEntries(new URLSearchParams(await request.text())),
         });
         return upstreamStatus === 200
-          ? Response.json(tokens)
+          ? new Response(
+              JSON.stringify(tokens).replace(
+                '"123456789012345678"',
+                "123456789012345678",
+              ),
+              { headers: { "Content-Type": "application/json" } },
+            )
           : new Response("test-secret", {
               status: upstreamStatus,
               headers: { Location: "https://unexpected.example/oauth" },
