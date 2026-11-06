@@ -3,6 +3,11 @@ import i18n from "@/lib/i18n.svelte";
 import { getFigUrl, store } from "@/lib/store.svelte";
 import { isMac } from "@/lib/utility.svelte";
 
+let {
+  onReload = () => location.reload(),
+  loading = false,
+}: { onReload?: () => void | Promise<void>; loading?: boolean } = $props();
+
 let header: HTMLHeadElement;
 
 function checkInView() {
@@ -43,7 +48,8 @@ onMount(() => window.scroll(0, 56));
 
   <button
     class="c-button -small -lightGray c-tooltip"
-    onclick={() => location.reload()}
+    onclick={onReload}
+    disabled={loading}
     tabindex="-1"
     title={isMac ? "⌘R" : "Ctrl + R"}
   >

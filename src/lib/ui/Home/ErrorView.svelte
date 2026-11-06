@@ -6,10 +6,14 @@ let {
   mainText,
   subText,
   icon = "info-circle",
+  onReload = () => location.reload(),
+  loading = false,
 }: {
   mainText: Record<string, string>;
   subText?: Record<string, string>;
   icon?: string;
+  onReload?: () => void | Promise<void>;
+  loading?: boolean;
 } = $props();
 </script>
 
@@ -24,10 +28,8 @@ let {
 
   <button
     class="c-button c-tooltip"
-    onclick={() => {
-      storage.removeItems(["local:localProjectState", "local:projects"]);
-      location.reload();
-    }}
+    onclick={onReload}
+    disabled={loading}
     title={isMac ? "⌘R" : "Ctrl + R"}
   >
     <svg-icon src="/img/icon/refresh.svg"></svg-icon>

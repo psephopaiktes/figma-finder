@@ -1,8 +1,9 @@
 import { mutateAccounts } from "@/lib/account-storage";
 import { getAuthBaseUrl } from "@/lib/auth-config";
 import i18n from "@/lib/i18n.svelte";
+import { clearProjectSnapshot } from "@/lib/project-storage";
 import { applyAccounts, store } from "@/lib/store.svelte";
-import type { AuthTokens } from "@/types";
+import type { Accounts, AuthTokens } from "@/types";
 
 const clientId = import.meta.env.WXT_FIGMA_ID;
 const authBaseUrl = getAuthBaseUrl(import.meta.env.WXT_AUTH_BASE_URL);
@@ -176,18 +177,24 @@ async function logOut(): Promise<boolean> {
   )
     return false;
   try {
-    const { state } = await mutateAccounts((accounts) => {
-      delete accounts.auth[id];
-      delete accounts.options.users[id];
-      if (accounts.options.currentUser === id) {
-        accounts.options.currentUser =
-          Object.keys(accounts.options.users).find(
-            (key) => accounts.auth[key],
-          ) ?? null;
-      }
+    let state: Accounts | undefined;
+    // Keep queued refreshes outside the cache-clear/auth-removal transaction.
+    // Cache deletion happens before auth watchers can navigate this page away.
+    await clearProjectSnapshot(id, async () => {
+      await storage.removeItem("local:projects");
+      const changed = await mutateAccounts((accounts) => {
+        delete accounts.auth[id];
+        delete accounts.options.users[id];
+        if (accounts.options.currentUser === id) {
+          accounts.options.currentUser =
+            Object.keys(accounts.options.users).find(
+              (key) => accounts.auth[key],
+            ) ?? null;
+        }
+      });
+      state = changed.state;
     });
-    applyAccounts(state);
-    await storage.removeItem("local:projects");
+    if (state) applyAccounts(state);
     return true;
   } catch {
     console.warn("Account could not be removed.");

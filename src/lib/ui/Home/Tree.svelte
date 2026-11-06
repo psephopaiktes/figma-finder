@@ -1,8 +1,12 @@
 <script lang="ts">
-import { tick } from "svelte";
 import { slide } from "svelte/transition";
 import i18n from "@/lib/i18n.svelte";
-import { getFigUrl, getTargetUrl, store } from "@/lib/store.svelte";
+import {
+  getFigUrl,
+  getTargetUrl,
+  saveProjectOrder,
+  store,
+} from "@/lib/store.svelte";
 import { formatEditedDate } from "@/lib/utility.svelte";
 import type { Project } from "@/types";
 
@@ -28,16 +32,21 @@ const handleClick = (e: MouseEvent) => {
   }
 };
 
-//  Objects in array updates cannot be tracked by $effect directly
-let watcher = $derived(JSON.stringify(store.localProjectState));
+let lastSnapshot = "";
 $effect(() => {
-  watcher;
-  tick().then(() => {
-    storage.setItem<string>(
-      "local:localProjectState",
-      JSON.stringify(store.localProjectState), //WXT対策
-    );
-  });
+  if (
+    !store.projectDataReady ||
+    store.projectAccount !== store.options.currentUser
+  )
+    return;
+  const snapshot = JSON.stringify(store.localProjectState);
+  if (snapshot === store.projectOrderSaved) {
+    lastSnapshot = snapshot;
+    return;
+  }
+  if (snapshot === lastSnapshot) return;
+  lastSnapshot = snapshot;
+  void saveProjectOrder();
 });
 </script>
 

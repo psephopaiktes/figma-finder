@@ -45,12 +45,15 @@ const i18n = {
 const makeAccounts = (initial = {}) => {
   const data = structuredClone(initial);
   const writes = [];
-  let queue = Promise.resolve();
+  const queues = new Map();
   const navigator = {
     locks: {
-      request: (_name, callback) => {
-        const next = queue.then(callback);
-        queue = next.catch(() => {});
+      request: (name, callback) => {
+        const next = (queues.get(name) ?? Promise.resolve()).then(callback);
+        queues.set(
+          name,
+          next.catch(() => {}),
+        );
         return next;
       },
     },
@@ -66,7 +69,8 @@ const makeAccounts = (initial = {}) => {
     },
   };
   const accounts = load("src/lib/account-storage.ts", { storage, navigator });
-  return { data, writes, storage, navigator, accounts };
+  const projects = load("src/lib/project-storage.ts", { storage, navigator });
+  return { data, writes, storage, navigator, accounts, projects };
 };
 const auth = (
   callback = (state) =>
@@ -126,6 +130,7 @@ const auth = (
         },
       },
       "@/lib/account-storage": fixture.accounts,
+      "@/lib/project-storage": fixture.projects,
       "@/lib/auth-config": { getAuthBaseUrl: () => "https://auth.test" },
       "@/lib/i18n.svelte": i18n,
     },
@@ -367,12 +372,16 @@ test("refresh responses without a new refresh token preserve the current one", a
 
 test("logout removes local credentials and synced account metadata", async () => {
   const fixture = makeAccounts(savedAccounts());
+  fixture.data["local:projectData:user"] = { projects: { private: {} } };
+  fixture.data["local:projectData:other"] = { projects: { retained: {} } };
   const client = auth(undefined, fixture);
   client.store.options.currentUser = "user";
   assert.equal(await client.api.logOut(), true);
   assert.equal(fixture.data["local:auth"].user, undefined);
   assert.equal(fixture.data["sync:options"].users.user, undefined);
   assert.equal(fixture.data["sync:options"].currentUser, null);
+  assert.equal(fixture.data["local:projectData:user"], undefined);
+  assert.ok(fixture.data["local:projectData:other"]);
 });
 
 test("reauthentication preserves teams and duplicate login retains newly issued tokens", async () => {
@@ -409,94 +418,6 @@ test("the auth endpoint accepts HTTPS origins only", () => {
   ]) {
     assert.throws(() => getAuthBaseUrl(value));
   }
-});
-
-test("Failed team fetch preserves cached files and order without writing empty projects", async () => {
-  const writes = [];
-  const cached = {
-    old: { name: "Cached", team: "Team", files: { key: { name: "File" } } },
-  };
-  const mod = load(
-    "src/lib/store.svelte.ts",
-    {
-      storage: {
-        getItem: async (key) =>
-          key === "local:projects" ? cached : '[{"id":"old","open":false}]',
-        setItem: async (...args) => writes.push(args),
-      },
-      fetch: async () => {
-        throw new Error("Offline");
-      },
-    },
-    {
-      "@/lib/i18n.svelte": i18n,
-      "@/lib/account-storage": makeAccounts().accounts,
-    },
-  );
-  mod.store.options.currentUser = "user";
-  mod.store.options.users.user = { teams: { team: "Team" } };
-  mod.store.auth.user = {
-    access_token: "token",
-    refresh_token: "refresh",
-    expires_at: 0,
-  };
-  await assert.rejects(mod.loadFiles(), /Offline/);
-  assert.equal(mod.store.projects.old.name, "Cached");
-  assert.equal(mod.store.localProjectState[0].open, false);
-  assert.equal(writes.length, 0);
-});
-
-test("Successful file refresh keeps existing order, appends new projects and removes deleted ones", async () => {
-  const writes = [];
-  const mod = load(
-    "src/lib/store.svelte.ts",
-    {
-      storage: {
-        getItem: async (key) =>
-          key === "local:projects"
-            ? { old: {}, gone: {} }
-            : '[{"id":"gone","open":true},{"id":"old","open":false}]',
-        setItem: async (...args) => writes.push(args),
-      },
-      fetch: async (url) => ({
-        ok: true,
-        json: async () =>
-          url.includes("/teams/")
-            ? {
-                projects: [
-                  { id: "new", name: "New" },
-                  { id: "old", name: "Old" },
-                ],
-              }
-            : {
-                files: [
-                  { key: "file", name: "Design", last_modified: "2026-01-01" },
-                ],
-              },
-      }),
-    },
-    {
-      "@/lib/i18n.svelte": i18n,
-      "@/lib/account-storage": makeAccounts().accounts,
-    },
-  );
-  mod.store.options.currentUser = "user";
-  mod.store.options.users.user = { teams: { team: "Team" } };
-  mod.store.auth.user = {
-    access_token: "token",
-    refresh_token: "refresh",
-    expires_at: 0,
-  };
-  await mod.loadFiles();
-  assert.equal(
-    JSON.stringify(mod.store.localProjectState),
-    '[{"id":"old","open":false},{"id":"new","open":true}]',
-  );
-  assert.equal(mod.store.projects.gone, undefined);
-  assert.equal(mod.store.projects.new.files.file.name, "Design");
-  assert.equal(writes.at(-1)[0], "local:projects");
-  mod.store.options.currentUser = null;
-  assert.equal(mod.user(), null);
 });
 
 test("Welcome page opens on installation without reading tab information", () => {

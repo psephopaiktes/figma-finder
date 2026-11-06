@@ -10,9 +10,10 @@ import type { AuthTokens } from "@/types";
 
 type Props = {
   title?: string | null | Record<string, string>;
+  onReload?: () => void | Promise<void>;
   children?: Snippet;
 };
-let { title = null, children }: Props = $props();
+let { title = null, onReload, children }: Props = $props();
 
 const tabTitle = $derived.by(() => {
   if (!title) {
@@ -45,7 +46,8 @@ const reload = (e: KeyboardEvent) => {
     }
     localStorage.lastReloadTime = String(now);
     e.preventDefault();
-    location.reload();
+    if (onReload) void onReload();
+    else location.reload();
   }
 };
 
