@@ -9,6 +9,7 @@ import Input from "@/lib/ui/Home/Input.svelte";
 import NewFAB from "@/lib/ui/Home/NewFAB.svelte";
 import SubHeader from "@/lib/ui/Home/SubHeader.svelte";
 import Tree from "@/lib/ui/Home/Tree.svelte";
+import ViewSwitcher from "@/lib/ui/Home/ViewSwitcher.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
 import type { File, Project } from "@/types";
@@ -198,6 +199,7 @@ const openFirstFile = () => {
     />
   {/if}
 
+  <ViewSwitcher />
   <NewFAB />
 </Layout>
 

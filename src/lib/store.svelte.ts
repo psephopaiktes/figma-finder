@@ -2,7 +2,11 @@ import type {
   GetProjectFilesResponse,
   GetTeamProjectsResponse,
 } from "@figma/rest-api-spec";
-import { loadAccounts, persistOptions } from "@/lib/account-storage";
+import {
+  loadAccounts,
+  persistFileView,
+  persistOptions,
+} from "@/lib/account-storage";
 import {
   commitProjectSnapshot,
   type ProjectSnapshot,
@@ -15,6 +19,7 @@ import type {
   Accounts,
   AuthTokens,
   LocalProjectState,
+  Options,
   Project,
   Store,
 } from "@/types";
@@ -36,6 +41,7 @@ export const store: Store = $state({
     theme: "system",
     locale: null,
     openInApp: false,
+    fileView: "list",
     users: {},
   },
 });
@@ -62,6 +68,13 @@ export const saveOptions = (selectCurrent = false) =>
   persistOptions(store.options, selectCurrent).catch(() => {
     console.warn("Settings could not be saved.");
   });
+
+export const setFileView = (fileView: Options["fileView"]) => {
+  store.options.fileView = fileView;
+  return persistFileView(fileView).catch(() => {
+    console.warn("Settings could not be saved.");
+  });
+};
 
 /**
  * Constructs a Figma URL based on path and environment

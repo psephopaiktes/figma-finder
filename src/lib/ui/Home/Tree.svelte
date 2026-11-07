@@ -54,7 +54,7 @@ $effect(() => {
 
 <ContextMenu event={contextMenuEvent} />
 
-<ul class="projects">
+<ul class={["projects", { "-grid": store.options.fileView === "grid" }]}>
   {#each store.localProjectState as localProject, index}
     {#if projects[localProject.id]}
       {@const project = projects[localProject.id]!}
@@ -120,8 +120,8 @@ $effect(() => {
                     key.handleChild(e);
                   }}
                 >
-                  <img src={file.thumbnail_url} alt="thumbnail" />
-                  <h3>{file.name}</h3>
+                  <img src={file.thumbnail_url || undefined} alt="" />
+                  <h3 title={file.name}>{file.name}</h3>
                   <p>{formatEditedDate(file.last_modified)}</p>
                 </a>
               </li>
@@ -136,7 +136,7 @@ $effect(() => {
 <style>
   .projects {
     margin: var(--sp-m) var(--sp-m) 0;
-    padding-block-end: var(--sp-xl);
+    padding-block-end: calc(40px + var(--sp-m));
   }
   .projects > li {
     margin-block-start: var(--sp-xs);
@@ -167,6 +167,7 @@ $effect(() => {
     }
 
     &[open]::details-content {
+      height: auto;
       height: calc-size(auto, size);
       opacity: 1;
     }
@@ -281,6 +282,42 @@ $effect(() => {
     }
     &:hover {
       background: rgb(from var(--color-theme) r g b / 0.2);
+    }
+  }
+
+  .projects.-grid {
+    .files {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: var(--sp-s);
+      margin-block-start: var(--sp-s);
+      padding: 4px;
+    }
+    .files > li {
+      min-inline-size: 0;
+      margin-block-start: 0;
+    }
+    .files li > a {
+      min-inline-size: 0;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--sp-xs);
+      padding: 0;
+
+      img {
+        display: block;
+        grid-row: auto;
+      }
+      h3 {
+        display: block;
+        min-inline-size: 0;
+        white-space: nowrap;
+      }
+      p {
+        display: none;
+      }
+    }
+    > li:first-of-type .files > li:first-of-type h3 {
+      padding-inline-end: 20px;
     }
   }
 

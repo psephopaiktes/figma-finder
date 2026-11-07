@@ -15,6 +15,7 @@ export type Options = {
   theme: string;
   locale: string | null;
   openInApp: boolean;
+  fileView: "list" | "grid";
   users: Record<string, User>;
 };
 

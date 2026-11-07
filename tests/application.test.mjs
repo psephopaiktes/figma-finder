@@ -154,9 +154,13 @@ test("OAuth rejects mismatched state, foreign redirect, error, and missing code 
 
 test("Worker login keeps credentials local and rotated refresh tokens are persisted", async () => {
   for (const add of [false, true]) {
-    const { api, store, writes, data, requests } = auth();
+    const { api, store, writes, data, requests } = auth(
+      undefined,
+      makeAccounts({ "sync:options": { fileView: "grid" } }),
+    );
     assert.equal(await api.logIn({ add }), true);
     assert.equal(store.options.currentUser, "user");
+    assert.equal(store.options.fileView, "grid");
     assert.equal(store.options.users.user.refresh_token, undefined);
     assert.equal(data["local:auth"].user.refresh_token, "new-refresh");
     assert.equal(requests[0].url, "https://auth.test/oauth/exchange");
@@ -167,6 +171,7 @@ test("Worker login keeps credentials local and rotated refresh tokens are persis
     data["local:auth"].user.expires_at = 0;
     assert.equal(await api.refreshTokens(), true);
     assert.equal(store.auth.user.refresh_token, "new-refresh");
+    assert.equal(store.options.fileView, "grid");
     assert.equal(requests.at(-1).url, "https://auth.test/oauth/refresh");
     assert.equal(
       JSON.parse(requests.at(-1).init.body).refresh_token,
@@ -238,6 +243,7 @@ const savedAccounts = () => ({
     theme: "dark",
     locale: "ja",
     openInApp: false,
+    fileView: "grid",
   },
   "local:auth": { user: accountTokens },
 });
@@ -247,6 +253,7 @@ test("legacy credentials are copied before sync cleanup, with teams and preferen
     currentUser: "user",
     theme: "dark",
     locale: "ja",
+    fileView: "grid",
     users: { user: { ...accountProfile, ...accountTokens } },
   };
   const fixture = makeAccounts({ "sync:options": legacy });
@@ -255,6 +262,7 @@ test("legacy credentials are copied before sync cleanup, with teams and preferen
   assert.equal(first.options.users.user.teams.team, "Team");
   assert.equal(first.options.theme, "dark");
   assert.equal(first.options.locale, "ja");
+  assert.equal(first.options.fileView, "grid");
   assert.deepEqual(
     fixture.writes.map(([key]) => key),
     ["local:auth", "sync:options"],
@@ -330,6 +338,109 @@ test("sync writes strip credentials and stale preference pages cannot erase or r
   assert.equal(fixture.data["sync:options"].currentUser, "new");
 });
 
+test("file view defaults to list for legacy and malformed settings", async () => {
+  for (const fileView of [undefined, null, false, 1, "", "tiles", {}, []]) {
+    const fixture = makeAccounts({ "sync:options": { fileView } });
+    const state = await fixture.accounts.loadAccounts();
+    assert.equal(state.options.fileView, "list");
+  }
+  for (const fileView of ["list", "grid"]) {
+    const fixture = makeAccounts({ "sync:options": { fileView } });
+    assert.equal(
+      (await fixture.accounts.loadAccounts()).options.fileView,
+      fileView,
+    );
+  }
+});
+
+test("file view saves only its intent and stale settings cannot undo it", async () => {
+  const fixture = makeAccounts(savedAccounts());
+  const stale = (await fixture.accounts.loadAccounts()).options;
+  await fixture.accounts.persistFileView("list");
+  fixture.data["sync:options"].theme = "light";
+  fixture.data["sync:options"].locale = "ko";
+  fixture.data["sync:options"].openInApp = true;
+  fixture.data["sync:options"].users.user.teams.new = "New team";
+  const before = structuredClone(fixture.data);
+  await fixture.accounts.persistFileView("grid");
+  before["sync:options"].fileView = "grid";
+  assert.deepEqual(fixture.data, before);
+  stale.theme = "system";
+  stale.fileView = "list";
+  stale.users.user = { ...stale.users.user, ...accountTokens };
+  await fixture.accounts.persistOptions(stale);
+  assert.equal(fixture.data["sync:options"].theme, "system");
+  assert.equal(fixture.data["sync:options"].fileView, "grid");
+  assert.equal(fixture.data["local:auth"].user.refresh_token, "refresh");
+  assert.equal(fixture.data["sync:options"].users.user.access_token, undefined);
+  assert.ok(fixture.writes.every(([key]) => key === "sync:options"));
+});
+
+test("the view preference is global and does not require a signed-in account", async () => {
+  const fixture = makeAccounts();
+  await fixture.accounts.persistFileView("grid");
+  const state = await fixture.accounts.loadAccounts();
+  assert.equal(state.options.fileView, "grid");
+  assert.equal(state.options.currentUser, null);
+  assert.deepEqual(Object.keys(state.auth), []);
+  assert.equal(fixture.data["local:auth"], undefined);
+  assert.deepEqual(
+    fixture.writes.map(([key]) => key),
+    ["sync:options"],
+  );
+});
+
+test("rapid file view choices update immediately and persist in user action order", async () => {
+  const fixture = makeAccounts(savedAccounts());
+  const page = load(
+    "src/lib/store.svelte.ts",
+    { storage: fixture.storage, navigator: fixture.navigator },
+    {
+      "@/lib/account-storage": fixture.accounts,
+      "@/lib/project-storage": fixture.projects,
+    },
+  );
+  assert.equal(page.store.options.fileView, "list");
+  await page.loadOptions();
+  const first = page.setFileView("list");
+  assert.equal(page.store.options.fileView, "list");
+  const second = page.setFileView("grid");
+  assert.equal(page.store.options.fileView, "grid");
+  await Promise.all([first, second]);
+  assert.equal(page.store.options.fileView, "grid");
+  assert.equal(fixture.data["sync:options"].fileView, "grid");
+  assert.deepEqual(
+    fixture.writes.map(([, options]) => options.fileView),
+    ["list", "grid"],
+  );
+  await page.loadOptions();
+  assert.equal(page.store.options.fileView, "grid");
+});
+
+test("a failed earlier view save does not undo a later successful choice", async () => {
+  const fixture = makeAccounts();
+  let firstWrite = true;
+  const write = fixture.storage.setItem;
+  fixture.storage.setItem = async (key, value) => {
+    if (firstWrite) {
+      firstWrite = false;
+      throw new Error("temporary failure");
+    }
+    await write(key, value);
+  };
+  const page = load(
+    "src/lib/store.svelte.ts",
+    { storage: fixture.storage, navigator: fixture.navigator },
+    {
+      "@/lib/account-storage": fixture.accounts,
+      "@/lib/project-storage": fixture.projects,
+    },
+  );
+  await Promise.all([page.setFileView("grid"), page.setFileView("list")]);
+  assert.equal(page.store.options.fileView, "list");
+  assert.equal(fixture.data["sync:options"].fileView, "list");
+});
+
 test("two extension pages refreshing concurrently perform a single token rotation", async () => {
   const fixture = makeAccounts(savedAccounts());
   const first = auth(undefined, fixture);
@@ -380,6 +491,8 @@ test("logout removes local credentials and synced account metadata", async () =>
   assert.equal(fixture.data["local:auth"].user, undefined);
   assert.equal(fixture.data["sync:options"].users.user, undefined);
   assert.equal(fixture.data["sync:options"].currentUser, null);
+  assert.equal(fixture.data["sync:options"].fileView, "grid");
+  assert.equal(client.store.options.fileView, "grid");
   assert.equal(fixture.data["local:projectData:user"], undefined);
   assert.ok(fixture.data["local:projectData:other"]);
 });
@@ -392,6 +505,7 @@ test("reauthentication preserves teams and duplicate login retains newly issued 
     assert.equal(await client.api.logIn(), !duplicate);
     assert.equal(fixture.data["local:auth"].user.refresh_token, "new-refresh");
     assert.equal(fixture.data["sync:options"].users.user.teams.team, "Team");
+    assert.equal(client.store.options.fileView, "grid");
     assert.equal(
       fixture.data["sync:options"].users.user.refresh_token,
       undefined,
