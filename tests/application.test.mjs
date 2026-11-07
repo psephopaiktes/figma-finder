@@ -497,19 +497,100 @@ test("logout removes local credentials and synced account metadata", async () =>
   assert.ok(fixture.data["local:projectData:other"]);
 });
 
-test("reauthentication preserves teams and duplicate login retains newly issued tokens", async () => {
-  for (const duplicate of [true, false]) {
-    const fixture = makeAccounts(savedAccounts());
-    if (!duplicate) delete fixture.data["local:auth"].user;
-    const client = auth(undefined, fixture);
-    assert.equal(await client.api.logIn(), !duplicate);
-    assert.equal(fixture.data["local:auth"].user.refresh_token, "new-refresh");
-    assert.equal(fixture.data["sync:options"].users.user.teams.team, "Team");
-    assert.equal(client.store.options.fileView, "grid");
-    assert.equal(
-      fixture.data["sync:options"].users.user.refresh_token,
-      undefined,
-    );
+test("normal and add-account login restore and select existing accounts without duplicate errors", async () => {
+  for (const add of [false, true]) {
+    for (const selected of [null, "other", "user"]) {
+      for (const existing of ["complete", "profile-only", "credentials-only"]) {
+        const fixture = makeAccounts(savedAccounts());
+        const options = fixture.data["sync:options"];
+        const otherProfile = {
+          ...accountProfile,
+          email: "other@example.com",
+          teams: { otherTeam: "Other team" },
+        };
+        const otherTokens = {
+          ...accountTokens,
+          access_token: "other-access",
+          refresh_token: "other-refresh",
+        };
+        options.currentUser = selected;
+        options.openInApp = true;
+        options.users.other = structuredClone(otherProfile);
+        fixture.data["local:auth"].other = structuredClone(otherTokens);
+        if (existing === "profile-only") delete fixture.data["local:auth"].user;
+        if (existing === "credentials-only") delete options.users.user;
+        const savedProjectData = {
+          projects: { privateProject: { name: "Saved project" } },
+          order: [{ id: "privateProject", open: false }],
+        };
+        fixture.data["local:projectData:user"] =
+          structuredClone(savedProjectData);
+        fixture.respond = async (url) =>
+          url.endsWith("/me")
+            ? {
+                ok: true,
+                status: 200,
+                json: async () => ({
+                  email: "updated@example.com",
+                  handle: "Updated profile",
+                  img_url: "https://example.test/profile.png",
+                }),
+              }
+            : undefined;
+        const client = auth(undefined, fixture);
+        const before = await fixture.accounts.loadAccounts();
+        client.store.auth = before.auth;
+        client.store.options = before.options;
+        assert.equal(
+          await client.api.logIn({ add }),
+          true,
+          `add=${add}, selected=${selected}, existing=${existing}`,
+        );
+        assert.equal(client.store.options.currentUser, "user");
+        const saved = fixture.data["sync:options"];
+        assert.equal(saved.currentUser, "user");
+        assert.deepEqual(Object.keys(saved.users).sort(), ["other", "user"]);
+        assert.equal(saved.users.user.email, "updated@example.com");
+        assert.equal(saved.users.user.handle, "Updated profile");
+        assert.deepEqual(
+          saved.users.user.teams,
+          existing === "credentials-only" ? {} : accountProfile.teams,
+        );
+        assert.deepEqual(saved.users.other, otherProfile);
+        assert.equal(saved.theme, "dark");
+        assert.equal(saved.locale, "ja");
+        assert.equal(saved.openInApp, true);
+        assert.equal(saved.fileView, "grid");
+        assert.equal(client.store.options.fileView, "grid");
+        assert.equal(
+          fixture.data["local:auth"].user.access_token,
+          "new-access",
+        );
+        assert.equal(
+          fixture.data["local:auth"].user.refresh_token,
+          "new-refresh",
+        );
+        assert.ok(fixture.data["local:auth"].user.expires_at > Date.now());
+        assert.deepEqual(fixture.data["local:auth"].other, otherTokens);
+        assert.deepEqual(
+          fixture.data["local:projectData:user"],
+          savedProjectData,
+        );
+        assert.deepEqual(client.messages, []);
+        assert.deepEqual(
+          client.requests.map(({ url }) => url),
+          ["https://auth.test/oauth/exchange", "https://api.figma.com/v1/me"],
+        );
+        for (const [key, value] of fixture.writes) {
+          if (key !== "sync:options") continue;
+          for (const profile of Object.values(value.users)) {
+            assert.equal(profile.access_token, undefined);
+            assert.equal(profile.refresh_token, undefined);
+            assert.equal(profile.expires_at, undefined);
+          }
+        }
+      }
+    }
   }
 });
 

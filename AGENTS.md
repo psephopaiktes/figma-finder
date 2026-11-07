@@ -4,6 +4,7 @@
 - Node.js 24 以上（CI は 24）。`npm ci`、`npm start`（Chrome 自動起動）、`npm run dev:firefox`。ヘッドレス環境では WXT のローカル `web-ext.config.ts` でブラウザ実行ファイル・起動引数を指定する。既存の設定を上書きしない。
 - 検証は `npm run check`、`npm run lint`、`npm test`、`npm audit --omit=dev --audit-level=moderate`（必須）と `npm audit --audit-level=moderate`（開発依存を含む参考結果）、`npm run build`、`npm run build:firefox`、`node .github/scripts/release.mjs archives`。ビルドはソースを自動修正せず `build/` に ZIP を出力する。`npm run biome` は書き換えを伴うので差分を確認する。
 - 作業ブランチから PR を作り、レビュー後に main へマージする。無関係な整形を避け、既存の設計・コンポーネント・CSS・5 言語の翻訳を再利用する。README は明示的に依頼された場合だけ変更する。エージェント向けの指示・運用メモは既存の `AGENTS.md` または `.agents/` に集約し、ルートに専用ファイルを勝手に追加しない。特定エージェント専用の設定・指示ファイルはコミットしない。公開プライバシーポリシー等の利用者向け文書とは区別する。
+- サポート受付・問い合わせ窓口は設けていない。エラー文言で「お問い合わせください」等の案内を追加せず、再試行など実行可能な操作を案内する。
 - UI、CSS、クライアント JavaScript の変更前に `.agents/skills/modern-web-guidance/SKILL.md` を参照する。拡張 API・申請には `chrome-extensions` も参照する。公式 CLI `npx modern-web-guidance@latest update` で更新できる。
 - Chrome 126 以上と Firefox 140 以上を検証する。Modern Web Guidance の既定は Baseline Widely available。Chrome 固有 API や新しい CSS を Firefox でも利用可能と仮定しない。両ビルドに加え、サイドパネル、ショートカット、OAuth、検索、キーボード操作の実ブラウザ確認を行う。Firefox のビルドだけでは動作確認にならない。
 - 秘密情報をコード・ログ・PR・ソース ZIP に書かない。Figma の Client secret は Cloudflare Worker の `FIGMA_CLIENT_SECRET` だけに置き、拡張や実配布ビルドへ渡さない。拡張は公開 Client ID `WXT_FIGMA_ID` と公開 Worker URL（既定 `https://figma-finder.hirataakira6.workers.dev`、任意の `WXT_AUTH_BASE_URL`）を使う。実トークンは `local:auth`、プロフィール・設定は資格情報を除外して `sync:options` に保存する。保存・移行・ログイン・更新・ログアウトは `account-storage.ts` の Web Locks と whitelist 経由とし、直接同期へ書き込まない。ストア認証は申請ステップだけへ渡す。
