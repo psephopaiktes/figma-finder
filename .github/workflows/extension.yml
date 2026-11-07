@@ -51,9 +51,8 @@ jobs:
           WXT_FIGMA_SECRET: ci-only-secret-marker-7bf39a+/=
           LEAK_TEST_SECRET: ci-only-secret-marker-7bf39a+/=
         run: |
-          npm run build
-          npm run build:firefox
-          node .github/scripts/release.mjs check-secrets
+          npm run build -- --sources
+          node .github/scripts/release.mjs check-secrets chrome sources
       - name: Build Chrome archive
         env:
           REQUIRE_FIGMA_CONFIG: ${{ (github.event_name == 'push' && steps.version.outputs.changed == 'true') || (github.event_name == 'workflow_dispatch' && !inputs.dry_run) }}

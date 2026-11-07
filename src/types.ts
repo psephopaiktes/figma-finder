@@ -3,6 +3,9 @@ export type Store = {
   loading: boolean;
   projects: Record<string, Project>;
   localProjectState: LocalProjectState[];
+  projectAccount: string | null;
+  projectOrderSaved: string;
+  projectDataReady: boolean;
   targetProps: [id: string, type: "file" | "project"];
   options: Options;
 };
@@ -12,6 +15,7 @@ export type Options = {
   theme: string;
   locale: string | null;
   openInApp: boolean;
+  fileView: "list" | "grid";
   users: Record<string, User>;
 };
 

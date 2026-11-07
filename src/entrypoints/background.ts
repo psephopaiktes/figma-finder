@@ -1,10 +1,21 @@
+import { recordMajorUpdate } from "@/lib/update-notice";
+
 export default defineBackground(() => {
   // Show Welcome Page
-  browser.runtime.onInstalled.addListener((details) => {
+  browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === "install") {
-      browser.tabs.create({
+      await browser.tabs.create({
         url: browser.runtime.getURL("/help.html?welcome"),
       });
+    } else if (details.reason === "update") {
+      try {
+        await recordMajorUpdate(
+          details.previousVersion ?? "",
+          browser.runtime.getManifest().version,
+        );
+      } catch {
+        console.warn("Update notice could not be saved.");
+      }
     }
   });
 

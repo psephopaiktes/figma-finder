@@ -40,6 +40,7 @@ export function cleanOptions(value: unknown): Options {
     theme: text(input.theme) || "system",
     locale: typeof input.locale === "string" ? input.locale : null,
     openInApp: input.openInApp === true,
+    fileView: input.fileView === "grid" ? "grid" : "list",
     users,
   };
 }
@@ -122,6 +123,9 @@ export function persistOptions(
     const selected = snapshot.currentUser;
     await storage.setItem("sync:options", {
       ...snapshot,
+      // View changes have their own intent; an older settings page must not
+      // replace a newer choice while saving unrelated preferences.
+      fileView: state.options.fileView,
       users: state.options.users,
       currentUser:
         selectCurrent &&
@@ -131,6 +135,15 @@ export function persistOptions(
           ? selected
           : state.options.currentUser,
     });
+  });
+}
+
+export function persistFileView(fileView: Options["fileView"]): Promise<void> {
+  const view = fileView === "grid" ? "grid" : "list";
+  return locked(async () => {
+    const { options } = await readAccounts();
+    options.fileView = view;
+    await storage.setItem("sync:options", options);
   });
 }
 

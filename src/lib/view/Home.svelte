@@ -3,43 +3,70 @@ import Fuse from "fuse.js";
 import { tick, untrack } from "svelte";
 import i18n from "@/lib/i18n.svelte";
 import Layout from "@/lib/Layout.svelte";
-import { loadFiles, store } from "@/lib/store.svelte";
+import { FigmaRateLimitError, loadFiles, store } from "@/lib/store.svelte";
 import ErrorView from "@/lib/ui/Home/ErrorView.svelte";
 import Input from "@/lib/ui/Home/Input.svelte";
 import NewFAB from "@/lib/ui/Home/NewFAB.svelte";
 import SubHeader from "@/lib/ui/Home/SubHeader.svelte";
 import Tree from "@/lib/ui/Home/Tree.svelte";
+import UpdateBanner from "@/lib/ui/Home/UpdateBanner.svelte";
+import ViewSwitcher from "@/lib/ui/Home/ViewSwitcher.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
 import type { File, Project } from "@/types";
 
 let loading = $state(true);
+let refreshing = $state(false);
 let query = $state("");
 let isTimeout = $state(false);
+let isRateLimited = $state(false);
+const rateLimitText = {
+  en: "Figma's request limit was reached. Please wait before reloading.",
+  ja: "Figmaへのリクエスト上限に達しました。時間を置いて再読み込みしてください。",
+  "zh-cn": "已达到 Figma 的请求上限。请稍后再重新加载。",
+  es: "Se ha alcanzado el límite de solicitudes de Figma. Espera antes de recargar.",
+  ko: "Figma 요청 한도에 도달했습니다. 잠시 후 다시 불러와 주세요.",
+};
+const refreshErrorText = {
+  en: "Could not refresh. Showing saved files. Please try again later.",
+  ja: "更新できませんでした。保存済みのファイルを表示しています。時間を置いて再度お試しください。",
+  "zh-cn": "无法刷新。正在显示已保存的文件。请稍后重试。",
+  es: "No se pudo actualizar. Se muestran los archivos guardados. Inténtalo más tarde.",
+  ko: "새로 불러오지 못했습니다. 저장된 파일을 표시합니다. 잠시 후 다시 시도해 주세요.",
+};
 let isInputed: boolean = $derived.by(() => {
   return query.trim().length > 0;
 });
 
-$effect(() => {
-  // Layout loads accounts and refreshes credentials before publishing readiness.
-  if (store.loading) return;
+async function refresh(force = false) {
+  if (refreshing) return;
+  refreshing = true;
+  loading = true;
+  isTimeout = false;
+  isRateLimited = false;
   const timeoutId = setTimeout(() => {
     isTimeout = true;
     loading = false;
   }, 10000);
 
-  void untrack(async () => {
-    try {
-      await loadFiles();
-    } catch (error) {
-      console.error("Failed to load files:", error);
-      isTimeout = true;
-    } finally {
-      loading = false;
-      clearTimeout(timeoutId);
-    }
-  });
-  return () => clearTimeout(timeoutId);
+  try {
+    await loadFiles({ force });
+    isTimeout = false;
+  } catch (error) {
+    isRateLimited = error instanceof FigmaRateLimitError;
+    isTimeout = !isRateLimited;
+    if (!isRateLimited) console.warn("Files could not be refreshed.");
+  } finally {
+    loading = false;
+    refreshing = false;
+    clearTimeout(timeoutId);
+  }
+}
+
+$effect(() => {
+  // Layout loads accounts and refreshes credentials before publishing readiness.
+  if (store.loading) return;
+  void untrack(() => refresh());
 });
 
 let filterdProjects: Record<string, Project> = $derived.by(() => {
@@ -94,13 +121,26 @@ const openFirstFile = () => {
 };
 </script>
 
-<Layout>
+<Layout onReload={() => refresh(true)}>
   <Nav current="home">
     <Input bind:value={query} submit={openFirstFile} />
   </Nav>
 
+  <div class="requestStatus" role="status">
+    {#if isRateLimited && Object.keys(store.projects).length !== 0}
+      <p>{i18n.t(rateLimitText)}</p>
+    {:else if isTimeout && !refreshing && Object.keys(store.projects).length !== 0}
+      <p>{i18n.t(refreshErrorText)}</p>
+    {/if}
+  </div>
+
   {#if Object.keys(store.projects).length !== 0}
-    <SubHeader />
+    <SubHeader onReload={() => refresh(true)} loading={refreshing} />
+  {/if}
+
+  <UpdateBanner />
+
+  {#if Object.keys(store.projects).length !== 0}
     <Tree projects={filterdProjects} {isInputed} />
   {:else if loading}
     <section class="l-centeringContainer">
@@ -108,6 +148,8 @@ const openFirstFile = () => {
     </section>
   {:else if !navigator.onLine}
     <ErrorView
+      onReload={() => refresh(true)}
+      loading={refreshing}
       icon="offline"
       mainText={{
         en: "You are offline.",
@@ -117,8 +159,16 @@ const openFirstFile = () => {
         ko: "오프라인 상태입니다。",
       }}
     />
+  {:else if isRateLimited}
+    <ErrorView
+      onReload={() => refresh(true)}
+      loading={refreshing}
+      mainText={rateLimitText}
+    />
   {:else if isTimeout}
     <ErrorView
+      onReload={() => refresh(true)}
+      loading={refreshing}
       mainText={{
         en: "Timeout. Please reload.",
         ja: "タイムアウトしました。再読み込みしてください。",
@@ -136,6 +186,8 @@ const openFirstFile = () => {
     />
   {:else}
     <ErrorView
+      onReload={() => refresh(true)}
+      loading={refreshing}
       mainText={{
         en: "No projects found.",
         ja: "プロジェクトがありません。",
@@ -153,7 +205,15 @@ const openFirstFile = () => {
     />
   {/if}
 
+  <ViewSwitcher />
   <NewFAB />
 </Layout>
+
+<style>
+  .requestStatus p {
+    margin: var(--sp-m);
+    color: var(--color-caution);
+  }
+</style>
 
 

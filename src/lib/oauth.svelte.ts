@@ -1,8 +1,9 @@
 import { mutateAccounts } from "@/lib/account-storage";
 import { getAuthBaseUrl } from "@/lib/auth-config";
 import i18n from "@/lib/i18n.svelte";
+import { clearProjectSnapshot } from "@/lib/project-storage";
 import { applyAccounts, store } from "@/lib/store.svelte";
-import type { AuthTokens } from "@/types";
+import type { Accounts, AuthTokens } from "@/types";
 
 const clientId = import.meta.env.WXT_FIGMA_ID;
 const authBaseUrl = getAuthBaseUrl(import.meta.env.WXT_AUTH_BASE_URL);
@@ -113,10 +114,7 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     const profile = await profileResponse.json();
     stage = "storage";
     status = undefined;
-    const { state: accounts, result } = await mutateAccounts((accounts) => {
-      const duplicate = Boolean(
-        accounts.auth[data.user_id] && accounts.options.users[data.user_id],
-      );
+    const { state: accounts } = await mutateAccounts((accounts) => {
       accounts.auth[data.user_id] = credentials;
       accounts.options.users[data.user_id] = {
         email: profile.email,
@@ -124,22 +122,10 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
         img_url: profile.img_url,
         teams: accounts.options.users[data.user_id]?.teams ?? {},
       };
-      if (!duplicate) accounts.options.currentUser = data.user_id;
-      return !duplicate;
+      // A successful login also resumes an account saved by an earlier session.
+      accounts.options.currentUser = data.user_id;
     });
     applyAccounts(accounts);
-    if (!result) {
-      alert(
-        i18n.t({
-          ja: "すでにログイン済みのユーザーです。",
-          en: "User already logged in.",
-          "zh-cn": "用户已登录。",
-          es: "El usuario ya ha iniciado sesión.",
-          ko: "이미 로그인된 사용자입니다。",
-        }),
-      );
-      return false;
-    }
     await storage.removeItem("local:projects");
     return true;
   } catch {
@@ -148,12 +134,11 @@ async function logIn(options: { add?: boolean } = {}): Promise<boolean> {
     console.warn(`OAuth login failed (${code}).`);
     alert(
       `${i18n.t({
-        ja: "ログインを完了できませんでした。もう一度お試しください。解決しない場合は、このコードを添えてお問い合わせください。",
-        en: "Could not complete login. Please try again. If the problem continues, include this code when contacting support.",
-        "zh-cn":
-          "无法完成登录。请重试。如果问题仍然存在，请在联系支持时提供此代码。",
-        es: "No se pudo completar el inicio de sesión. Inténtalo de nuevo. Si el problema continúa, incluye este código al contactar con soporte.",
-        ko: "로그인을 완료하지 못했습니다. 다시 시도해 주세요. 문제가 계속되면 이 코드를 포함하여 문의해 주세요.",
+        ja: "ログインを完了できませんでした。もう一度お試しください。",
+        en: "Could not complete login. Please try again.",
+        "zh-cn": "无法完成登录。请重试。",
+        es: "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
+        ko: "로그인을 완료하지 못했습니다. 다시 시도해 주세요.",
       })} (${code})`,
     );
     return false;
@@ -176,18 +161,24 @@ async function logOut(): Promise<boolean> {
   )
     return false;
   try {
-    const { state } = await mutateAccounts((accounts) => {
-      delete accounts.auth[id];
-      delete accounts.options.users[id];
-      if (accounts.options.currentUser === id) {
-        accounts.options.currentUser =
-          Object.keys(accounts.options.users).find(
-            (key) => accounts.auth[key],
-          ) ?? null;
-      }
+    let state: Accounts | undefined;
+    // Keep queued refreshes outside the cache-clear/auth-removal transaction.
+    // Cache deletion happens before auth watchers can navigate this page away.
+    await clearProjectSnapshot(id, async () => {
+      await storage.removeItem("local:projects");
+      const changed = await mutateAccounts((accounts) => {
+        delete accounts.auth[id];
+        delete accounts.options.users[id];
+        if (accounts.options.currentUser === id) {
+          accounts.options.currentUser =
+            Object.keys(accounts.options.users).find(
+              (key) => accounts.auth[key],
+            ) ?? null;
+        }
+      });
+      state = changed.state;
     });
-    applyAccounts(state);
-    await storage.removeItem("local:projects");
+    if (state) applyAccounts(state);
     return true;
   } catch {
     console.warn("Account could not be removed.");

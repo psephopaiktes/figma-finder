@@ -117,7 +117,7 @@ const main = () => {
       appendFileSync(process.env.GITHUB_OUTPUT, output);
     process.stdout.write(output);
   } else if (command === "archives" || command === "check-secrets") {
-    const kinds = args.length ? args : ["chrome", "firefox", "sources"];
+    const kinds = args.length ? args : ["chrome", "sources"];
     if (kinds.some((kind) => !["chrome", "firefox", "sources"].includes(kind)))
       throw new Error("Unknown archive kind");
     const names = kinds.map(
