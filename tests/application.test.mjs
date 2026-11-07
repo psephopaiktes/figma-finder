@@ -6,9 +6,9 @@ import ts from "typescript";
 
 // Exercise the actual TypeScript functions with browser/network/storage boundaries mocked.
 // Rune identity is sufficient here: these tests do not assert Svelte rendering or reactivity.
-const load = (file, globals = {}, imports = {}, chrome = true) => {
+const load = (file, globals = {}, imports = {}) => {
   const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8")
-    .replaceAll("import.meta.env.CHROME", String(chrome))
+    .replaceAll("import.meta.env.CHROME", "true")
     .replaceAll("import.meta.env.WXT_FIGMA_ID", '"test-client"')
     .replaceAll("import.meta.env.WXT_AUTH_BASE_URL", "undefined");
   const compiled = ts.transpileModule(source, {
@@ -615,132 +615,114 @@ test("the auth endpoint accepts HTTPS origins only", () => {
   }
 });
 
-test("Welcome page opens on installation without reading tab information", () => {
-  for (const chrome of [true, false]) {
-    let onInstalled;
-    const created = [];
-    load(
-      "src/entrypoints/background.ts",
-      {
-        defineBackground: (callback) => callback(),
-        chrome: { sidePanel: { setPanelBehavior: async () => {} } },
-        browser: {
-          runtime: {
-            getURL: (path) => `chrome-extension://test${path}`,
-            onInstalled: {
-              addListener: (callback) => {
-                onInstalled = callback;
-              },
+test("Welcome page opens on installation without reading tab information", async () => {
+  let onInstalled;
+  const created = [];
+  load(
+    "src/entrypoints/background.ts",
+    {
+      defineBackground: (callback) => callback(),
+      chrome: { sidePanel: { setPanelBehavior: async () => {} } },
+      browser: {
+        runtime: {
+          getURL: (path) => `chrome-extension://test${path}`,
+          getManifest: () => ({ version: "2.0.0" }),
+          onInstalled: {
+            addListener: (callback) => {
+              onInstalled = callback;
             },
           },
-          tabs: {
-            create: (options) => {
-              created.push(options.url);
-            },
-          },
-          action: { onClicked: { addListener() {} } },
-          commands: { onCommand: { addListener() {} } },
         },
+        tabs: {
+          create: (options) => {
+            created.push(options.url);
+          },
+        },
+        action: { onClicked: { addListener() {} } },
+        commands: { onCommand: { addListener() {} } },
       },
-      {},
-      chrome,
-    );
-    onInstalled({ reason: "update" });
-    assert.deepEqual(created, []);
-    onInstalled({ reason: "install" });
-    assert.deepEqual(created, ["chrome-extension://test/help.html?welcome"]);
-  }
+    },
+    { "@/lib/update-notice": { recordMajorUpdate: async () => {} } },
+  );
+  await onInstalled({ reason: "update", previousVersion: "1.0.7" });
+  assert.deepEqual(created, []);
+  await onInstalled({ reason: "install" });
+  assert.deepEqual(created, ["chrome-extension://test/help.html?welcome"]);
 });
 
-test("Sidebar opens using only non-sensitive tab window information", async () => {
-  for (const chrome of [true, false]) {
-    const calls = [];
-    const tab = { windowId: 42 };
-    for (const property of ["url", "pendingUrl", "title", "favIconUrl"]) {
-      Object.defineProperty(tab, property, {
-        get() {
-          throw new Error(`Sensitive tab property accessed: ${property}`);
-        },
-      });
-    }
-    const { openSidePanel } = load(
-      "src/lib/utility.svelte.ts",
-      {
-        navigator: { userAgent: "test" },
-        browser: {
-          tabs: {
-            query: async (options) => {
-              assert.equal(options.active, true);
-              assert.equal(options.currentWindow, true);
-              return [tab];
-            },
-          },
-          sidebarAction: {
-            open: async () => calls.push("sidebar"),
-          },
-        },
-        chrome: {
-          sidePanel: {
-            open: async ({ windowId }) => calls.push(windowId),
+test("Chrome side panel opens using only non-sensitive tab window information", async () => {
+  const calls = [];
+  const tab = { windowId: 42 };
+  for (const property of ["url", "pendingUrl", "title", "favIconUrl"]) {
+    Object.defineProperty(tab, property, {
+      get() {
+        throw new Error(`Sensitive tab property accessed: ${property}`);
+      },
+    });
+  }
+  const { openSidePanel } = load(
+    "src/lib/utility.svelte.ts",
+    {
+      navigator: { userAgent: "test" },
+      browser: {
+        tabs: {
+          query: async (options) => {
+            assert.equal(options.active, true);
+            assert.equal(options.currentWindow, true);
+            return [tab];
           },
         },
       },
-      { "@/lib/i18n.svelte": i18n },
-      chrome,
-    );
-    await openSidePanel();
-    assert.deepEqual(calls, chrome ? [42] : ["sidebar"]);
-  }
+      chrome: {
+        sidePanel: {
+          open: async ({ windowId }) => calls.push(windowId),
+        },
+      },
+    },
+    { "@/lib/i18n.svelte": i18n },
+  );
+  await openSidePanel();
+  assert.deepEqual(calls, [42]);
 });
 
-test("Chrome and Firefox shortcut await popup setup and restore toolbar sidebar behavior", async () => {
-  for (const chrome of [true, false]) {
-    let command;
-    let click;
-    const calls = [];
-    load(
-      "src/entrypoints/background.ts",
-      {
-        defineBackground: (callback) => callback(),
-        chrome: { sidePanel: { setPanelBehavior: async () => {} } },
-        browser: {
-          runtime: { onInstalled: { addListener() {} } },
-          action: {
-            onClicked: {
-              addListener: (callback) => {
-                click = callback;
-              },
-            },
-            setPopup: async ({ popup }) => {
-              await Promise.resolve();
-              calls.push(popup);
-            },
-            openPopup: async () => {
-              calls.push("open");
-            },
+test("Chrome shortcut waits for popup setup and restores the default toolbar popup", async () => {
+  let command;
+  const calls = [];
+  const panelBehavior = [];
+  load(
+    "src/entrypoints/background.ts",
+    {
+      defineBackground: (callback) => callback(),
+      chrome: {
+        sidePanel: {
+          setPanelBehavior: async (options) => {
+            panelBehavior.push(structuredClone(options));
           },
-          sidebarAction: {
-            open: () => {
-              calls.push("sidebar");
-            },
+        },
+      },
+      browser: {
+        runtime: { onInstalled: { addListener() {} } },
+        action: {
+          setPopup: async ({ popup }) => {
+            await Promise.resolve();
+            calls.push(popup);
           },
-          commands: {
-            onCommand: {
-              addListener: (callback) => {
-                command = callback;
-              },
+          openPopup: async () => {
+            calls.push("open");
+          },
+        },
+        commands: {
+          onCommand: {
+            addListener: (callback) => {
+              command = callback;
             },
           },
         },
       },
-      {},
-      chrome,
-    );
-    await command("open-popup");
-    assert.deepEqual(calls, ["popup.html", "open", ""]);
-    if (!chrome) {
-      click();
-      assert.equal(calls.at(-1), "sidebar");
-    }
-  }
+    },
+    { "@/lib/update-notice": { recordMajorUpdate: async () => {} } },
+  );
+  assert.deepEqual(panelBehavior, [{ openPanelOnActionClick: true }]);
+  await command("open-popup");
+  assert.deepEqual(calls, ["popup.html", "open", ""]);
 });

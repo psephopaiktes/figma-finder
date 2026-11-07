@@ -317,7 +317,7 @@ $effect(() => {
       }
     }
     > li:first-of-type .files > li:first-of-type h3 {
-      padding-inline-end: 20px;
+      padding-inline-end: 24px;
     }
   }
 
@@ -338,5 +338,10 @@ $effect(() => {
       mask-size: cover;
       background: var(--color-theme);
     }
+  }
+  :global(.projects.-grid > li:first-of-type li:first-of-type a::after) {
+    position: absolute;
+    bottom: 0;
+    right: 8px;
   }
 </style>

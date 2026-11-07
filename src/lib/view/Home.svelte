@@ -9,6 +9,7 @@ import Input from "@/lib/ui/Home/Input.svelte";
 import NewFAB from "@/lib/ui/Home/NewFAB.svelte";
 import SubHeader from "@/lib/ui/Home/SubHeader.svelte";
 import Tree from "@/lib/ui/Home/Tree.svelte";
+import UpdateBanner from "@/lib/ui/Home/UpdateBanner.svelte";
 import ViewSwitcher from "@/lib/ui/Home/ViewSwitcher.svelte";
 import Loader from "@/lib/ui/Loader.svelte";
 import Nav from "@/lib/ui/Nav/Index.svelte";
@@ -135,6 +136,11 @@ const openFirstFile = () => {
 
   {#if Object.keys(store.projects).length !== 0}
     <SubHeader onReload={() => refresh(true)} loading={refreshing} />
+  {/if}
+
+  <UpdateBanner />
+
+  {#if Object.keys(store.projects).length !== 0}
     <Tree projects={filterdProjects} {isInputed} />
   {:else if loading}
     <section class="l-centeringContainer">
